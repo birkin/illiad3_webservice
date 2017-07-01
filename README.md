@@ -1,6 +1,6 @@
 ### overview ###
 
-This is a [django](https://www.djangoproject.com) web-wrapper around our [module](https://github.com/Brown-University-Library/illiad-client) for programmatic access to [Illiad Interlibrary Loan](http://www.atlas-sys.com/illiad/) software.
+This is a [django](https://www.djangoproject.com) web-wrapper around our [python3 illiad module](https://github.com/birkin/illiad3_client) for programmatic access to [Illiad Interlibrary Loan](http://www.atlas-sys.com/illiad/) software.
 
 
 ### usage ###
@@ -41,6 +41,6 @@ This is a [django](https://www.djangoproject.com) web-wrapper around our [module
 
 ### notes ###
 
-- Though the underlying [module](https://github.com/Brown-University-Library/illiad-client) supports new-user-registration, this webservice focuses solely on submitting requests.
+- Though the underlying [python3 module](https://github.com/birkin/illiad3_client) supports new-user-registration, this webservice focuses solely on submitting requests.
 
 ---
