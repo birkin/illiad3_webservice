@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 import json, random
 from . import settings_app
 from django.test import Client, TestCase

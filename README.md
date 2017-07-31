@@ -7,8 +7,6 @@ This is a [django](https://www.djangoproject.com) web-wrapper around our [python
 
     # -*- coding: utf-8 -*-
 
-    from __future__ import unicode_literals
-
     """ Shows sample call to webservice. """
 
     import os

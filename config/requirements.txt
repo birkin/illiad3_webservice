@@ -1,4 +1,4 @@
 Django==1.11.3
-PyMySQL==0.7.11
+git+https://github.com/birkin/illiad3_client.git
 git+https://github.com/birkin/shellvars-py.git
-git+https://github.com/birkin/illiad3_client.git@v0.9
+PyMySQL==0.7.11
