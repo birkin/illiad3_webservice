@@ -13,14 +13,14 @@ class ClientV2_Test( TestCase ):
         c = Client()
         response = c.get( '/v2/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
         self.assertEqual( 400, response.status_code )
-        self.assertEqual( 'Bad Request', response.content )
+        self.assertEqual( b'Bad Request', response.content )
 
     def test__check_bad_post_params(self):
         """ POST with bad params should return 400. """
         c = Client()
         response = c.post( '/v2/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
         self.assertEqual( 400, response.status_code )
-        self.assertEqual( 'Bad Request', response.content )
+        self.assertEqual( b'Bad Request', response.content )
 
     # def test__check_good_post_params__known_user(self):
     #     """ POST with good params should submit a request and return a transaction number.
