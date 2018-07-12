@@ -137,6 +137,7 @@ LOGGING = {
         'illiad_app': {
             'handlers': ['logfile'],
             'level': os.environ.get(u'ILLIAD_WS__LOG_LEVEL'),
+            'propagate': False
         },
     }
 }
