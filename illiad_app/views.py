@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 def info( request ):
     """ Returns simple response. """
+    log.debug( 'starting info()' )
     doc_url = os.environ['ILLIAD_WS__DOCS']
     now = datetime.datetime.now()
     referrer = request.META.get( 'REMOTE_ADDR', 'unavailable' )
