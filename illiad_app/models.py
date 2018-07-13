@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime, json, logging, os, pprint
-from illiad3.account import IlliadSession
+from illiad_app.lib.illiad3.account import IlliadSession
 
 
 log = logging.getLogger(__name__)

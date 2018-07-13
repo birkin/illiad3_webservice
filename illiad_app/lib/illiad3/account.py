@@ -128,12 +128,15 @@ class IlliadSession():
         #ensure submit_key has proper button value
         submit_key['SubmitButton'] ='Submit Request'
         out = {}
-        resp = requests.post(self.url,
-                          data=submit_key,
-                          headers=self.header,
-                          cookies=self.cookies,
-                          verify=True,
-                          timout=15)
+        try:
+            resp = requests.post(self.url,
+                              data=submit_key,
+                              headers=self.header,
+                              cookies=self.cookies,
+                              verify=True,
+                              timeout=15)
+        except Exception as e:
+            log.error( 'exception, ```%s```' % str(e) )
         submit_resp = parsers.request_submission(resp.content)
         out.update(submit_resp)
         return out
