@@ -1,10 +1,13 @@
-import os, sys, pprint, unittest
+import logging, os, sys, pprint, unittest
 
 ## add project parent-directory to sys.path
 parent_working_dir = os.path.abspath( os.path.join(os.getcwd(), os.pardir) )
 sys.path.append( parent_working_dir )
 
 from illiad_app.lib.illiad3.account import IlliadSession
+
+
+log = logging.getLogger(__name__)
 
 
 class AccountTest(unittest.TestCase):
@@ -15,6 +18,7 @@ class AccountTest(unittest.TestCase):
         self.ILLIAD_USERNAME = os.environ['ILLIAD_MODULE__TEST_USERNAME']
         self.ill = IlliadSession(
             self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY, self.ILLIAD_USERNAME )
+        log.debug( 'test setUp has self.ill now' )
 
     def tearDown(self):
         self.ill.logout()
