@@ -28,6 +28,7 @@ class IlliadSession():
 
     def login(self):
         """ Logs the user in to Illiad and sets the session id. """
+        log.debug( 'starting actual illiad login()' )
         out = { 'authenticated': False, 'session_id': None, 'new_user': False }
         resp = requests.get( self.url, headers=self.header, verify=True, timeout=15 )
         if self._check_blocked( resp.text ) == True:
@@ -37,14 +38,14 @@ class IlliadSession():
         out.update(parsed_login)
         self.session_id = parsed_login['session_id']
         self.registered = parsed_login['registered']
-        logging.info( "ILLiad session %s established for %s.  Registered: %s" % (self.session_id, self.username, self.registered) )
+        log.info( "ILLiad session %s established for %s.  Registered: %s" % (self.session_id, self.username, self.registered) )
         return out
 
     def _check_blocked( self, resp_text ):
         """ Checks if login attempt indicates user is blocked.
             TODO: refactor parsers._check_blocked() because if user is blocked, code-flow never gets there; was failing on the `#SessionID` selection in parsers.main_menu()
             Called by login() """
-        logging.debug( 'resp.text, ```%s```' % resp_text )
+        log.debug( 'resp.text, ```%s```' % resp_text )
         if 'you have been blocked' in resp_text.lower():
             self.blocked_patron = True
             self.registered = True
@@ -63,7 +64,7 @@ class IlliadSession():
         resp = requests.get(
             "%s?SessionID=%s&Action=99" % (self.url, self.session_id), verify=True, timeout=15
             )
-        logging.info("ILLiad session %s ended for %s." % (self.session_id, self.username))
+        log.info("ILLiad session %s ended for %s." % (self.session_id, self.username))
         out['authenticated'] = False
         return out
 
@@ -74,7 +75,7 @@ class IlliadSession():
         """
         submit_key = { 'errors': None, 'blocked': False }
         ill_url = "%s/OpenURL?%s" % ( self.url, open_url )
-        logging.info("ILLiad request form URL %s." % ill_url)
+        log.info("ILLiad request form URL %s." % ill_url)
         resp = requests.get( ill_url, headers=self.header, cookies=self.cookies, verify=True, timeout=15 )
         submit_key = self._check_400( resp, submit_key )
         rkey = parsers.request_form(resp.content)
@@ -110,7 +111,7 @@ class IlliadSession():
         """ Checks for poor openurl & updates notes to help ill staff.
             Called by _ensure_required_fields() """
         parts = open_url.split( '&' )
-        logging.debug( 'parts, `%s`' % parts )
+        log.debug( 'parts, `%s`' % parts )
         if len( parts ) == 2:
             for part in parts:
                 if 'id=pmid' in part:
@@ -177,7 +178,7 @@ class IlliadSession():
         reg_key['SubmitButton'] = 'Submit Information'
         reg_key['Department'] = kwargs.get('department', 'Other - Unlisted')
 
-        logging.info("Registering %s with ILLiad as %s." % (self.username, status))
+        log.info("Registering %s with ILLiad as %s." % (self.username, status))
 
         resp = requests.post(self.url,
                           data=reg_key,

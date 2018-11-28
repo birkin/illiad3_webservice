@@ -51,7 +51,7 @@ def _check_blocked( soup, submit_key ):
         title = soup.title.text
         status_message = soup.select('#status')[0].text
     except IndexError:
-        logging.info("Unable to parse status from ILLiad request page %s." % title)
+        log.info("Unable to parse status from ILLiad request page %s." % title)
         status_message = None
     if status_message:
         if status_message.rfind('blocked') > 0:
