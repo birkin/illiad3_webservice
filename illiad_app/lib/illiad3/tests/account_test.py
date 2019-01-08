@@ -4,13 +4,13 @@ import logging, os, sys, pprint, unittest
 parent_working_dir = os.path.abspath( os.path.join(os.getcwd(), os.pardir) )
 sys.path.append( parent_working_dir )
 
-from illiad_app.lib.illiad3.account import IlliadSession
+from illiad_app.lib.illiad3.account import IlliadSession, Status
 
 
 log = logging.getLogger(__name__)
 
 
-class AccountTest(unittest.TestCase):
+class SessionTest(unittest.TestCase):
 
     def setUp(self):
         self.ILLIAD_REMOTE_AUTH_URL = os.environ['ILLIAD_MODULE__TEST_REMOTE_AUTH_URL']
@@ -96,26 +96,46 @@ class AccountTest(unittest.TestCase):
         self.assertEqual(
             'entire openurl: `sid=Entrez:PubMed&id=pmid:23671965`', submit_key['Notes'] )
 
-    def test_check_user_status(self):
-        """ Checks user status (Undergraduate, Graduate, Faculty, Staff, Distance Ed Grad -- as of 2018-Nov-28) """
-        ill = self.ill
-        ill.login()
+    # def test_check_user_status(self):
+    #     """ Checks user status (Undergraduate, Graduate, Faculty, Staff, Distance Ed Grad -- as of 2018-Nov-28) """
+    #     ill = self.ill
+    #     ill.login()
+    #     self.assertEqual(
+    #         'Staffz',
+    #         ill.check_user_status()
+    #         )
+
+    # def test_logout(self):
+    #     """ Tests logout. """
+    #     response_dct = self.ill.logout()
+    #     self.assertTrue( 'authenticated' in response_dct.keys() )
+    #     self.assertFalse(response_dct['authenticated'])
+
+    ## end class SessionTest()
+
+
+class StatusTest(unittest.TestCase):
+
+    def setUp(self):
+        self.ILLIAD_REMOTE_AUTH_URL = os.environ['ILLIAD_MODULE__TEST_REMOTE_AUTH_URL']
+        self.ILLIAD_REMOTE_AUTH_KEY = os.environ['ILLIAD_MODULE__TEST_REMOTE_AUTH_KEY']
+        self.ILLIAD_USERNAME = os.environ['ILLIAD_MODULE__TEST_USERNAME']
+        self.status = Status(
+            self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY, self.ILLIAD_USERNAME )
+
+    def test_initialize_status(self):
+        """ Checks initial status.
+            Logs in user if necessary. """
         self.assertEqual(
-            'Staffz',
-            ill.check_user_status()
-            )
+            'foo',
+            self.status.initialize_status() )
 
-    def test_logout(self):
-        """ Tests logout. """
-        response_dct = self.ill.logout()
-        self.assertTrue( 'authenticated' in response_dct.keys() )
-        self.assertFalse(response_dct['authenticated'])
+    ## end class StatusTest()
 
-    ## end class AccountTest()
 
 
 def suite():
-    suite = unittest.makeSuite(AccountTest, 'test')
+    suite = unittest.makeSuite(SessionTest, 'test')
     return suite
 
 

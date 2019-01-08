@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 SSL_VERIFICATION = True
 
 
-class IlliadSession():
+class IlliadSession( object ):
 
     def __init__(self, url, auth_header, username):
         self.username = username
@@ -193,6 +193,39 @@ class IlliadSession():
         out['status'] = 'Registered'
         return out
 
+    # def check_user_status( self ):
+    #     """ Returns user status.
+    #         Called by easyAccess-api-call """
+    #     status = self.initialize_check_user_status()
+    #     check_user_url = "%s?Action=10&Form=81" % self.url
+    #     resp = requests.get( check_user_url, headers=self.header, cookies=self.cookies, verify=True, timeout=15 )
+    #     log.debug( 'resp, ```%s```' % resp.content.decode('utf-8') )
+    #     return 'foo'
+
+    # def initialize_check_user_status( self ):
+    #     """ Logs in user if necessary.
+    #         Called by check_user_status() """
+    #     status = 'init'
+    #     log.debug( 'hereA' )
+    #     if self.registered == False:
+    #         log.debug( 'hereB' )
+    #         self.login()
+    #         log.debug( 'hereC' )
+    #         if self.registered == False:
+    #             log.debug( 'hereD' )
+    #             status = 'unregistered'
+    #         else:
+    #             log.debug( 'hereE' )
+    #             status = 'init-registered'
+    #     log.debug( 'hereF' )
+    #     log.debug( 'initial status, `%s`' % status )
+    #     return status
+
+    ## end class class IlliadSession()
+
+
+class Status( object ):
+
     def check_user_status( self ):
         """ Returns user status.
             Called by easyAccess-api-call """
@@ -202,11 +235,11 @@ class IlliadSession():
         log.debug( 'resp, ```%s```' % resp.content.decode('utf-8') )
         return 'foo'
 
-    def initialize_check_user_status( self ):
+    def initialize_status( self ):
         """ Logs in user if necessary.
             Called by check_user_status() """
-        status = 'init'
-        log.debug( 'hereA' )
+        session = IlliadSession()
+        status = 'unregistered'
         if self.registered == False:
             log.debug( 'hereB' )
             self.login()
@@ -221,4 +254,23 @@ class IlliadSession():
         log.debug( 'initial status, `%s`' % status )
         return status
 
-    ## end class class IlliadSession()
+    # def initialize_check_user_status( self ):
+    #     """ Logs in user if necessary.
+    #         Called by check_user_status() """
+    #     status = 'init'
+    #     log.debug( 'hereA' )
+    #     if self.registered == False:
+    #         log.debug( 'hereB' )
+    #         self.login()
+    #         log.debug( 'hereC' )
+    #         if self.registered == False:
+    #             log.debug( 'hereD' )
+    #             status = 'unregistered'
+    #         else:
+    #             log.debug( 'hereE' )
+    #             status = 'init-registered'
+    #     log.debug( 'hereF' )
+    #     log.debug( 'initial status, `%s`' % status )
+    #     return status
+
+    ## end class Status()
