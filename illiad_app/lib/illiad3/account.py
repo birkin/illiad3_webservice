@@ -226,6 +226,10 @@ class IlliadSession( object ):
 
 class Status( object ):
 
+    def __init__(self, url, auth_key):
+        self.url = url
+        self.auth_key = auth_key
+
     def check_user_status( self ):
         """ Returns user status.
             Called by easyAccess-api-call """
@@ -235,42 +239,16 @@ class Status( object ):
         log.debug( 'resp, ```%s```' % resp.content.decode('utf-8') )
         return 'foo'
 
-    def initialize_status( self ):
+    def initialize_status( self, username ):
         """ Logs in user if necessary.
             Called by check_user_status() """
-        session = IlliadSession()
+        session = IlliadSession( self.url, self.auth_key, username )
         status = 'unregistered'
-        if self.registered == False:
-            log.debug( 'hereB' )
-            self.login()
-            log.debug( 'hereC' )
-            if self.registered == False:
-                log.debug( 'hereD' )
-                status = 'unregistered'
-            else:
-                log.debug( 'hereE' )
-                status = 'init-registered'
-        log.debug( 'hereF' )
+        if session.registered == False:  # maybe user is not logged in
+            session.login()
+            if session.registered == True:
+                status = 'registered'
         log.debug( 'initial status, `%s`' % status )
         return status
-
-    # def initialize_check_user_status( self ):
-    #     """ Logs in user if necessary.
-    #         Called by check_user_status() """
-    #     status = 'init'
-    #     log.debug( 'hereA' )
-    #     if self.registered == False:
-    #         log.debug( 'hereB' )
-    #         self.login()
-    #         log.debug( 'hereC' )
-    #         if self.registered == False:
-    #             log.debug( 'hereD' )
-    #             status = 'unregistered'
-    #         else:
-    #             log.debug( 'hereE' )
-    #             status = 'init-registered'
-    #     log.debug( 'hereF' )
-    #     log.debug( 'initial status, `%s`' % status )
-    #     return status
 
     ## end class Status()
