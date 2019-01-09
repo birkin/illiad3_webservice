@@ -229,11 +229,14 @@ class Status( object ):
     def __init__(self, url, auth_key):
         self.url = url
         self.auth_key = auth_key
+        self.session = None
 
     def check_user_status( self ):
         """ Returns user status.
             Called by easyAccess-api-call """
         status = self.initialize_check_user_status()
+        if status == 'unregistered':
+            return
         check_user_url = "%s?Action=10&Form=81" % self.url
         resp = requests.get( check_user_url, headers=self.header, cookies=self.cookies, verify=True, timeout=15 )
         log.debug( 'resp, ```%s```' % resp.content.decode('utf-8') )
@@ -242,11 +245,11 @@ class Status( object ):
     def initialize_status( self, username ):
         """ Logs in user if necessary.
             Called by check_user_status() """
-        session = IlliadSession( self.url, self.auth_key, username )
+        self.session = IlliadSession( self.url, self.auth_key, username )
         status = 'unregistered'
-        if session.registered == False:  # maybe user is not logged in
-            session.login()
-            if session.registered == True:
+        if self.session.registered == False:  # maybe user is not logged in
+            self.session.login()
+            if self.session.registered == True:
                 status = 'registered'
         log.debug( 'initial status, `%s`' % status )
         return status

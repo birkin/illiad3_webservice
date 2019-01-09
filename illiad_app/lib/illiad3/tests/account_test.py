@@ -130,6 +130,10 @@ class StatusTest(unittest.TestCase):
             'registered',
             self.status.initialize_status( self.ILLIAD_USERNAME )
             )
+        self.assertEqual(
+            "<class 'illiad_app.lib.illiad3.account.IlliadSession'>",
+            repr( type(self.status.session) )
+            )
 
     ## end class StatusTest()
 
