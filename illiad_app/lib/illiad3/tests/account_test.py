@@ -105,11 +105,11 @@ class SessionTest(unittest.TestCase):
     #         ill.check_user_status()
     #         )
 
-    # def test_logout(self):
-    #     """ Tests logout. """
-    #     response_dct = self.ill.logout()
-    #     self.assertTrue( 'authenticated' in response_dct.keys() )
-    #     self.assertFalse(response_dct['authenticated'])
+    def test_logout(self):
+        """ Tests logout. """
+        response_dct = self.ill.logout()
+        self.assertTrue( 'authenticated' in response_dct.keys() )
+        self.assertFalse(response_dct['authenticated'])
 
     ## end class SessionTest()
 
@@ -121,14 +121,15 @@ class StatusTest(unittest.TestCase):
         self.ILLIAD_REMOTE_AUTH_KEY = os.environ['ILLIAD_MODULE__TEST_REMOTE_AUTH_KEY']
         self.ILLIAD_USERNAME = os.environ['ILLIAD_MODULE__TEST_USERNAME']
         self.status = Status(
-            self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY, self.ILLIAD_USERNAME )
+            self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY )
 
     def test_initialize_status(self):
         """ Checks initial status.
             Logs in user if necessary. """
         self.assertEqual(
-            'foo',
-            self.status.initialize_status() )
+            'registered',
+            self.status.initialize_status( self.ILLIAD_USERNAME )
+            )
 
     ## end class StatusTest()
 
@@ -136,6 +137,7 @@ class StatusTest(unittest.TestCase):
 
 def suite():
     suite = unittest.makeSuite(SessionTest, 'test')
+    suite.addTest( unittest.makeSuite(StatusTest) )
     return suite
 
 
