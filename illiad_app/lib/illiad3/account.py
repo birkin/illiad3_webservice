@@ -231,14 +231,14 @@ class Status( object ):
         self.auth_key = auth_key
         self.session = None
 
-    def check_user_status( self ):
+    def check_user_status( self, username ):
         """ Returns user status.
             Called by easyAccess-api-call """
-        status = self.initialize_check_user_status()
+        status = self.initialize_status( username )
         if status == 'unregistered':
             return
         check_user_url = "%s?Action=10&Form=81" % self.url
-        resp = requests.get( check_user_url, headers=self.header, cookies=self.cookies, verify=True, timeout=15 )
+        resp = requests.get( check_user_url, headers=self.session.header, cookies=self.session.cookies, verify=True, timeout=15 )
         log.debug( 'resp, ```%s```' % resp.content.decode('utf-8') )
         return 'foo'
 
