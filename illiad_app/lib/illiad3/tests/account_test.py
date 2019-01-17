@@ -135,6 +135,7 @@ class StatusTest(unittest.TestCase):
             repr( type(self.status.session) )
             )
 
+
     def test_check_user_status(self):
         """ Checks user status (Undergraduate, Graduate, Faculty, Staff, Distance Ed Grad -- as of 2018-Nov-28) """
         self.assertEqual(

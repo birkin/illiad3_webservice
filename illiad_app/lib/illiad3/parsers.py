@@ -5,9 +5,11 @@ Parsers are separated so that they can be unit tested more easily and adjusted
 without changing the application logic.
 """
 
-import logging, re
+import logging, pprint, re
 from bs4 import BeautifulSoup
 
+
+log = logging.getLogger(__name__)
 
 DIGITS_RE = re.compile('(\d+)')
 
@@ -122,3 +124,20 @@ def request_submission(content):
         out['message'] = "Unable to find confirmation message"
 
     return out
+
+
+def parse_user_status( content ):
+    """ Parses user-status from change-user-info form.
+        Called by lib.illiad3.account.Status.check_user_status() """
+    status = 'init'
+    soup = BeautifulSoup( content, 'html.parser' )
+    status_doc = soup.select( '#StatusGroup' )[0]  # grabs the status-html
+    option_docs = status_doc( 'option' )  # grabs all the 'option' elements in the html-fragment
+    for option_doc in option_docs:
+        attr_dct = option_doc.attrs  # the element's attributes are returned as a dict
+        attr_keys = attr_dct.keys()
+        if 'selected' in attr_keys:
+            status = option_doc.text
+            break
+    log.debug( 'status, `%s`' % status )
+    return status

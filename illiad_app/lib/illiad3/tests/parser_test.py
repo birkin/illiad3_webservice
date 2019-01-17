@@ -88,10 +88,24 @@ class ParserTest(unittest.TestCase):
         self.assertEqual(submit['message'],
                          'Photo Journal Year is a required field.')
 
+    def test_parse_user_status(self):
+        """ Checks parsing. """
+        path = os.path.join( DATA_PATH, 'change_user_info.html' )
+        with open( path, 'rt' ) as f:
+            content = f.read()
+            self.assertEqual( str, type(content) )
+        self.assertEqual(
+            'Staffz',
+            parsers.parse_user_status( content )
+            )
+
+    ## end class ParserTest()
+
 
 def suite():
     suite = unittest.makeSuite(ParserTest, 'test')
     return suite
+
 
 if __name__ == '__main__':
     unittest.main()

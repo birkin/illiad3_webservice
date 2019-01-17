@@ -230,6 +230,7 @@ class Status( object ):
         self.url = url
         self.auth_key = auth_key
         self.session = None
+        self.status_html = None
 
     def check_user_status( self, username ):
         """ Returns user status.
@@ -240,7 +241,9 @@ class Status( object ):
         check_user_url = "%s?Action=10&Form=81" % self.url
         resp = requests.get( check_user_url, headers=self.session.header, cookies=self.session.cookies, verify=True, timeout=15 )
         log.debug( 'resp, ```%s```' % resp.content.decode('utf-8') )
-        return 'foo'
+        self.status_html = resp.content.decode('utf-8')
+        status = self.parse_status( self.status_html )
+        return status
 
     def initialize_status( self, username ):
         """ Logs in user if necessary.
@@ -253,5 +256,10 @@ class Status( object ):
                 status = 'registered'
         log.debug( 'initial status, `%s`' % status )
         return status
+
+    def parse_status( self, html ):
+        """ Grabs status.
+            Called by check_user_status() """
+        return 'coming'
 
     ## end class Status()
