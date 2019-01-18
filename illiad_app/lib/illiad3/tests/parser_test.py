@@ -95,7 +95,7 @@ class ParserTest(unittest.TestCase):
             content = f.read()
             self.assertEqual( str, type(content) )
         self.assertEqual(
-            'Staffz',
+            'Staff',
             parsers.parse_user_status( content )
             )
 
