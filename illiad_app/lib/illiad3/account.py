@@ -242,7 +242,7 @@ class Status( object ):
         resp = requests.get( check_user_url, headers=self.session.header, cookies=self.session.cookies, verify=True, timeout=15 )
         log.debug( 'resp, ```%s```' % resp.content.decode('utf-8') )
         self.status_html = resp.content.decode('utf-8')
-        status = self.parse_status( self.status_html )
+        status = parsers.parse_user_status( self.status_html )
         return status
 
     def initialize_status( self, username ):
@@ -256,10 +256,5 @@ class Status( object ):
                 status = 'registered'
         log.debug( 'initial status, `%s`' % status )
         return status
-
-    def parse_status( self, html ):
-        """ Grabs status.
-            Called by check_user_status() """
-        return 'coming'
 
     ## end class Status()
