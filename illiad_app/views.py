@@ -6,23 +6,12 @@ from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from illiad_app.models import V2_Helper
 from illiad_app.lib import info_helper
+from illiad_app.lib.status import CheckStatusHandler
+from illiad_app.models import V2_Helper
 
 
 log = logging.getLogger(__name__)
-
-
-
-# def info( request ):
-#     """ Returns simple response. """
-#     log.debug( 'starting info()' )
-#     doc_url = os.environ['ILLIAD_WS__DOCS']
-#     now = datetime.datetime.now()
-#     referrer = request.META.get( 'REMOTE_ADDR', 'unavailable' )
-#     dct = { 'date_time': str(now), 'docs': doc_url, 'ip': referrer }
-#     output = json.dumps( dct, sort_keys=True, indent=2 )
-#     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
 def info( request ):
@@ -49,4 +38,16 @@ def make_request_v2( request ):
         return HttpResponseBadRequest( 'Bad Request' )
     v2_response_dct = v2_helper.run_request( request )
     output = json.dumps( v2_response_dct, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
+
+
+def check_status_v2( request ):
+    """ Handles shib-protected check-user-status. """
+    status_checker = CheckStatusHandler()
+    log.debug( '%s - starting' % status_checker.request_id )
+    if status_checker.data_check( request ) == 'invalid':
+        bad_response = status_checker.prep_bad_response()
+        return bad_response
+    result_data = status_checker.check_statuses( request )
+    output = json.dumps( result_data, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
