@@ -57,6 +57,8 @@ class SessionTest(unittest.TestCase):
         #Url encoded
         openurl = "rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&rft.spage=538&rft.issue=5&rft.date=2010-02-11&rft.volume=16&url_ver=Z39.88-2004&rft.atitle=Targeting+%CE%B17+Nicotinic+Acetylcholine+Receptors+in+the+Treatment+of+Schizophrenia.&rft.jtitle=Current+pharmaceutical+design&rft.issn=1381-6128&rft.genre=article"
         submit_key = ill.get_request_key(openurl)
+        log.debug( 'submit_key, ```%s```' % pprint.pformat(submit_key) )
+        # self.assertEqual( 1, 2 )
         self.assertEqual(submit_key['ILLiadForm'],
                         'ArticleRequest')
         self.assertEqual(submit_key['PhotoJournalTitle'],
@@ -66,7 +68,7 @@ class SessionTest(unittest.TestCase):
         """ Tests submit_key on simple book openurl (includes a note). """
         ill = self.ill
         ill.login()
-        openurl = "sid=FirstSearch:WorldCat&genre=book&isbn=9780231122375&title=Mahatma%20Gandhi%20%3A%20nonviolent%20power%20in%20action&date=2000&rft.genre=book&notes=%E2%80%9Ci%C3%B1t%C3%ABrn%C3%A2ti%C3%B8n%C3%A0l%C4%ADz%C3%A6ti%D0%A4n%E2%80%9D"
+        openurl = "sid=FirstSearch:WorldCat&genre=book&isbn=9780231122375&title=Mahatma%20Gandhi%20%3A%20nonviolent%20power%20in%20action&date=2000&rft.genre=book&notes=%E2%80%9Ci%C3%B1t%C3%ABrn%C3%A2ti%C3%B8n%C3%A0l%C4%ADz%C3%A6ti%D0%A4n%E2%80%9D"  # “iñtërnâtiønàlĭzætiФn”
         submit_key = ill.get_request_key(openurl)
         self.assertEqual( 'LoanRequest', submit_key['ILLiadForm'] )
         self.assertEqual( 'Mahatma Gandhi : nonviolent power in action', submit_key['LoanTitle'] )

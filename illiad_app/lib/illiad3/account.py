@@ -131,7 +131,6 @@ class IlliadSession( object ):
                 submit_key.setdefault( 'LoanDate', '(date-not-found)' )
                 submit_key.setdefault( 'LoanTitle', '(title-not-found)' )
                 submit_key = self._check_scrawny_openurl( submit_key, open_url )
-
         return submit_key
 
     def _check_scrawny_openurl( self, submit_key, open_url ):
