@@ -96,15 +96,6 @@ class SessionTest(unittest.TestCase):
         self.assertEqual(
             'entire openurl: `sid=Entrez:PubMed&id=pmid:23671965`', submit_key['Notes'] )
 
-    # def test_check_user_status(self):
-    #     """ Checks user status (Undergraduate, Graduate, Faculty, Staff, Distance Ed Grad -- as of 2018-Nov-28) """
-    #     ill = self.ill
-    #     ill.login()
-    #     self.assertEqual(
-    #         'Staffz',
-    #         ill.check_user_status()
-    #         )
-
     def test_logout(self):
         """ Tests logout. """
         response_dct = self.ill.logout()
