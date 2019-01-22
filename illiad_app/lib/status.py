@@ -38,7 +38,7 @@ class CheckStatusHandler( object ):
         log.debug( '%s - result_dct, ```%s```' % (self.request_id, pprint.pformat(result_dct)) )
         return result_dct
 
-    def update_response_dct( self, start_time, request, data_dct ):
+    def prep_output_dct( self, start_time, request, data_dct ):
         """ Preps output-dct.
             Called by views.check_status_via_shib() """
         output_dct = {
@@ -50,11 +50,10 @@ class CheckStatusHandler( object ):
                     request.META['QUERY_STRING'] ),
                 'timestamp': str( start_time )
                 },
-            'response': self.assemble_response_dct( start_time, data_dct )
-            }
+            'response': self.prep_response_segment( start_time, data_dct ) }
         return output_dct
 
-    def assemble_response_dct( self, start_time, data_dct ):
+    def prep_response_segment( self, start_time, data_dct ):
         """ Returns response part of context dct.
             Called by update_response_dct() """
         response_dct = {
@@ -62,6 +61,5 @@ class CheckStatusHandler( object ):
             'status_data': data_dct
             }
         return response_dct
-
 
     ## end class CheckStatusHandler()

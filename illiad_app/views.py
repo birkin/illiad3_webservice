@@ -51,6 +51,6 @@ def check_status_via_shib( request ):
         bad_response = status_checker_handler.prep_bad_response()
         return bad_response
     result_data = status_checker_handler.check_statuses( request )
-    output_dct = status_checker_handler.update_response_dct( rq_now, request, result_data )
+    output_dct = status_checker_handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
