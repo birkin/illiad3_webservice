@@ -14,9 +14,10 @@ log = logging.getLogger(__name__)
 DIGITS_RE = re.compile('(\d+)')
 
 
-def main_menu(content):
+def main_menu( content ):
     """ Parses main illiad landing page.
         Called by IlliadSession.login() """
+    log.debug( 'content, ```%s```' % content )
     out = {'authenticated': False,
            'session_id': None,
            'registered': None}

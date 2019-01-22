@@ -27,61 +27,58 @@ class IlliadSession( object ):
         self.header={self.auth_header: str(self.username)}
         self.cookies = dict(ILLiadSessionID=self.session_id)
 
-    # def login(self):
-    #     """ Logs the user in to Illiad and sets the session id. """
-    #     log.debug( 'starting actual illiad login()' )
-    #     out = { 'authenticated': False, 'session_id': None, 'new_user': False }
-    #     resp = requests.get( self.url, headers=self.header, verify=True, timeout=15 )
-    #     if self._check_blocked( resp.text ) == True:
-    #         out['blocked'] = True
-    #         return out
-    #     parsed_login = parsers.main_menu(resp.content)
-    #     out.update(parsed_login)
-    #     self.session_id = parsed_login['session_id']
-    #     self.registered = parsed_login['registered']
-    #     log.info( "ILLiad session %s established for %s.  Registered: %s" % (self.session_id, self.username, self.registered) )
-    #     return out
-
     def login(self):
-        """ Logs the user in to Illiad and sets the session id. """
-        log.debug( 'starting actual illiad login() for username, `%s`' % self.username )
+        """ Logs the user in to Illiad and sets the session id.
+            Checks for `blocked` and `disavowed` status.
+            Updates Session attributes. """
+        log.debug( 'starting actual illiad login() for username, `%s`' %  self.username )
         out = { 'authenticated': False, 'session_id': None, 'new_user': False }
         resp = requests.get( self.url, headers=self.header, verify=True, timeout=15 )
-        if self._check_blocked( resp.text ) == True:
-            out['blocked'] = True
-            return out
-        if self._check_disavowed( resp.text ) == True:
-            out['disavowed'] = True
-            return out
-        parsed_login = parsers.main_menu( resp.content )
+        ( problem_output, err ) = self.problem_check( out, resp.text )
+        if err:
+            return problem_output
+        parsed_login = parsers.main_menu( resp.content )  # happy path
         out.update( parsed_login )
-        self.session_id = parsed_login['session_id']
-        self.registered = parsed_login['registered']
+        ( self.session_id, self.registered ) = ( parsed_login['session_id'], parsed_login['registered'] )
         log.info( "ILLiad session `%s` established for `%s`; perceived registered-status: `%s`" % (self.session_id, self.username, self.registered) )
         return out
+
+    def problem_check( self, out, resp_text ):
+        """ Manager for blocked-check and disavowed-check.
+            Called by login() """
+        log.debug( 'resp.text, ```%s```' % resp_text )
+        err = False
+        if self._check_blocked( resp_text ) == True:
+            out['blocked'] = True; err = True
+        elif self._check_disavowed( resp_text ) == True:
+            out['disavowed'] = True; err = True
+        log.debug( 'out, ```%s```; err, `%s`' % (pprint.pformat(out), err) )
+        return( out, err )
 
     def _check_blocked( self, resp_text ):
         """ Checks if login attempt indicates user is blocked.
             TODO: refactor parsers._check_blocked() because if user is blocked, code-flow never gets there; was failing on the `#SessionID` selection in parsers.main_menu()
             Called by login() """
-        log.debug( 'resp.text, ```%s```' % resp_text )
         if 'you have been blocked' in resp_text.lower():
             self.blocked_patron = True
             self.registered = True
-            return True
+            return_val = True
         else:
-            return False
+            return_val = False
+        log.debug( 'return_val, `%s`' % return_val )
+        return return_val
 
     def _check_disavowed( self, resp_text ):
         """ Checks if login attempt indicates user is disavowed.
             Called by login() """
-        log.debug( 'resp.text, ```%s```' % resp_text )
         if 'you have been disavowed' in resp_text.lower():
             self.disavowed = True
-            self.registered = True  ## may seem like this should be `False`, but we don't want to try to re-register a disavowed user.
-            return True
+            self.registered = True  # may seem like this should be `False`, but we don't want to try to re-register a disavowed user.
+            return_val = True
         else:
-            return False
+            return_val = False
+        log.debug( 'return_val, `%s`' % return_val )
+        return return_val
 
     def logout(self):
         """

@@ -43,7 +43,7 @@ def make_request_v2( request ):
 
 def check_status_via_shib( request ):
     """ Handles shib-protected check-user-status. """
-    log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_checker_handler = CheckStatusHandler()
     log.debug( '%s - starting' % status_checker_handler.request_id )
