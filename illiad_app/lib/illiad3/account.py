@@ -238,11 +238,12 @@ class Status( object ):
         """ Returns user status.
             Called by easyAccess-api-call """
         status = self.initialize_status( username )
-        if status == 'unregistered':
-            return
+        if status == 'UNREGISTERED' or status == 'DISAVOWED':
+            return status
         check_user_url = "%s?Action=10&Form=81" % self.url
         resp = requests.get( check_user_url, headers=self.session.header, cookies=self.session.cookies, verify=True, timeout=15 )
         log.debug( 'resp, ```%s```' % resp.content.decode('utf-8') )
+        self.session.logout()
         self.status_html = resp.content.decode('utf-8')
         status = parsers.parse_user_status( self.status_html )
         return status
@@ -251,11 +252,13 @@ class Status( object ):
         """ Logs in user if necessary.
             Called by check_user_status() """
         self.session = IlliadSession( self.url, self.auth_key, username )
-        status = 'unregistered'
+        status = 'UNREGISTERED'
         if self.session.registered == False:  # maybe user is not logged in
             self.session.login()
             if self.session.registered == True:
                 status = 'registered'
+        if self.session.disavowed == True:
+            status = 'DISAVOWED'
         log.debug( 'initial status, `%s`' % status )
         return status
 
