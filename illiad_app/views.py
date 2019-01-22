@@ -41,7 +41,7 @@ def make_request_v2( request ):
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
-def check_status_v2( request ):
+def check_status_via_shib( request ):
     """ Handles shib-protected check-user-status. """
     status_checker_handler = CheckStatusHandler()
     log.debug( '%s - starting' % status_checker_handler.request_id )
