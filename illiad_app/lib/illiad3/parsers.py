@@ -34,6 +34,7 @@ def main_menu(content):
     out['authenticated'] = True
     return out
 
+###
 
 def request_form(content):
     """ Parses illiad's openurl request form.
@@ -87,6 +88,7 @@ def _check_textareas( soup, submit_key ):
             submit_key[name] = value
     return submit_key
 
+###
 
 def request_submission(content):
     """ Parses the submitted request response from Illiad.
@@ -125,6 +127,7 @@ def request_submission(content):
 
     return out
 
+###
 
 def parse_user_status( content ):
     """ Parses user-status from change-user-info form.

@@ -23,22 +23,41 @@ class IlliadSession( object ):
         self.auth_header = auth_header
         self.registered = False
         self.blocked_patron = False
+        self.disavowed = False
         self.header={self.auth_header: str(self.username)}
         self.cookies = dict(ILLiadSessionID=self.session_id)
 
+    # def login(self):
+    #     """ Logs the user in to Illiad and sets the session id. """
+    #     log.debug( 'starting actual illiad login()' )
+    #     out = { 'authenticated': False, 'session_id': None, 'new_user': False }
+    #     resp = requests.get( self.url, headers=self.header, verify=True, timeout=15 )
+    #     if self._check_blocked( resp.text ) == True:
+    #         out['blocked'] = True
+    #         return out
+    #     parsed_login = parsers.main_menu(resp.content)
+    #     out.update(parsed_login)
+    #     self.session_id = parsed_login['session_id']
+    #     self.registered = parsed_login['registered']
+    #     log.info( "ILLiad session %s established for %s.  Registered: %s" % (self.session_id, self.username, self.registered) )
+    #     return out
+
     def login(self):
         """ Logs the user in to Illiad and sets the session id. """
-        log.debug( 'starting actual illiad login()' )
+        log.debug( 'starting actual illiad login() for username, `%s`' % self.username )
         out = { 'authenticated': False, 'session_id': None, 'new_user': False }
         resp = requests.get( self.url, headers=self.header, verify=True, timeout=15 )
         if self._check_blocked( resp.text ) == True:
             out['blocked'] = True
             return out
-        parsed_login = parsers.main_menu(resp.content)
-        out.update(parsed_login)
+        if self._check_disavowed( resp.text ) == True:
+            out['disavowed'] = True
+            return out
+        parsed_login = parsers.main_menu( resp.content )
+        out.update( parsed_login )
         self.session_id = parsed_login['session_id']
         self.registered = parsed_login['registered']
-        log.info( "ILLiad session %s established for %s.  Registered: %s" % (self.session_id, self.username, self.registered) )
+        log.info( "ILLiad session `%s` established for `%s`; perceived registered-status: `%s`" % (self.session_id, self.username, self.registered) )
         return out
 
     def _check_blocked( self, resp_text ):
@@ -49,6 +68,17 @@ class IlliadSession( object ):
         if 'you have been blocked' in resp_text.lower():
             self.blocked_patron = True
             self.registered = True
+            return True
+        else:
+            return False
+
+    def _check_disavowed( self, resp_text ):
+        """ Checks if login attempt indicates user is disavowed.
+            Called by login() """
+        log.debug( 'resp.text, ```%s```' % resp_text )
+        if 'you have been disavowed' in resp_text.lower():
+            self.disavowed = True
+            self.registered = True  ## may seem like this should be `False`, but we don't want to try to re-register a disavowed user.
             return True
         else:
             return False
@@ -64,7 +94,7 @@ class IlliadSession( object ):
         resp = requests.get(
             "%s?SessionID=%s&Action=99" % (self.url, self.session_id), verify=True, timeout=15
             )
-        log.info("ILLiad session %s ended for %s." % (self.session_id, self.username))
+        log.info("ILLiad session `%s` ended for `%s`." % (self.session_id, self.username))
         out['authenticated'] = False
         return out
 

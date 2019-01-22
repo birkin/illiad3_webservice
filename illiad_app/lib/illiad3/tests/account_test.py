@@ -16,6 +16,7 @@ class SessionTest(unittest.TestCase):
         self.ILLIAD_REMOTE_AUTH_URL = os.environ['ILLIAD_MODULE__TEST_REMOTE_AUTH_URL']
         self.ILLIAD_REMOTE_AUTH_KEY = os.environ['ILLIAD_MODULE__TEST_REMOTE_AUTH_KEY']
         self.ILLIAD_USERNAME = os.environ['ILLIAD_MODULE__TEST_USERNAME']
+        self.DISAVOWED_ILLIAD_USERNAME = os.environ['ILLIAD_MODULE__TEST_DISAVOWED_USERNAME']
         self.ill = IlliadSession(
             self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY, self.ILLIAD_USERNAME )
         log.debug( 'test setUp has self.ill now' )
@@ -29,6 +30,23 @@ class SessionTest(unittest.TestCase):
         self.assertTrue( 'authenticated' in login_resp_dct.keys() )
         self.assertTrue( 'registered' in login_resp_dct.keys() )
         self.assertTrue( login_resp_dct['authenticated'] )
+        self.assertTrue( 'blocked' not in login_resp_dct.keys() )
+        self.assertTrue( 'disavowed' not in login_resp_dct.keys() )
+
+    def test_disavowed_login(self):
+        custom_ill = IlliadSession(
+            self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY, self.DISAVOWED_ILLIAD_USERNAME )
+        login_resp_dct = custom_ill.login()
+        log.debug( 'TEMP; login_resp_dct, ```%s```' % pprint.pformat(login_resp_dct) )
+        self.assertTrue( 'session_id' in login_resp_dct.keys()  )
+        self.assertEqual( login_resp_dct['session_id'], None  )
+        self.assertTrue( 'authenticated' in login_resp_dct.keys() )
+        self.assertEqual( login_resp_dct['authenticated'], False  )
+        self.assertTrue( 'registered' not in login_resp_dct.keys() )
+        self.assertTrue( 'blocked' not in login_resp_dct.keys() )
+        self.assertTrue( 'disavowed' in login_resp_dct.keys() )
+        self.assertEqual( login_resp_dct['disavowed'], True  )
+        custom_ill.logout()
 
     ## submit_key tests ##
 
