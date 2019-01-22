@@ -43,11 +43,14 @@ def make_request_v2( request ):
 
 def check_status_via_shib( request ):
     """ Handles shib-protected check-user-status. """
+    log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    rq_now = datetime.datetime.now()
     status_checker_handler = CheckStatusHandler()
     log.debug( '%s - starting' % status_checker_handler.request_id )
     if status_checker_handler.data_check( request ) == 'invalid':
         bad_response = status_checker_handler.prep_bad_response()
         return bad_response
     result_data = status_checker_handler.check_statuses( request )
-    output = json.dumps( result_data, sort_keys=True, indent=2 )
+    output_dct = status_checker_handler.update_response_dct( rq_now, request, result_data )
+    output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )

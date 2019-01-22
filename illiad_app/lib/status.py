@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging, pprint, random, time
+import datetime, logging, pprint, random, time
 from illiad_app import settings_app
 from illiad_app.lib.illiad3.account import Status as LibStatusModule
 
@@ -16,7 +16,7 @@ class CheckStatusHandler( object ):
 
     def data_check( self, request ):
         """ Checks data.
-            Called by views.check_status_v2() """
+            Called by views.check_status_via_shib() """
         log.debug( '%s - request.GET, `%s`' % (self.request_id, request.GET) )
         return_val = 'invalid'
         if 'users' in request.GET.keys():
@@ -26,7 +26,7 @@ class CheckStatusHandler( object ):
 
     def check_statuses( self, request ):
         """ Handles status check(s).
-            Called by views.check_status_v2() """
+            Called by views.check_status_via_shib() """
         users = request.GET['users']
         log.debug( '%s - users, ```%s```' % (self.request_id, users) )
         user_list = users.split( ',' )
@@ -37,5 +37,31 @@ class CheckStatusHandler( object ):
             time.sleep( .5 )
         log.debug( '%s - result_dct, ```%s```' % (self.request_id, pprint.pformat(result_dct)) )
         return result_dct
+
+    def update_response_dct( self, start_time, request, data_dct ):
+        """ Preps output-dct.
+            Called by views.check_status_via_shib() """
+        output_dct = {
+            'request': {
+                'url': '%s://%s%s?%s' % (
+                    request.scheme,
+                    request.META.get( 'HTTP_HOST', '127.0.0.1' ),  # HTTP_HOST doesn't exist for client-tests
+                    request.META.get('REQUEST_URI', request.META['PATH_INFO']),
+                    request.META['QUERY_STRING'] ),
+                'timestamp': str( start_time )
+                },
+            'response': self.assemble_response_dct( start_time, data_dct )
+            }
+        return output_dct
+
+    def assemble_response_dct( self, start_time, data_dct ):
+        """ Returns response part of context dct.
+            Called by update_response_dct() """
+        response_dct = {
+            'elapsed_time': str( datetime.datetime.now() - start_time ),
+            'status_data': data_dct
+            }
+        return response_dct
+
 
     ## end class CheckStatusHandler()
