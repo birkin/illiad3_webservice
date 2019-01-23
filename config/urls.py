@@ -18,6 +18,8 @@ urlpatterns = [
 
     url( r'^check_status_via_shib/$', views.check_status_via_shib, name='check_status_via_shib' ),
 
+    url( r'^update_status/$', views.update_status, name='update_status' ),
+
     url( r'^error_check/$', views.error_check, name='error_check' ),  # only generates error if DEBUG == True
 
     url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),

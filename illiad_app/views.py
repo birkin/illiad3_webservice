@@ -56,6 +56,22 @@ def check_status_via_shib( request ):
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
+def update_status( request ):
+    """ Interface for updating user-status. """
+    return HttpResponse( 'coming' )
+    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    rq_now = datetime.datetime.now()
+    status_update_handler = UpdateStatusHandler()
+    log.debug( '%s - starting' % status_update_handler.request_id )
+    if status_update_handler.data_check( request ) == 'invalid':
+        bad_response = status_update_handler.prep_bad_response()
+        return bad_response
+    result_data = status_update_handler.update_statuses( request )
+    output_dct = status_update_handler.prep_output_dct( rq_now, request, result_data )
+    output = json.dumps( output_dct, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
+
+
 def error_check( request ):
     """ For checking that admins receive error-emails. """
     if project_settings.DEBUG == True:
