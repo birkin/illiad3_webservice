@@ -26,6 +26,8 @@ DEBUG = temp_DEBUG
 
 TEMPLATE_DEBUG = DEBUG
 
+ADMINS = json.loads( os.environ['ILLIAD_WS__ADMINS_JSON'] )
+
 ALLOWED_HOSTS = json.loads( os.environ['ILLIAD_WS__ALLOWED_HOSTS'] )  # list
 
 
@@ -98,6 +100,7 @@ TEMPLATE_DIRS = json.loads( os.environ['ILLIAD_WS__TEMPLATE_DIRS'] )  # list
 
 
 # Email
+SERVER_EMAIL = os.environ['ILLIAD_WS__SERVER_EMAIL']
 EMAIL_HOST = os.environ['ILLIAD_WS__EMAIL_HOST']
 EMAIL_PORT = int( os.environ['ILLIAD_WS__EMAIL_PORT'] )
 
@@ -132,8 +135,18 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        }
     },
     'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
         'illiad_app': {
             'handlers': ['logfile'],
             'level': os.environ.get(u'ILLIAD_WS__LOG_LEVEL'),
