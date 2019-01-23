@@ -4,7 +4,7 @@ import datetime, json, logging, os, pprint
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
 from illiad_app.lib.status import CheckStatusHandler
@@ -55,6 +55,10 @@ def check_status_via_shib( request ):
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
-def shib_error_check( request ):
+
+def error_check( request ):
     """ For checking that admins receive error-emails. """
-    1/0
+    if project_settings.DEBUG == True:
+        1/0
+    else:
+        return HttpResponseNotFound( '<div>404 / Not Found</div>' )
