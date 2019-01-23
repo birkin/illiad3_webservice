@@ -54,3 +54,7 @@ def check_status_via_shib( request ):
     output_dct = status_checker_handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
+
+def shib_error_check( request ):
+    """ For checking that admins receive error-emails. """
+    1/0
