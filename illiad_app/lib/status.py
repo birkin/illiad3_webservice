@@ -63,3 +63,21 @@ class CheckStatusHandler( object ):
         return response_dct
 
     ## end class CheckStatusHandler()
+
+
+class UpdateStatusHandler( object ):
+
+    def __init__( self ):
+        self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
+
+    def data_check( self, request ):
+        """ Checks data.
+            Called by views.check_status_via_shib() """
+        log.debug( 'request.method, `%s`' % request.method )
+        log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
+        log.debug( 'request.body, `%s`' % request.body )
+        return_val = 'invalid'
+        if 'user' in request.POST.keys() and 'new_status' in request.POST.keys() :
+            return_val = 'valid'
+        log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
+        return return_val

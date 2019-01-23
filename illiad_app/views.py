@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
-from illiad_app.lib.status import CheckStatusHandler
+from illiad_app.lib.status import CheckStatusHandler, UpdateStatusHandler
 from illiad_app.models import V2_Helper
 
 
@@ -58,8 +58,8 @@ def check_status_via_shib( request ):
 
 def update_status( request ):
     """ Interface for updating user-status. """
-    return HttpResponse( 'coming' )
-    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    # return HttpResponse( 'coming' )
+    log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_update_handler = UpdateStatusHandler()
     log.debug( '%s - starting' % status_update_handler.request_id )
