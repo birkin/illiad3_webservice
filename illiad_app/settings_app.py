@@ -5,6 +5,9 @@ import json, os
 
 README_URL = os.environ['ILLIAD_WS__DOCS']
 
+API_KEY = os.environ['ILLIAD_WS__API_AUTH_KEY']
+LEGIT_IPS = json.loads( os.environ['ILLIAD_WS__LEGIT_IPS_JSON'] )
+
 ILLIAD_REMOTE_AUTH_URL = os.environ['ILLIAD_WS__REMOTE_AUTH_URL']
 ILLIAD_REMOTE_AUTH_KEY = os.environ['ILLIAD_WS__REMOTE_AUTH_KEY']
 
