@@ -63,7 +63,7 @@ def update_status( request ):
     log.debug( '%s - starting' % status_update_handler.request_id )
     if status_update_handler.data_check( request ) == 'invalid':
         return HttpResponseBadRequest( 'Bad Request' )
-    result_data = status_update_handler.manage_status_update( request )
+    result_data = status_update_handler.manage_status_update( request, rq_now )
     output_dct = status_update_handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )

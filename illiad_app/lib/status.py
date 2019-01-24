@@ -75,15 +75,15 @@ class UpdateStatusHandler( object ):
             Called by views.update_status() """
         log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
         return_val = 'invalid'
-        if 'user' in request.POST.keys() and 'new_status' in request.POST.keys() :
+        if 'user' in request.POST.keys() and 'requested_status' in request.POST.keys() :
             return_val = 'valid'
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
 
-    def manage_status_update( self, request ):
+    def manage_status_update( self, request, start_time ):
         """ Manager for updating status.
             Called by views.update_status() """
-        output_dct = self.initialize_output_dct()
+        output_dct = self.initialize_output_dct( request, start_time )
         ( user, requested_status, err ) = self.parse_requested_status( request, output_dct )
         if err:
             return err  # err will be an output-dct
@@ -93,6 +93,22 @@ class UpdateStatusHandler( object ):
         else:
             output_dct = self.update_status( user, requested_status, output_dct )
         return output_dct
+
+    def initialize_output_dct( self, request, start_time ):
+        """ Sets up initial output_dct.
+            Called by manage_status_update() """
+        output_dct = {
+            'request': {
+                'url': '%s://%s%s' % ( request.scheme, request.META.get('HTTP_HOST', '127.0.0.1'), request.META.get('REQUEST_URI', request.META['PATH_INFO']) ),  # HTTP_HOST doesn't exist for client-tests
+                'payload': { 'user': request.POST['user'], 'requested_status': request.POST['requested_status'] },
+                'timestamp': str( start_time )
+                },
+            'response': { 'user': None, 'requested_status': None, 'updated_status': None, 'message': None
+                }
+            }
+        log.debug( 'initial output_dct, ```%s```' % pprint.pformat(output_dct) )
+        return output_dct
+
 
     def update_status( self, user, requested_status, output_dct ):
         """ Calls module's update-status, and prepares output-dct.
