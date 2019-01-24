@@ -69,20 +69,19 @@ class UpdateStatusHandler( object ):
 
     def __init__( self ):
         self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
+        self.legit_statuses = [ 'Distance Ed Grad', 'Faculty', 'Graduate', 'Staff', 'Undergraduate' ]
 
     def data_check( self, request ):
         """ Checks data.
             Called by views.update_status() """
-        log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
+        # log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
         return_val = 'invalid'
         ( return_val, post_keys, source_ip ) = ( 'invalid', request.POST.keys(), request.META.get('REMOTE_ADDR', 'unavailable') )
         if 'user' in post_keys and 'requested_status' in post_keys and 'auth_key' in post_keys:
-            log.debug( 'hereA' )
-            log.debug( 'post-auth-key, `%s`; setting, `%s`' % (request.POST['auth_key'], settings_app.API_KEY) )
             if request.POST['auth_key'] == settings_app.API_KEY:
-                log.debug( 'hereB' )
                 if source_ip in settings_app.LEGIT_IPS:
-                    return_val = 'valid'
+                    if request.POST['requested_status'] in self.legit_statuses:
+                        return_val = 'valid'
         if return_val == 'invalid':
             log.debug( 'validation failed; post-keys, ```%s```; ip, `%s`' % (list(post_keys), source_ip) )
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
@@ -108,7 +107,7 @@ class UpdateStatusHandler( object ):
         output_dct = {
             'request': {
                 'url': '%s://%s%s' % ( request.scheme, request.META.get('HTTP_HOST', '127.0.0.1'), request.META.get('REQUEST_URI', request.META['PATH_INFO']) ),  # HTTP_HOST doesn't exist for client-tests
-                'payload': { 'user': request.POST['user'], 'requested_status': request.POST['requested_status'] },
+                'payload': { 'user': request.POST['user'], 'requested_status': request.POST['requested_status'], 'auth_key': 'xxxxxxxxxx' },
                 'timestamp': str( start_time )
                 },
             'response': { 'updated_status': None, 'message': None, 'elapsed_time': None
