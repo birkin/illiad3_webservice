@@ -57,14 +57,13 @@ def check_status_via_shib( request ):
 
 def update_status( request ):
     """ Interface for updating user-status. """
-    # return HttpResponse( 'coming' )
     log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_update_handler = UpdateStatusHandler()
     log.debug( '%s - starting' % status_update_handler.request_id )
     if status_update_handler.data_check( request ) == 'invalid':
         return HttpResponseBadRequest( 'Bad Request' )
-    result_data = status_update_handler.update_status( request )
+    result_data = status_update_handler.manage_status_update( request )
     output_dct = status_update_handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
