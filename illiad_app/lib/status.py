@@ -75,8 +75,9 @@ class UpdateStatusHandler( object ):
             Called by views.update_status() """
         log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
         return_val = 'invalid'
-        if 'user' in request.POST.keys() and 'requested_status' in request.POST.keys() :
-            return_val = 'valid'
+        if 'user' in request.POST.keys() and 'requested_status' in request.POST.keys() and 'auth_key' in request.POST.keys():
+            if request.POST['auth_key'] == settings_app.ILLIAD_REMOTE_AUTH_KEY:
+                return_val = 'valid'
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
 
@@ -119,7 +120,5 @@ class UpdateStatusHandler( object ):
             self.prep_status_updated_response( output_dct )
         log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
         return output_dct
-
-
 
     ## end clas UpdateStatusHandler()
