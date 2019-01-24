@@ -86,10 +86,12 @@ class UpdateStatusHandler( object ):
         output_dct = self.initialize_output_dct( request, start_time )
         ( user, requested_status ) = ( request.POST['user'], request.POST['requested_status'] )
         current_status = status_module.check_user_status( user )  # illiad3.account.Status()
-        if current_status == requested_status:
-            output_dct = self.prep_status_already_exists_response( output_dct )
+        if current_status.strip().lower() == requested_status.strip().lower():
+            output_dct['response']['message'] = 'Status not updated; existing status is already `%s`.' % current_status
         else:
             output_dct = self.update_status( user, requested_status, output_dct )
+        output_dct['response']['elapsed_time'] = str( datetime.datetime.now() - start_time )
+        log.debug( 'final output_dct, ```%s```' % pprint.pformat(output_dct) )
         return output_dct
 
     def initialize_output_dct( self, request, start_time ):
@@ -101,7 +103,7 @@ class UpdateStatusHandler( object ):
                 'payload': { 'user': request.POST['user'], 'requested_status': request.POST['requested_status'] },
                 'timestamp': str( start_time )
                 },
-            'response': { 'updated_status': None, 'message': None
+            'response': { 'updated_status': None, 'message': None, 'elapsed_time': None
                 }
             }
         log.debug( 'initial output_dct, ```%s```' % pprint.pformat(output_dct) )
@@ -117,5 +119,7 @@ class UpdateStatusHandler( object ):
             self.prep_status_updated_response( output_dct )
         log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
         return output_dct
+
+
 
     ## end clas UpdateStatusHandler()
