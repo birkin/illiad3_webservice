@@ -75,9 +75,16 @@ class UpdateStatusHandler( object ):
             Called by views.update_status() """
         log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
         return_val = 'invalid'
-        if 'user' in request.POST.keys() and 'requested_status' in request.POST.keys() and 'auth_key' in request.POST.keys():
-            if request.POST['auth_key'] == settings_app.ILLIAD_REMOTE_AUTH_KEY:
-                return_val = 'valid'
+        ( return_val, post_keys, source_ip ) = ( 'invalid', request.POST.keys(), request.META.get('REMOTE_ADDR', 'unavailable') )
+        if 'user' in post_keys and 'requested_status' in post_keys and 'auth_key' in post_keys:
+            log.debug( 'hereA' )
+            log.debug( 'post-auth-key, `%s`; setting, `%s`' % (request.POST['auth_key'], settings_app.API_KEY) )
+            if request.POST['auth_key'] == settings_app.API_KEY:
+                log.debug( 'hereB' )
+                if source_ip in settings_app.LEGIT_IPS:
+                    return_val = 'valid'
+        if return_val == 'invalid':
+            log.debug( 'validation failed; post-keys, ```%s```; ip, `%s`' % (list(post_keys), source_ip) )
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
 
