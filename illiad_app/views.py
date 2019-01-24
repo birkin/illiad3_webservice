@@ -48,8 +48,7 @@ def check_status_via_shib( request ):
     status_checker_handler = CheckStatusHandler()
     log.debug( '%s - starting' % status_checker_handler.request_id )
     if status_checker_handler.data_check( request ) == 'invalid':
-        bad_response = status_checker_handler.prep_bad_response()
-        return bad_response
+        return HttpResponseBadRequest( 'Bad Request' )
     result_data = status_checker_handler.check_statuses( request )
     output_dct = status_checker_handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
@@ -64,9 +63,8 @@ def update_status( request ):
     status_update_handler = UpdateStatusHandler()
     log.debug( '%s - starting' % status_update_handler.request_id )
     if status_update_handler.data_check( request ) == 'invalid':
-        bad_response = status_update_handler.prep_bad_response()
-        return bad_response
-    result_data = status_update_handler.update_statuses( request )
+        return HttpResponseBadRequest( 'Bad Request' )
+    result_data = status_update_handler.update_status( request )
     output_dct = status_update_handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )

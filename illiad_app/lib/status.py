@@ -72,7 +72,7 @@ class UpdateStatusHandler( object ):
 
     def data_check( self, request ):
         """ Checks data.
-            Called by views.check_status_via_shib() """
+            Called by views.update_status() """
         log.debug( 'request.method, `%s`' % request.method )
         log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
         log.debug( 'request.body, `%s`' % request.body )
@@ -81,3 +81,10 @@ class UpdateStatusHandler( object ):
             return_val = 'valid'
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
+
+    def update_status( self, request ):
+        """ Manager for updating status.
+            Called by views.update_status() """
+        return 'foo'
+
+    ## end clas UpdateStatusHandler()
