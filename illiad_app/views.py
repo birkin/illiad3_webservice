@@ -57,7 +57,7 @@ def check_status_via_shib( request ):
 
 def update_status( request ):
     """ Interface for updating user-status. """
-    log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_update_handler = UpdateStatusHandler()
     log.debug( '%s - starting' % status_update_handler.request_id )

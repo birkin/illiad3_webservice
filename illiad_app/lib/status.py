@@ -84,9 +84,7 @@ class UpdateStatusHandler( object ):
         """ Manager for updating status.
             Called by views.update_status() """
         output_dct = self.initialize_output_dct( request, start_time )
-        ( user, requested_status, err ) = self.parse_requested_status( request, output_dct )
-        if err:
-            return err  # err will be an output-dct
+        ( user, requested_status ) = ( request.POST['user'], request.POST['requested_status'] )
         current_status = status_module.check_user_status( user )  # illiad3.account.Status()
         if current_status == requested_status:
             output_dct = self.prep_status_already_exists_response( output_dct )
@@ -103,12 +101,11 @@ class UpdateStatusHandler( object ):
                 'payload': { 'user': request.POST['user'], 'requested_status': request.POST['requested_status'] },
                 'timestamp': str( start_time )
                 },
-            'response': { 'user': None, 'requested_status': None, 'updated_status': None, 'message': None
+            'response': { 'updated_status': None, 'message': None
                 }
             }
         log.debug( 'initial output_dct, ```%s```' % pprint.pformat(output_dct) )
         return output_dct
-
 
     def update_status( self, user, requested_status, output_dct ):
         """ Calls module's update-status, and prepares output-dct.
