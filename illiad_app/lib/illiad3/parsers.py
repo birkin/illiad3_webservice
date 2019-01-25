@@ -145,3 +145,40 @@ def parse_user_status( content ):
             break
     log.debug( 'status, `%s`' % status )
     return status
+
+def parse_user_info( content ):
+    """ Parses all user-info from change-user-info form.
+        Called by lib.illiad3.account.Status.update_user_status() """
+    usr_dct = {}
+
+    usr_dct['ILLiadForm'] = 'ChangeUserInformation'
+    usr_dct['Username'] = self.username
+    usr_dct['FirstName'] = first_name
+    usr_dct['LastName'] = last_name
+    usr_dct['EMailAddress'] = email
+    usr_dct['StatusGroup'] = status
+    usr_dct['Phone'] = phone
+    usr_dct['Address'] = address
+    #defaults
+    usr_dct['NotifyGroup'] = 'E-Mail'
+    usr_dct['DeliveryGroup'] = 'Electronic Delivery if Possible'
+    usr_dct['LoanDeliveryGroup'] = 'Hold for Pickup'
+    usr_dct['WebDeliveryGroup'] = 'Yes'
+    usr_dct['Site'] = kwargs.get('site', 'Rockefeller Circ. Desk')
+    usr_dct['NVTGC'] = 'ILL'
+    usr_dct['SubmitButton'] = 'Submit Information'
+    usr_dct['Department'] = kwargs.get('department', 'Other - Unlisted')
+
+    logging.info("Registering %s with ILLiad as %s." % (self.username, status))
+
+    resp = requests.post(self.url,
+                      data=usr_dct,
+                      headers=self.header,
+                      cookies=self.cookies,
+                      verify=True,
+                      timeout=15)
+    out = {}
+    #out['meta'] = r.content
+    out['status_code'] = resp.status_code
+
+    return 'parser-foo'
