@@ -261,8 +261,34 @@ class Status( object ):
     def update_user_status( self, username, new_status ):
         """ Manages user-status update.
             Called by lib.status.Status.UpdateStatusHandler.update_status() via views.update_status() """
-        ( result, err ) = ( 'foo', 'bar' )
+        ( result, err ) = ( None, None )
+        usr_dct = parsers.parse_user_info( self.status_html )
+        usr_dct['SessionID'] = self.session.session_id
+        usr_dct['StatusGroup'] = new_status
+        ( result, err ) = self.post_user_update( usr_dct, username, new_status )
         log.debug( 'result, `%s`; err, `%s`' % (result, err) )
+        return ( result, err )
+
+    def post_user_update( self, usr_dct, username, new_status ):
+        """ Posts updated user (status) info to illiad.
+            Called by update_user_status() """
+        log.info( "updating  user, `%s` with status, `%s`." % ( username, new_status) )
+        ( result, err ) = ( None, None )
+        try:
+            1/0
+            resp = requests.post(
+                self.url,
+                data=usr_dct,
+                headers=self.session.header,
+                cookies=self.session.cookies,
+                verify=True,
+                timeout=15 )
+            result = resp.status_code
+        except Exception as e:
+            log.error( 'exception posting user-data to illiad, ```%s```' % e )
+            err = e
+        ( result, err )
+        log.debug( 'result, `%s`; err, ```%s```' % (result, err) )
         return ( result, err )
 
     ## end class Status()
