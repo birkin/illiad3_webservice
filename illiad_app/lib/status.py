@@ -111,8 +111,8 @@ class UpdateStatusHandler( object ):
         self.check_current_status( current_status, requested_status, start_time )
         if self.output_dct['response']['message']:
             return self.output_dct
-        output_dct = self.update_status( user, requested_status, output_dct )
-        output_dct['response']['elapsed_time'] = str( datetime.datetime.now() - start_time )
+        self.update_status( user, requested_status )
+        self.output_dct['response']['elapsed_time'] = str( datetime.datetime.now() - start_time )
         log.debug( 'final output_dct, ```%s```' % pprint.pformat(output_dct) )
         return output_dct
 
@@ -143,15 +143,15 @@ class UpdateStatusHandler( object ):
         log.debug( 'check_current_status output_dct, ```%s```' % pprint.pformat(self.output_dct) )
         return
 
-    def update_status( self, user, requested_status, output_dct ):
+    def update_status( self, user, requested_status ):
         """ Calls module's update-status, and prepares output-dct.
             Called by manage_status_update() """
         err = status_module.upate_user_status( user, requested_status )
         if err:
-            self.prep_status_not_updated_response( output_dct, err )
+            self.prep_status_not_updated_response( err )
         else:
-            self.prep_status_updated_response( output_dct )
-        log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
-        return output_dct
+            self.prep_status_updated_response()
+        log.debug( 'output_dct, ```%s```' % pprint.pformat(self.output_dct) )
+        return
 
     ## end clas UpdateStatusHandler()
