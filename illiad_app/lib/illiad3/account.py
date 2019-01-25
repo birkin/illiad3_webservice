@@ -6,12 +6,15 @@ import logging, pprint, re
 import requests
 from . import parsers
 
+
 log = logging.getLogger(__name__)
 
 #By default SSL verification will be set to false.
 #This is likely to be run against a local service where
 #trust has already been established.
 SSL_VERIFICATION = True
+
+usr_inf_parser = parsers.UserInfoParser()
 
 
 class IlliadSession( object ):
@@ -262,17 +265,16 @@ class Status( object ):
         """ Manages user-status update.
             Called by lib.status.Status.UpdateStatusHandler.update_status() via views.update_status() """
         ( result, err ) = ( None, None )
-        usr_dct = parsers.parse_user_info( self.status_html )
+        usr_dct = usr_inf_parser.parse_user_info( self.status_html )
         usr_dct['SessionID'] = self.session.session_id
         usr_dct['StatusGroup'] = new_status
-        ( result, err ) = self.post_user_update( usr_dct, username, new_status )
+        ( result, err ) = self.post_user_update( usr_dct )
         log.debug( 'result, `%s`; err, `%s`' % (result, err) )
         return ( result, err )
 
-    def post_user_update( self, usr_dct, username, new_status ):
+    def post_user_update( self, usr_dct ):
         """ Posts updated user (status) info to illiad.
             Called by update_user_status() """
-        log.info( "updating  user, `%s` with status, `%s`." % ( username, new_status) )
         ( result, err ) = ( None, None )
         try:
             1/0
