@@ -150,30 +150,33 @@ def parse_user_status( content ):
 class UserInfoParser( object ):
 
     def __init__( self ):
-        pass
+        self.html = None
+        self.soup = None
 
-    def parse_user_info( self, user_html ):
+    def parse_user_info( self, username, user_html ):
         """ Parses all user-info from change-user-info form.
             Called by lib.illiad3.account.Status.update_user_status() """
+        self.html = user_html
+        self.soup = BeautifulSoup( content, 'html.parser' )
         usr_dct = {}
-        usr_dct['ILLiadForm'] = 'ChangeUserInformation'
-        usr_dct['Username'] = self.parse_username
-        usr_dct['FirstName'] = self.parse_first_name
-        usr_dct['LastName'] = self.parse_last_name
-        usr_dct['EMailAddress'] = self.parse_email
-        # usr_dct['StatusGroup'] = None  # set in lib.illiad3.account.Status.update_user_status()
-        usr_dct['Phone'] = self.parse_phone
-        usr_dct['Address'] = self.parse_address
+        usr_dct['FirstName'] = self.parse_first_name()
+        usr_dct['LastName'] = self.parse_last_name()
+        usr_dct['EMailAddress'] = self.parse_email()
+        usr_dct['Phone'] = self.parse_phone()
+        usr_dct['Address'] = self.parse_address()
+        usr_dct['Site'] = self.parse_site()
         #defaults
+        usr_dct['ILLiadForm'] = 'ChangeUserInformation'
         usr_dct['NotifyGroup'] = 'E-Mail'
         usr_dct['DeliveryGroup'] = 'Electronic Delivery if Possible'
         usr_dct['LoanDeliveryGroup'] = 'Hold for Pickup'
         usr_dct['WebDeliveryGroup'] = 'Yes'
-        usr_dct['Site'] = self.parse_site
         usr_dct['NVTGC'] = 'ILL'
         usr_dct['SubmitButton'] = 'Submit Information'
-        usr_dct['Department'] = self.parse_department
+        usr_dct['Department'] = self.parse_department()
         log.debug( 'parsed_usr_dct, ```%s```' % pprint.pformat(usr_dct) )
         return usr_dct
+
+    def parse_first_name( self )
 
     ## end class UserInfoParser()

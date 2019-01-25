@@ -266,6 +266,7 @@ class Status( object ):
             Called by lib.status.Status.UpdateStatusHandler.update_status() via views.update_status() """
         ( result, err ) = ( None, None )
         usr_dct = usr_inf_parser.parse_user_info( self.status_html )
+        usr_dct['Username'] = username
         usr_dct['SessionID'] = self.session.session_id
         usr_dct['StatusGroup'] = new_status
         ( result, err ) = self.post_user_update( usr_dct )
