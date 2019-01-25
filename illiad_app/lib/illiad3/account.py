@@ -258,4 +258,11 @@ class Status( object ):
         log.debug( 'initial status, `%s`' % status )
         return status
 
+    def update_user_status( self, username, new_status ):
+        """ Manages user-status update.
+            Called by lib.status.Status.UpdateStatusHandler.update_status() via views.update_status() """
+        ( result, err ) = ( 'foo', 'bar' )
+        log.debug( 'result, `%s`; err, `%s`' % (result, err) )
+        return ( result, err )
+
     ## end class Status()
