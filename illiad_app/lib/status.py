@@ -6,13 +6,14 @@ from illiad_app.lib.illiad3.account import Status as LibStatusModule
 
 
 log = logging.getLogger(__name__)
-status_module = LibStatusModule( settings_app.ILLIAD_REMOTE_AUTH_URL, settings_app.ILLIAD_REMOTE_AUTH_KEY )
+# status_module = LibStatusModule( settings_app.ILLIAD_REMOTE_AUTH_URL, settings_app.ILLIAD_REMOTE_AUTH_KEY )
 
 
 class CheckStatusHandler( object ):
 
     def __init__( self ):
         self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
+        self.status_module = LibStatusModule( settings_app.ILLIAD_REMOTE_AUTH_URL, settings_app.ILLIAD_REMOTE_AUTH_KEY )
 
     def data_check( self, request ):
         """ Checks data.
@@ -33,7 +34,7 @@ class CheckStatusHandler( object ):
         log.debug( '%s - user_list, ```%s```' % (self.request_id, user_list) )
         result_dct = {}
         for user in user_list:
-            result_dct[user] = status_module.check_user_status( user )
+            result_dct[user] = self.status_module.check_user_status( user )
             time.sleep( .5 )
         log.debug( '%s - result_dct, ```%s```' % (self.request_id, pprint.pformat(result_dct)) )
         return result_dct
@@ -69,6 +70,7 @@ class UpdateStatusHandler( object ):
 
     def __init__( self ):
         self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
+        self.status_module = LibStatusModule( settings_app.ILLIAD_REMOTE_AUTH_URL, settings_app.ILLIAD_REMOTE_AUTH_KEY )
         self.legit_statuses = [ 'Distance Ed Grad', 'Faculty', 'Graduate', 'Staff', 'Undergraduate' ]
         self.output_dct = None
 
@@ -107,7 +109,7 @@ class UpdateStatusHandler( object ):
             Called by views.update_status() """
         self.initialize_output_dct( request, start_time )
         ( user, requested_status ) = ( request.POST['user'], request.POST['requested_status'] )
-        current_status = status_module.check_user_status( user )  # illiad3.account.Status()
+        current_status = self.status_module.check_user_status( user )  # illiad3.account.Status()
         self.check_current_status( current_status, requested_status, start_time )
         if self.output_dct['response']['message']:
             return self.output_dct
@@ -146,7 +148,7 @@ class UpdateStatusHandler( object ):
     def update_status( self, user, requested_status ):
         """ Calls module's update-status, and prepares output-dct.
             Called by manage_status_update() """
-        ( result, err ) = status_module.update_user_status( user, requested_status )
+        ( result, err ) = self.status_module.update_user_status( user, requested_status )
         if err:
             self.prep_status_not_updated_response( err )
         else:
