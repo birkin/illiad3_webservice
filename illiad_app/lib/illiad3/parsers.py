@@ -163,8 +163,8 @@ class UserInfoParser( object ):
         usr_dct['LastName'] = self.parse_input_element( None, 'LastName', 'value' )
         usr_dct['EMailAddress'] = self.parse_input_element( None, 'EMailAddress', 'value' )
         usr_dct['Phone'] = self.parse_input_element( None, 'Phone', 'value' )
+        usr_dct['Address'] = self.parse_input_element( None, 'Address', 'value' )
 
-        usr_dct['Address'] = self.parse_address()
         usr_dct['Site'] = self.parse_site()
         ## defaults
         usr_dct['ILLiadForm'] = 'ChangeUserInformation'
