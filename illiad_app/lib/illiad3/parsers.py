@@ -168,7 +168,7 @@ class UserInfoParser( object ):
         # usr_dct['Site'] = self.parse_site()
         # usr_dct['Department'] = self.parse_department()
 
-        usr_dct['Site'] = self.parse_select_element( None, 'Site' )  # (submitted_html, target_id)
+        usr_dct['Site'] = self.parse_select_element( None, 'site' )  # (submitted_html, target_id)
         usr_dct['Department'] = self.parse_select_element( None, 'Department' )
 
         ## defaults
@@ -229,7 +229,7 @@ class UserInfoParser( object ):
         ( select_text, html ) = ( 'init', self.html if self.html else submitted_html )
         soup = self.soup if self.soup else BeautifulSoup( html, 'html.parser' )
         select_doc = soup.select( '#%s' % target_id )[0]  # grabs the target <select> element
-        option_docs = status_doc( 'option' )  # grabs all the 'option' elements in the select-fragment
+        option_docs = select_doc( 'option' )  # grabs all the 'option' elements in the select-fragment
         for option_doc in option_docs:
             attr_keys = option_doc.attrs.keys()  # the option element's attributes are returned as a dict
             if 'selected' in attr_keys:
