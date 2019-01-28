@@ -194,48 +194,66 @@ class UserInfoParser( object ):
     #     log.debug( 'first_name, `%s`' % first_name )
     #     return first_name
 
+    # def parse_input_element( self, submitted_html, target_id, target_attribute ):
+    #     """ Returns desired value.
+    #         Called by parse_user_info() """
+    #     html = self.html if self.html else submitted_html  # submitted_html useful for tests
+    #     soup = self.soup if self.soup else BeautifulSoup(html, 'html.parser')
+    #     input_doc = soup.select( '#%s' % target_id )[0]  # grabs the target <input> element
+    #     attr_dct = input_doc.attrs  # the element's attributes are returned as a dict
+    #     log.debug( 'attr_dct, ```%s```' % pprint.pformat(attr_dct) )
+    #     desired_value = attr_dct[target_attribute].strip()
+    #     log.debug( 'desired_value, `%s`' % desired_value )
+    #     return desired_value
+
     def parse_input_element( self, submitted_html, target_id, target_attribute ):
         """ Returns desired value.
             Called by parse_user_info() """
-        html = self.html if self.html else submitted_html  # submitted_html useful for tests
-        soup = self.soup if self.soup else BeautifulSoup(html, 'html.parser')
-        input_doc = soup.select( '#%s' % target_id )[0]  # grabs the target <input> element
+        self.initialize_html_soup( submitted_html )
+        input_doc = self.soup.select( '#%s' % target_id )[0]  # grabs the target <input> element
         attr_dct = input_doc.attrs  # the element's attributes are returned as a dict
         log.debug( 'attr_dct, ```%s```' % pprint.pformat(attr_dct) )
         desired_value = attr_dct[target_attribute].strip()
         log.debug( 'desired_value, `%s`' % desired_value )
         return desired_value
 
-    # def parse_select_element( self, submitted_html, target_id )
+    def initialize_html_soup( self, submitted_html ):
+        """ Loads up instance-attributes if they're not already set.
+            Called by parse_input_element() and parse_select_element() """
+        if not self.html:
+            self.html = submitted_html
+        if not self.soup:
+            self.soup = BeautifulSoup( self.html, 'html.parser' )
+        return
+
+    def parse_select_element( self, submitted_html, target_id ):
+        """ Returns selected option.
+            Called by parse_user_info() """
+        select_text = 'init'
+        self.initialize_html_soup( submitted_html )
+        select_doc = self.soup.select( '#%s' % target_id )[0]  # grabs the target <select> element
+        option_docs = select_doc( 'option' )  # grabs all the 'option' elements in the select-fragment
+        for option_doc in option_docs:
+            attr_keys = option_doc.attrs.keys()  # `attrs` returns the option element's attributes as a dict
+            if 'selected' in attr_keys:
+                select_text = option_doc.text.strip()
+                break
+        log.debug( 'select_text, `%s`' % select_text )
+        return select_text
+
+    # def parse_select_element( self, submitted_html, target_id ):
     #     """ Returns selected option.
     #         Called by parse_user_info() """
-    #     select_text = 'init'
-    #     html = self.html if self.html else submitted_html  # submitted_html useful for tests
-    #     soup = self.soup if self.soup else BeautifulSoup(html, 'html.parser')
+    #     ( select_text, html ) = ( 'init', self.html if self.html else submitted_html )
+    #     soup = self.soup if self.soup else BeautifulSoup( html, 'html.parser' )
     #     select_doc = soup.select( '#%s' % target_id )[0]  # grabs the target <select> element
-    #     option_docs = status_doc( 'option' )  # grabs all the 'option' elements in the select-fragment
+    #     option_docs = select_doc( 'option' )  # grabs all the 'option' elements in the select-fragment
     #     for option_doc in option_docs:
-    #         attr_dct = option_doc.attrs  # the element's attributes are returned as a dict
-    #         attr_keys = attr_dct.keys()
+    #         attr_keys = option_doc.attrs.keys()  # the option element's attributes are returned as a dict
     #         if 'selected' in attr_keys:
     #             select_text = option_doc.text
     #             break
     #     log.debug( 'select_text, `%s`' % select_text )
     #     return select_text
-
-    def parse_select_element( self, submitted_html, target_id ):
-        """ Returns selected option.
-            Called by parse_user_info() """
-        ( select_text, html ) = ( 'init', self.html if self.html else submitted_html )
-        soup = self.soup if self.soup else BeautifulSoup( html, 'html.parser' )
-        select_doc = soup.select( '#%s' % target_id )[0]  # grabs the target <select> element
-        option_docs = select_doc( 'option' )  # grabs all the 'option' elements in the select-fragment
-        for option_doc in option_docs:
-            attr_keys = option_doc.attrs.keys()  # the option element's attributes are returned as a dict
-            if 'selected' in attr_keys:
-                select_text = option_doc.text
-                break
-        log.debug( 'select_text, `%s`' % select_text )
-        return select_text
 
     ## end class UserInfoParser()
