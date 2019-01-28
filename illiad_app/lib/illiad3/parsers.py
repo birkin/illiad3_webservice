@@ -159,26 +159,22 @@ class UserInfoParser( object ):
         self.html = user_html
         self.soup = BeautifulSoup( self.html, 'html.parser' )
         usr_dct = {}
-
-        # usr_dct['FirstName'] = self.parse_input_element( submitted_html=self.html, target_id='FirstName', target_attribute='value' )
-        # usr_dct['LastName'] = self.parse_input_element( submitted_html=self.html, target_id='LasName', target_attribute='value' )
-
         usr_dct['FirstName'] = self.parse_input_element( None, 'FirstName', 'value' )  # (submitted_html, target_id, target_attribute)
         usr_dct['LastName'] = self.parse_input_element( None, 'LastName', 'value' )
+        usr_dct['EMailAddress'] = self.parse_input_element( None, 'EMailAddress', 'value' )
+        usr_dct['Phone'] = self.parse_input_element( None, 'Phone', 'value' )
 
-        # usr_dct['EMailAddress'] = self.parse_email()
-        # usr_dct['Phone'] = self.parse_phone()
-        # usr_dct['Address'] = self.parse_address()
-        # usr_dct['Site'] = self.parse_site()
-        # ## defaults
-        # usr_dct['ILLiadForm'] = 'ChangeUserInformation'
-        # usr_dct['NotifyGroup'] = 'E-Mail'
-        # usr_dct['DeliveryGroup'] = 'Electronic Delivery if Possible'
-        # usr_dct['LoanDeliveryGroup'] = 'Hold for Pickup'
-        # usr_dct['WebDeliveryGroup'] = 'Yes'
-        # usr_dct['NVTGC'] = 'ILL'
-        # usr_dct['SubmitButton'] = 'Submit Information'
-        # usr_dct['Department'] = self.parse_department()
+        usr_dct['Address'] = self.parse_address()
+        usr_dct['Site'] = self.parse_site()
+        ## defaults
+        usr_dct['ILLiadForm'] = 'ChangeUserInformation'
+        usr_dct['NotifyGroup'] = 'E-Mail'
+        usr_dct['DeliveryGroup'] = 'Electronic Delivery if Possible'
+        usr_dct['LoanDeliveryGroup'] = 'Hold for Pickup'
+        usr_dct['WebDeliveryGroup'] = 'Yes'
+        usr_dct['NVTGC'] = 'ILL'
+        usr_dct['SubmitButton'] = 'Submit Information'
+        usr_dct['Department'] = self.parse_department()
         log.debug( 'parsed_usr_dct, ```%s```' % pprint.pformat(usr_dct) )
         return usr_dct
 
