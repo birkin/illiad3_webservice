@@ -153,18 +153,18 @@ class UserInfoParser( object ):
         self.html = None
         self.soup = None
 
-    def parse_user_info( self, username, user_html ):
+    def parse_user_info( self, user_html ):
         """ Parses all user-info from change-user-info form.
             Called by lib.illiad3.account.Status.update_user_status() """
         self.html = user_html
-        self.soup = BeautifulSoup( content, 'html.parser' )
+        self.soup = BeautifulSoup( self.html, 'html.parser' )
         usr_dct = {}
 
-        # usr_dct['FirstName'] = self.parse_first_name()
-        usr_dct['FirstName'] = self.parse_input_element( submitted_html=self.html, target_id='FirstName', target_attribute='value' )
+        # usr_dct['FirstName'] = self.parse_input_element( submitted_html=self.html, target_id='FirstName', target_attribute='value' )
+        # usr_dct['LastName'] = self.parse_input_element( submitted_html=self.html, target_id='LasName', target_attribute='value' )
 
-        # usr_dct['LastName'] = self.parse_last_name()
-        usr_dct['FirstName'] = self.parse_input_element( submitted_html=self.html, target_id='LasName', target_attribute='value' )
+        usr_dct['FirstName'] = self.parse_input_element( None, 'FirstName', 'value' )  # (submitted_html, target_id, target_attribute)
+        usr_dct['LastName'] = self.parse_input_element( None, 'LastName', 'value' )
 
         # usr_dct['EMailAddress'] = self.parse_email()
         # usr_dct['Phone'] = self.parse_phone()
