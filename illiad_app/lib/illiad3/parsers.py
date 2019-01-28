@@ -177,6 +177,6 @@ class UserInfoParser( object ):
         log.debug( 'parsed_usr_dct, ```%s```' % pprint.pformat(usr_dct) )
         return usr_dct
 
-    def parse_first_name( self )
+    # def parse_first_name( self )
 
     ## end class UserInfoParser()
