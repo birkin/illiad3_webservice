@@ -5,12 +5,12 @@ parent_working_dir = os.path.abspath( os.path.join(os.getcwd(), os.pardir) )
 sys.path.append( parent_working_dir )
 
 from illiad_app.lib.illiad3 import parsers
+from illiad_app.lib.illiad3.parsers import UserInfoParser
 
 
-#Directory where test data is stored.
 DATA_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'data'
-    )
+    )  # Directory where test-data is stored.
 
 
 class ParserTest(unittest.TestCase):
@@ -102,8 +102,27 @@ class ParserTest(unittest.TestCase):
     ## end class ParserTest()
 
 
+class UserInfoParserTest(unittest.TestCase):
+
+    def setUp(self):
+        self.usr_prsr = UserInfoParser()
+
+    def test_parse_first_name(self):
+        """ Checks first-name. """
+        path = os.path.join( DATA_PATH, 'change_user_info.html' )
+        with open( path, 'rt' ) as f:
+            content = f.read()
+        self.assertEqual(
+            'the_first_name',
+            self.usr_prsr.parse_first_name( content )
+            )
+
+    ## end class UserInfoParserTest()
+
+
 def suite():
     suite = unittest.makeSuite(ParserTest, 'test')
+    suite.addTest( unittest.makeSuite(UserInfoParserTest) )
     return suite
 
 

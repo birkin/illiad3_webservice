@@ -177,6 +177,16 @@ class UserInfoParser( object ):
         log.debug( 'parsed_usr_dct, ```%s```' % pprint.pformat(usr_dct) )
         return usr_dct
 
-    # def parse_first_name( self )
+    def parse_first_name( self, submitted_html=None ):
+        """ Returns existing first-name.
+            Called by parse_user_info() """
+        html = self.html if self.html else submitted_html  # submitted_html useful for tests
+        soup = self.soup if self.soup else BeautifulSoup(html, 'html.parser')
+        input_doc = soup.select( '#FirstName' )[0]  # grabs the first-name <input> element
+        attr_dct = input_doc.attrs  # the element's attributes are returned as a dict
+        log.debug( 'attr_dct, ```%s```' % pprint.pformat(attr_dct) )
+        first_name = attr_dct['value'].strip()
+        log.debug( 'first_name, `%s`' % first_name )
+        return first_name
 
     ## end class UserInfoParser()
