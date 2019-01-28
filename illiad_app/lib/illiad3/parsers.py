@@ -189,4 +189,19 @@ class UserInfoParser( object ):
         log.debug( 'first_name, `%s`' % first_name )
         return first_name
 
+    def parse_input_element( self, submitted_html, target_id, target_attribute ):
+        """ Returns desired value.
+            Called by parse_user_info() """
+        html = self.html if self.html else submitted_html  # submitted_html useful for tests
+        soup = self.soup if self.soup else BeautifulSoup(html, 'html.parser')
+        input_doc = soup.select( '#%s' % target_id )[0]  # grabs the first-name <input> element
+        attr_dct = input_doc.attrs  # the element's attributes are returned as a dict
+        log.debug( 'attr_dct, ```%s```' % pprint.pformat(attr_dct) )
+        desired_value = attr_dct[target_attribute].strip()
+        log.debug( 'desired_value, `%s`' % desired_value )
+        return desired_value
+
+        return 'foo'
+
+
     ## end class UserInfoParser()

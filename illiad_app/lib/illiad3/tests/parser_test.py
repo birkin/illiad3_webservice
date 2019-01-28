@@ -106,16 +106,25 @@ class UserInfoParserTest(unittest.TestCase):
 
     def setUp(self):
         self.usr_prsr = UserInfoParser()
+        self.content = None
+        path = os.path.join( DATA_PATH, 'change_user_info.html' )
+        with open( path, 'rt' ) as f:
+            self.content = f.read()
 
     def test_parse_first_name(self):
         """ Checks first-name. """
-        path = os.path.join( DATA_PATH, 'change_user_info.html' )
-        with open( path, 'rt' ) as f:
-            content = f.read()
         self.assertEqual(
             'the_first_name',
-            self.usr_prsr.parse_first_name( content )
+            self.usr_prsr.parse_first_name( self.content )
             )
+
+    def test_parse_input_element(self):
+        """ Checks last-name handling, as example. """
+        self.assertEqual(
+            'the_last_name',
+            self.usr_prsr.parse_input_element( submitted_html=self.content, target_id='LastName', target_attribute='value' )
+            )
+
 
     ## end class UserInfoParserTest()
 
