@@ -159,35 +159,40 @@ class UserInfoParser( object ):
         self.html = user_html
         self.soup = BeautifulSoup( content, 'html.parser' )
         usr_dct = {}
-        usr_dct['FirstName'] = self.parse_first_name()
-        usr_dct['LastName'] = self.parse_last_name()
-        usr_dct['EMailAddress'] = self.parse_email()
-        usr_dct['Phone'] = self.parse_phone()
-        usr_dct['Address'] = self.parse_address()
-        usr_dct['Site'] = self.parse_site()
-        #defaults
-        usr_dct['ILLiadForm'] = 'ChangeUserInformation'
-        usr_dct['NotifyGroup'] = 'E-Mail'
-        usr_dct['DeliveryGroup'] = 'Electronic Delivery if Possible'
-        usr_dct['LoanDeliveryGroup'] = 'Hold for Pickup'
-        usr_dct['WebDeliveryGroup'] = 'Yes'
-        usr_dct['NVTGC'] = 'ILL'
-        usr_dct['SubmitButton'] = 'Submit Information'
-        usr_dct['Department'] = self.parse_department()
+
+        # usr_dct['FirstName'] = self.parse_first_name()
+        usr_dct['FirstName'] = self.parse_input_element( submitted_html=self.html, target_id='FirstName', target_attribute='value' )
+
+        # usr_dct['LastName'] = self.parse_last_name()
+        usr_dct['FirstName'] = self.parse_input_element( submitted_html=self.html, target_id='LasName', target_attribute='value' )
+
+        # usr_dct['EMailAddress'] = self.parse_email()
+        # usr_dct['Phone'] = self.parse_phone()
+        # usr_dct['Address'] = self.parse_address()
+        # usr_dct['Site'] = self.parse_site()
+        # ## defaults
+        # usr_dct['ILLiadForm'] = 'ChangeUserInformation'
+        # usr_dct['NotifyGroup'] = 'E-Mail'
+        # usr_dct['DeliveryGroup'] = 'Electronic Delivery if Possible'
+        # usr_dct['LoanDeliveryGroup'] = 'Hold for Pickup'
+        # usr_dct['WebDeliveryGroup'] = 'Yes'
+        # usr_dct['NVTGC'] = 'ILL'
+        # usr_dct['SubmitButton'] = 'Submit Information'
+        # usr_dct['Department'] = self.parse_department()
         log.debug( 'parsed_usr_dct, ```%s```' % pprint.pformat(usr_dct) )
         return usr_dct
 
-    def parse_first_name( self, submitted_html=None ):
-        """ Returns existing first-name.
-            Called by parse_user_info() """
-        html = self.html if self.html else submitted_html  # submitted_html useful for tests
-        soup = self.soup if self.soup else BeautifulSoup(html, 'html.parser')
-        input_doc = soup.select( '#FirstName' )[0]  # grabs the first-name <input> element
-        attr_dct = input_doc.attrs  # the element's attributes are returned as a dict
-        log.debug( 'attr_dct, ```%s```' % pprint.pformat(attr_dct) )
-        first_name = attr_dct['value'].strip()
-        log.debug( 'first_name, `%s`' % first_name )
-        return first_name
+    # def parse_first_name( self, submitted_html=None ):
+    #     """ Returns existing first-name.
+    #         Called by parse_user_info() """
+    #     html = self.html if self.html else submitted_html  # submitted_html useful for tests
+    #     soup = self.soup if self.soup else BeautifulSoup(html, 'html.parser')
+    #     input_doc = soup.select( '#FirstName' )[0]  # grabs the first-name <input> element
+    #     attr_dct = input_doc.attrs  # the element's attributes are returned as a dict
+    #     log.debug( 'attr_dct, ```%s```' % pprint.pformat(attr_dct) )
+    #     first_name = attr_dct['value'].strip()
+    #     log.debug( 'first_name, `%s`' % first_name )
+    #     return first_name
 
     def parse_input_element( self, submitted_html, target_id, target_attribute ):
         """ Returns desired value.

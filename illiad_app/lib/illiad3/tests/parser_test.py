@@ -111,12 +111,12 @@ class UserInfoParserTest(unittest.TestCase):
         with open( path, 'rt' ) as f:
             self.content = f.read()
 
-    def test_parse_first_name(self):
-        """ Checks first-name. """
-        self.assertEqual(
-            'the_first_name',
-            self.usr_prsr.parse_first_name( self.content )
-            )
+    # def test_parse_first_name(self):
+    #     """ Checks first-name. """
+    #     self.assertEqual(
+    #         'the_first_name',
+    #         self.usr_prsr.parse_first_name( self.content )
+    #         )
 
     def test_parse_input_element(self):
         """ Checks last-name handling, as example. """
