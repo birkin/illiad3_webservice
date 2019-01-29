@@ -146,16 +146,4 @@ class UpdateStatusHandler( object ):
         log.debug( 'output_dct, ```%s```' % pprint.pformat(self.output_dct) )
         return
 
-    # def update_status( self, user, requested_status ):
-    #     """ Calls module's update-status, and prepares output-dct.
-    #         Called by manage_status_update() """
-    #     ( result, err ) = self.status_module.update_user_status( user, requested_status )
-    #     if err:
-    #         self.prep_status_not_updated_response( err )
-    #     else:
-    #         self.prep_status_updated_response()
-    #     log.debug( 'output_dct, ```%s```' % pprint.pformat(self.output_dct) )
-    #     return
-
-
     ## end clas UpdateStatusHandler()
