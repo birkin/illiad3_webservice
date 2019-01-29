@@ -278,7 +278,6 @@ class Status( object ):
             Called by update_user_status() """
         ( result, err ) = ( None, None )
         try:
-            1/0
             resp = requests.post(
                 self.url,
                 data=usr_dct,
@@ -289,8 +288,7 @@ class Status( object ):
             result = resp.status_code
         except Exception as e:
             log.error( 'exception posting user-data to illiad, ```%s```' % e )
-            err = e
-        ( result, err )
+            err = repr( e )
         log.debug( 'result, `%s`; err, ```%s```' % (result, err) )
         return ( result, err )
 

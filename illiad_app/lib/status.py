@@ -72,6 +72,7 @@ class UpdateStatusHandler( object ):
         self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
         self.status_module = LibStatusModule( settings_app.ILLIAD_REMOTE_AUTH_URL, settings_app.ILLIAD_REMOTE_AUTH_KEY )
         self.legit_statuses = [ 'Distance Ed Grad', 'Faculty', 'Graduate', 'Staff', 'Undergraduate' ]
+        self.current_status = None
         self.output_dct = None
 
     def data_check( self, request ):
@@ -90,33 +91,20 @@ class UpdateStatusHandler( object ):
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
 
-    # def manage_status_update( self, request, start_time ):
-    #     """ Manager for updating status.
-    #         Called by views.update_status() """
-    #     output_dct = self.initialize_output_dct( request, start_time )
-    #     ( user, requested_status ) = ( request.POST['user'], request.POST['requested_status'] )
-    #     current_status = status_module.check_user_status( user )  # illiad3.account.Status()
-    #     if current_status.strip().lower() == requested_status.strip().lower():
-    #         output_dct['response']['message'] = 'Status not updated; existing status is already `%s`.' % current_status
-    #     else:
-    #         output_dct = self.update_status( user, requested_status, output_dct )
-    #     output_dct['response']['elapsed_time'] = str( datetime.datetime.now() - start_time )
-    #     log.debug( 'final output_dct, ```%s```' % pprint.pformat(output_dct) )
-    #     return output_dct
-
     def manage_status_update( self, request, start_time ):
         """ Manager for updating status.
             Called by views.update_status() """
         self.initialize_output_dct( request, start_time )
         ( user, requested_status ) = ( request.POST['user'], request.POST['requested_status'] )
-        current_status = self.status_module.check_user_status( user )  # illiad3.account.Status()
-        self.check_current_status( current_status, requested_status, start_time )
-        if self.output_dct['response']['message']:
+        self.current_status = self.status_module.check_user_status( user )  # illiad3.account.Status()
+        self.output_dct['response']['initial_status'] = self.current_status
+        self.check_current_status( self.current_status, requested_status, start_time )
+        if self.output_dct['response']['error']:
             return self.output_dct
         self.update_status( user, requested_status )
         self.output_dct['response']['elapsed_time'] = str( datetime.datetime.now() - start_time )
-        log.debug( 'final output_dct, ```%s```' % pprint.pformat(output_dct) )
-        return output_dct
+        log.debug( 'final output_dct, ```%s```' % pprint.pformat(self.output_dct) )
+        return self.output_dct
 
     def initialize_output_dct( self, request, start_time ):
         """ Sets up initial output_dct.
@@ -127,7 +115,7 @@ class UpdateStatusHandler( object ):
                 'payload': { 'user': request.POST['user'], 'requested_status': request.POST['requested_status'], 'auth_key': 'xxxxxxxxxx' },
                 'timestamp': str( start_time )
                 },
-            'response': { 'updated_status': None, 'message': None, 'elapsed_time': None
+            'response': { 'initial_status': None, 'updated_status': None, 'error': None, 'elapsed_time': None
                 }
             }
         log.debug( 'initial output_dct, ```%s```' % pprint.pformat(self.output_dct) )
@@ -137,10 +125,10 @@ class UpdateStatusHandler( object ):
         """ Checks current status and updates output_dct if needed.
             Called by manage_status_update() """
         if current_status.strip().lower() == requested_status.strip().lower():
-            self.output_dct['response']['message'] = 'Status not updated; existing status is already `%s`.' % current_status
+            self.output_dct['response']['error'] = 'Status not updated; existing status is already `%s`.' % current_status
         elif current_status in [ 'DISAVOWED', 'UNREGISTERED' ]:
-            self.output_dct['response']['message'] = 'Status not updated; existing status is `%s`.' % current_status
-        if self.output_dct['response']['message']:
+            self.output_dct['response']['error'] = 'Status not updated; existing status is `%s`.' % current_status
+        if self.output_dct['response']['error']:
             self.output_dct['response']['elapsed_time'] = str( datetime.datetime.now() - start_time )
         log.debug( 'check_current_status output_dct, ```%s```' % pprint.pformat(self.output_dct) )
         return
@@ -150,10 +138,24 @@ class UpdateStatusHandler( object ):
             Called by manage_status_update() """
         ( result, err ) = self.status_module.update_user_status( user, requested_status )
         if err:
-            self.prep_status_not_updated_response( err )
+            self.output_dct['response']['error'] = err
+            # self.prep_status_not_updated_response( err )
         else:
-            self.prep_status_updated_response()
+            self.output_dct['response']['updated_status'] = requested_status.strip()
+            # self.prep_status_updated_response()
         log.debug( 'output_dct, ```%s```' % pprint.pformat(self.output_dct) )
         return
+
+    # def update_status( self, user, requested_status ):
+    #     """ Calls module's update-status, and prepares output-dct.
+    #         Called by manage_status_update() """
+    #     ( result, err ) = self.status_module.update_user_status( user, requested_status )
+    #     if err:
+    #         self.prep_status_not_updated_response( err )
+    #     else:
+    #         self.prep_status_updated_response()
+    #     log.debug( 'output_dct, ```%s```' % pprint.pformat(self.output_dct) )
+    #     return
+
 
     ## end clas UpdateStatusHandler()
