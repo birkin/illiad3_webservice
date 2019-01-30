@@ -52,6 +52,7 @@ class CheckStatusHandler( object ):
                 'timestamp': str( start_time )
                 },
             'response': self.prep_response_segment( start_time, data_dct ) }
+        log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
         return output_dct
 
     def prep_response_segment( self, start_time, data_dct ):
