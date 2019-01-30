@@ -87,7 +87,7 @@ class UpdateStatusHandler( object ):
                     if request.POST['requested_status'] in self.legit_statuses:
                         return_val = 'valid'
         if return_val == 'invalid':
-            log.debug( 'validation failed; post-keys, ```%s```; ip, `%s`' % (list(post_keys), source_ip) )
+            log.debug( 'validation failed; post-keys, ```%s```; ip, `%s`; requested_status, ```%s```' % (list(post_keys), source_ip, request.POST['requested_status']) )
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
 
