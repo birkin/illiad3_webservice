@@ -47,7 +47,6 @@ class CheckStatusHandler( object ):
                 'url': '%s://%s%s?%s' % (
                     request.scheme,
                     request.META.get( 'HTTP_HOST', '127.0.0.1' ),  # HTTP_HOST doesn't exist for client-tests
-                    # request.META.get('REQUEST_URI', request.META['PATH_INFO']),
                     request.META['PATH_INFO'],
                     request.META['QUERY_STRING'] ),  # REQUEST_URI contains querystring but doesn't exist via run-server
                 'timestamp': str( start_time )
