@@ -75,18 +75,33 @@ class UpdateStatusHandler( object ):
         self.current_status = None
         self.output_dct = None
 
+    # def data_check( self, request ):
+    #     """ Checks data.
+    #         Called by views.update_status() """
+    #     # log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
+    #     return_val = 'invalid'
+    #     ( return_val, post_keys, source_ip ) = ( 'invalid', request.POST.keys(), request.META.get('REMOTE_ADDR', 'unavailable') )
+    #     if 'user' in post_keys and 'requested_status' in post_keys and 'auth_key' in post_keys:
+    #         if request.POST['auth_key'] == settings_app.API_KEY:
+    #             if source_ip in settings_app.LEGIT_IPS:
+    #                 return_val = 'valid'
+    #     if return_val == 'invalid':
+    #         log.debug( 'validation failed; post-keys, ```%s```; ip, `%s`; requested_status, ```%s```' % (list(post_keys), source_ip, request.POST['requested_status']) )
+    #     log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
+    #     return return_val
+
     def data_check( self, request ):
         """ Checks data.
             Called by views.update_status() """
-        # log.debug( '%s - request.POST, `%s`' % (self.request_id, request.POST) )
-        return_val = 'invalid'
         ( return_val, post_keys, source_ip ) = ( 'invalid', request.POST.keys(), request.META.get('REMOTE_ADDR', 'unavailable') )
         if 'user' in post_keys and 'requested_status' in post_keys and 'auth_key' in post_keys:
-            if request.POST['auth_key'] == settings_app.API_KEY:
-                if source_ip in settings_app.LEGIT_IPS:
-                    return_val = 'valid'
+            requested_status = request.POST['requested_status'].strip()
+            if len( requested_status ) > 0:
+                if request.POST['auth_key'] == settings_app.API_KEY:
+                    if source_ip in settings_app.LEGIT_IPS:
+                        return_val = 'valid'
         if return_val == 'invalid':
-            log.debug( 'validation failed; post-keys, ```%s```; ip, `%s`; requested_status, ```%s```' % (list(post_keys), source_ip, request.POST['requested_status']) )
+            log.debug( 'validation failed; post-keys, ```%s```; ip, `%s`; requested_status, ```%s```' % (list(post_keys), source_ip, requested_status) )
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
 
