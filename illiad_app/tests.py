@@ -77,5 +77,18 @@ class ClientV3_MakeBookRequest_Test( TestCase ):
         self.assertEqual( 400, response.status_code )
         self.assertEqual( b'Bad Request', response.content )
 
+    def test__check_good_post_params__known_user(self):
+        """ POST with good params should submit a request and return a transaction number.
+            This test is good, just disabled so as not to auto-submit real requests. """
+        c = Client()
+        response = c.post(
+            '/v3/make_book_request/',
+            { 'auth_key': settings_app.TEST_AUTH_KEY, 'openurl': 'foo_b', 'request_id': 'foo_c', 'username': settings_app.TEST_EXISTING_GOOD_USER }
+            )
+        self.assertEqual( 200, response.status_code )
+        response_dct = json.loads( response.content )
+        self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
+        self.assertEqual( 'submission_successful', response_dct['status'] )
+
     ## end class ClientV2_Test()
 
