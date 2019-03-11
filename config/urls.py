@@ -16,6 +16,8 @@ urlpatterns = [
 
     url( r'^v2/make_request/$', views.make_request_v2, name='request_v2' ),
 
+    url( r'^v3/make_request/$', views.make_request_v3, name='request_v3' ),
+
     url( r'^check_status_via_shib/$', views.check_status_via_shib, name='check_status_via_shib' ),
 
     url( r'^update_status/$', views.update_status, name='update_status' ),
