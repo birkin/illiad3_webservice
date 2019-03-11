@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
-from illiad_app.lib.make_request_v3 import MakeRequestManager
+from illiad_app.lib.make_request_v3 import MakeBookRequestManager
 from illiad_app.lib.status import CheckStatusHandler, UpdateStatusHandler
 from illiad_app.models import V2_Helper
 
@@ -46,10 +46,10 @@ def make_book_request_v3( request ):
     """ Handles current (March 2019) easyBorrow controller illiad call -- via hitting ILLiad API. """
     log.debug( 'starting' )
     # log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
-    v3_req_mngr = MakeRequestManager( request.POST.get('request_id', 'no_id') )
-    if v3_req_mngr.check_validity( request ) is False:
+    v3_rq_manager = MakeBookRequestManager( request.POST.get('request_id', 'no_id') )
+    if v3_rq_manager.check_validity( request ) is False:
         return HttpResponseBadRequest( 'Bad Request' )
-    v3_response_dct = v3_helper.run_request( request )
+    v3_response_dct = v3_rq_manager.run_request( request )
     output = json.dumps( v3_response_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
