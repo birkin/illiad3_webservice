@@ -58,22 +58,22 @@ class ClientV2_Test( TestCase ):
     ## end class ClientV2_Test()
 
 
-class ClientV3_MakeRequest_Test( TestCase ):
+class ClientV3_MakeBookRequest_Test( TestCase ):
     """ Tests easyBorrow-api v3 """
 
     def test__check_bad_method(self):
         """ GET (api requires POST) should return 400. """
         c = Client()
-        response = c.get( '/v3/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        response = c.get( '/v3/make_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
         self.assertEqual( 400, response.status_code )
         self.assertEqual( b'Bad Request', response.content )
 
     def test__check_bad_post_params(self):
         """ POST with bad params should return 400.
-            eg: $ python ./manage.py test illiad_app.tests.ClientV3_MakeRequest_Test.test__check_bad_post_params
+            eg: $ python ./manage.py test illiad_app.tests.ClientV3_MakeBookRequest_Test.test__check_bad_post_params
             """
         c = Client()
-        response = c.post( '/v3/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        response = c.post( '/v3/make_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
         self.assertEqual( 400, response.status_code )
         self.assertEqual( b'Bad Request', response.content )
 
