@@ -12,7 +12,9 @@ from illiad_app import settings_app
 log = logging.getLogger(__name__)
 
 
-class MakeRequestManager( object ):
+class MakeBookRequestManager( object ):
+    """ `Book` hardcoded for now, for easyBorrow requests.
+        Will later do the `Article` manager for easyAccess requests, and then refactor for common features. """
 
     def __init__( self, request_id ):
         # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits

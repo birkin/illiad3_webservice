@@ -42,7 +42,7 @@ def make_request_v2( request ):
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
-def make_request_v3( request ):
+def make_book_request_v3( request ):
     """ Handles current (March 2019) easyBorrow controller illiad call -- via hitting ILLiad API. """
     log.debug( 'starting' )
     # log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
