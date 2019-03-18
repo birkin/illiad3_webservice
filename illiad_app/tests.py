@@ -16,6 +16,14 @@ class ClientCheckUser_Test( TestCase ):
         jdct = json.loads( response.content )
         self.assertEqual( ['a', 'b', 'c'], jdct.keys() )
 
+    def test_check_disavowed_user(self):
+        """ Checks disavowed user. """
+        c = Client()
+        response = c.get( '/check_user/', {'user': settings_app.TEST_DISAVOWED_USERNAME} )
+        self.assertEqual( 200, response.status_code )
+        jdct = json.loads( response.content )
+        self.assertEqual( ['a', 'b', 'c'], jdct.keys() )
+
     ## end class ClientCheckUser_Test()
 
 
