@@ -20,6 +20,8 @@ urlpatterns = [
 
     url( r'^update_status/$', views.update_status, name='update_status' ),
 
+    url( r'^check_user/$', views.check_user, name='check_user' ),
+
     url( r'^error_check/$', views.error_check, name='error_check' ),  # only generates error if DEBUG == True
 
     url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),
