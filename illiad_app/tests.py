@@ -5,6 +5,21 @@ from . import settings_app
 from django.test import Client, TestCase
 
 
+class ClientCheckUser_Test( TestCase ):
+    """ Tests views.check_user() """
+
+    def test_check_good_existing_user(self):
+        """ Checks happy path. """
+        c = Client()
+        response = c.get( '/check_user/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        self.assertEqual( 200, response.status_code )
+        jdct = json.loads( response.content )
+        self.assertEqual( ['a', 'b', 'c'], jdct.keys() )
+
+    ## end class ClientCheckUser_Test()
+
+
+
 class ClientV2_Test( TestCase ):
     """ Tests easyBorrow-api v2 """
 
