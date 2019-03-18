@@ -43,7 +43,8 @@ def make_request_v2( request ):
 
 def check_status_via_shib( request ):
     """ Handles shib-protected check-user-status.
-        Status meaning "type", eg, `Staff`, `Undergraduate`. """
+        Status meaning "type", eg, `Staff`, `Undergraduate`.
+        TODO: change this 'status' reference to 'type'. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_checker_handler = CheckStatusHandler()
@@ -58,7 +59,8 @@ def check_status_via_shib( request ):
 
 def update_status( request ):
     """ Interface for updating user-status.
-        Status meaning "type", eg, `Staff`, `Undergraduate`. """
+        Status meaning "type", eg, `Staff`, `Undergraduate`.
+        TODO: change this 'status' reference to 'type'. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_update_handler = UpdateStatusHandler()
@@ -66,6 +68,20 @@ def update_status( request ):
     if status_update_handler.data_check( request ) == 'invalid':
         return HttpResponseBadRequest( 'Bad Request' )
     result_data = status_update_handler.manage_status_update( request, rq_now )
+    output_dct = json.dumps( result_data, sort_keys=True, indent=2 )
+    return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
+
+
+def check_user( request );
+    """ Handles logging a user in, evaluating response, and returning basic status info.
+        Status meaning `registered`, `new-user`, `blocked`, `revoked`. """
+    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    rq_now = datetime.datetime.now()
+    check_user_handler = CheckUserHandler()
+    log.debug( '%s - starting' % check_user_handler.request_id )
+    if check_user_handler.data_check( request ) == 'invalid':
+        return HttpResponseBadRequest( 'Bad Request' )
+    result_data = check_user_handler.manage_check( request, rq_now )
     output_dct = json.dumps( result_data, sort_keys=True, indent=2 )
     return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
 
