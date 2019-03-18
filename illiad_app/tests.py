@@ -11,7 +11,7 @@ class ClientCheckUser_Test( TestCase ):
     def test_check_good_existing_user(self):
         """ Checks happy path. """
         c = Client()
-        response = c.get( '/check_user/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        response = c.get( '/check_user/', {'user': settings_app.TEST_EXISTING_GOOD_USER} )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['a', 'b', 'c'], jdct.keys() )
