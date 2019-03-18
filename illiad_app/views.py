@@ -72,7 +72,7 @@ def update_status( request ):
     return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
 
 
-def check_user( request );
+def check_user( request ):
     """ Handles logging a user in, evaluating response, and returning basic status info.
         Status meaning `registered`, `new-user`, `blocked`, `revoked`. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
