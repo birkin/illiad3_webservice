@@ -42,7 +42,8 @@ def make_request_v2( request ):
 
 
 def check_status_via_shib( request ):
-    """ Handles shib-protected check-user-status. """
+    """ Handles shib-protected check-user-status.
+        Status meaning "type", eg, `Staff`, `Undergraduate`. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_checker_handler = CheckStatusHandler()
@@ -56,7 +57,8 @@ def check_status_via_shib( request ):
 
 
 def update_status( request ):
-    """ Interface for updating user-status. """
+    """ Interface for updating user-status.
+        Status meaning "type", eg, `Staff`, `Undergraduate`. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_update_handler = UpdateStatusHandler()
