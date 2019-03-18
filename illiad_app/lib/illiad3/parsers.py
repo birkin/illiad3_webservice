@@ -33,6 +33,7 @@ def main_menu( content ):
     session_id = soup.select('#SessionID')[0].attrs.get('value')
     out['session_id'] = session_id
     out['authenticated'] = True
+    log.debug( 'parsed response dct, ```%s```' % pprint.pformat(out) )
     return out
 
 ###
