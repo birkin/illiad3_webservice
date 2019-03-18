@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFou
 from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
 from illiad_app.lib.status import CheckStatusHandler, UpdateStatusHandler
+from illiad_app.lib.user_helper import UserHelper
 from illiad_app.models import V2_Helper
 
 
@@ -74,10 +75,13 @@ def update_status( request ):
 
 def check_user( request ):
     """ Handles logging a user in, evaluating response, and returning basic status info.
-        Status meaning `registered`, `new-user`, `blocked`, `revoked`. """
+        Status meaning `registered`, `new-user`, `blocked`, `revoked`.
+        This was created in the shift to have the article part of easyAccess hit this illiad api instead of its pip-install module.
+        TODO... Eventually don't hit this url, and then a separte 'create-new-user' url...
+                instead, perhaps hit a check_user_and_create_new_user_if_necessary() url. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
-    check_user_handler = CheckUserHandler()
+    check_user_handler = UserHelper()
     log.debug( '%s - starting' % check_user_handler.request_id )
     if check_user_handler.data_check( request ) == 'invalid':
         return HttpResponseBadRequest( 'Bad Request' )
