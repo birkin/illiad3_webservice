@@ -14,7 +14,11 @@ class ClientCheckUser_Test( TestCase ):
         response = c.get( '/check_user/', {'user': settings_app.TEST_EXISTING_GOOD_USER} )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
-        self.assertEqual( ['a', 'b', 'c'], jdct.keys() )
+        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+        self.assertEqual(
+            {'authenticated': True, 'blocked': None, 'disavowed': None, 'registered': True, 'interpreted_new_user': False},
+            jdct['response']['status_data']
+            )
 
     def test_check_disavowed_user(self):
         """ Checks disavowed user. """
@@ -22,7 +26,17 @@ class ClientCheckUser_Test( TestCase ):
         response = c.get( '/check_user/', {'user': settings_app.TEST_DISAVOWED_USERNAME} )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
-        self.assertEqual( ['a', 'b', 'c'], jdct.keys() )
+        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+        self.assertEqual(
+            {'authenticated': False, 'blocked': None, 'disavowed': True, 'registered': None, 'interpreted_new_user': False},
+            jdct['response']['status_data']
+            )
+
+    # def test_check_blocked_user(self):
+    #     TODO
+
+    # def test_check_new_user(self):
+    #     TODO -- if I can auto-delete the new user
 
     ## end class ClientCheckUser_Test()
 

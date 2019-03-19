@@ -38,10 +38,22 @@ class UserHelper( object ):
     def prep_data_dct( self, login_response_dct ):
         """ Takes values from login_response_dct and prepares data-dct to be returned.
             Called by manage_check() """
-        data_dct = {'authenticated': None, 'registered': None, 'blocked': None, 'disavowed': None}
+        data_dct = {'authenticated': None, 'registered': None, 'blocked': None, 'disavowed': None, 'interpreted_new_user': None}
         for key in login_response_dct:
             if key in data_dct.keys():  # ignores session_id
                 data_dct[key] = login_response_dct[key]
+        data_dct = self.determine_new_user( data_dct )
+        log.debug( '%s - data_dct, ```%s```' % (self.request_id, pprint.pformat(data_dct)) )
+        return data_dct
+
+    def determine_new_user( self, data_dct ):
+        """ Adds new-user assessment from raw login-response.
+            Called by prep_data_dct() """
+        data_dct['interpreted_new_user'] = False
+        if data_dct['blocked'] == None:
+            if data_dct['disavowed'] == None:
+                if data_dct['registered'] == None:
+                    data_dct['interpreted_new_user'] == True
         log.debug( '%s - data_dct, ```%s```' % (self.request_id, pprint.pformat(data_dct)) )
         return data_dct
 
