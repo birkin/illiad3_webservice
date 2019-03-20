@@ -53,8 +53,12 @@ class ClientCheckUser_Test( TestCase ):
 
     def test_check_disavowed_user(self):
         """ Checks disavowed user. """
+        b64_bytes = base64.b64encode( b'%s:%s' % (settings_app.BASIC_AUTH_USER.encode('utf-8'), settings_app.BASIC_AUTH_PASSWORD.encode('utf-8')) )
+        headers = {
+            'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
+            'User-Agent': 'bul-test-client' }
         c = Client()
-        response = c.get( '/check_user/', {'user': settings_app.TEST_DISAVOWED_USERNAME} )
+        response = c.get( '/check_user/', {'user': settings_app.TEST_DISAVOWED_USERNAME}, **headers )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
