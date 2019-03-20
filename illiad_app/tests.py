@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import json, random
+import base64, json, random
 from . import settings_app
 from django.test import Client, TestCase
 
@@ -9,9 +9,40 @@ class ClientCheckUser_Test( TestCase ):
     """ Tests views.check_user() """
 
     def test_check_good_existing_user(self):
-        """ Checks happy path. """
+        """ Checks lack of basic-auth data in request. """
         c = Client()
         response = c.get( '/check_user/', {'user': settings_app.TEST_EXISTING_GOOD_USER} )
+        self.assertEqual( 4000, response.status_code )
+        # jdct = json.loads( response.content )
+        # self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+        # self.assertEqual(
+        #     {'authenticated': True, 'blocked': None, 'disavowed': None, 'registered': True, 'interpreted_new_user': False},
+        #     jdct['response']['status_data']
+        #     )
+
+    # def test_check_good_existing_user(self):
+    #     """ Checks happy path. """
+    #     b64_bytes = base64.b64encode( b'%s:%s' % (settings_app.BASIC_AUTH_USER.encode('utf-8'), settings_app.BASIC_AUTH_PASSWORD.encode('utf-8')) )
+    #     auth_headers = {
+    #         'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8') }
+    #     c = Client()
+    #     response = c.get( '/check_user/', {'user': settings_app.TEST_EXISTING_GOOD_USER}, **auth_headers )
+    #     self.assertEqual( 200, response.status_code )
+    #     jdct = json.loads( response.content )
+    #     self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+    #     self.assertEqual(
+    #         {'authenticated': True, 'blocked': None, 'disavowed': None, 'registered': True, 'interpreted_new_user': False},
+    #         jdct['response']['status_data']
+    #         )
+
+    def test_check_good_existing_user(self):
+        """ Checks happy path. """
+        b64_bytes = base64.b64encode( b'%s:%s' % (settings_app.BASIC_AUTH_USER.encode('utf-8'), settings_app.BASIC_AUTH_PASSWORD.encode('utf-8')) )
+        headers = {
+            'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
+            'User-Agent': 'bul-test-client' }
+        c = Client()
+        response = c.get( '/check_user/', {'user': settings_app.TEST_EXISTING_GOOD_USER}, **headers )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )

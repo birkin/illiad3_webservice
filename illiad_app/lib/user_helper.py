@@ -2,8 +2,8 @@
 
 import datetime, logging, pprint, random, time
 from illiad_app import settings_app
-# from illiad_app.lib.illiad3.account import Status as LibStatusModule
 from illiad_app.lib.illiad3.account import IlliadSession
+from illiad_app.lib import basic_auth
 
 
 log = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class UserHelper( object ):
         return_val = 'invalid'
         if 'user' in request.GET.keys():
             log.debug( 'user param exists' )
-            if basic_auth_helper.check_basic_auth( request ) is True:
+            if basic_auth.check_basic_auth( request ) is True:
                 return_val = 'valid'
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
