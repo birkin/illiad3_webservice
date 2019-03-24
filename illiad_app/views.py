@@ -42,6 +42,20 @@ def make_request_v2( request ):
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
+def create_user( request ):
+    """ Handles new-user creation. """
+     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    rq_now = datetime.datetime.now()
+    handler = CreateUserHandler()
+    log.debug( '%s - starting' % handler.request_id )
+    if handler.data_check( request ) == 'invalid':
+        return HttpResponseBadRequest( 'Bad Request' )
+    result_data = handler.create_user( request )
+    output_dct = handler.prep_output_dct( rq_now, request, result_data )
+    output = json.dumps( output_dct, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
+
+
 def check_status_via_shib( request ):
     """ Handles shib-protected check-user-status.
         Status meaning "type", eg, `Staff`, `Undergraduate`.
