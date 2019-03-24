@@ -46,13 +46,27 @@ class IlliadSession( object ):
         log.info( "ILLiad session `%s` established for `%s`; perceived registered-status: `%s`" % (self.session_id, self.username, self.registered) )
         return out
 
+    # def problem_check( self, out, resp_text ):
+    #     """ Manager for blocked-check and disavowed-check.
+    #         Called by login() """
+    #     log.debug( 'resp.text, ```%s```' % resp_text )
+    #     err = False
+    #     if self._check_blocked( resp_text ) == True:
+    #         out['blocked'] = True; err = True
+    #     elif self._check_disavowed( resp_text ) == True:
+    #         out['disavowed'] = True; err = True
+    #     log.debug( 'out, ```%s```; err, `%s`' % (pprint.pformat(out), err) )
+    #     return( out, err )
+
     def problem_check( self, out, resp_text ):
         """ Manager for blocked-check and disavowed-check.
             Called by login() """
         log.debug( 'resp.text, ```%s```' % resp_text )
         err = False
         if self._check_blocked( resp_text ) == True:
-            out['blocked'] = True; err = True
+            out['blocked'] = True; out['authenticated'] = True; out['registered'] = True; err = True
+        elif self.check_blocked_2() == True:
+            out['blocked'] = True; out['authenticated'] = True; out['registered'] = True; err = True
         elif self._check_disavowed( resp_text ) == True:
             out['disavowed'] = True; err = True
         log.debug( 'out, ```%s```; err, `%s`' % (pprint.pformat(out), err) )
@@ -61,7 +75,7 @@ class IlliadSession( object ):
     def _check_blocked( self, resp_text ):
         """ Checks if login attempt indicates user is blocked.
             TODO: refactor parsers._check_blocked() because if user is blocked, code-flow never gets there; was failing on the `#SessionID` selection in parsers.main_menu()
-            Called by login() """
+            Called by problem_check() """
         if 'you have been blocked' in resp_text.lower():
             self.blocked_patron = True
             self.registered = True
@@ -70,6 +84,35 @@ class IlliadSession( object ):
             return_val = False
         log.debug( 'return_val, `%s`' % return_val )
         return return_val
+
+    def check_blocked_2(self):
+        """ Hits a form url to check for blocked response.
+            Called by problem_check() """
+        dummy_openurl = 'Action=10&Form=30&sid=bul_illiad_api_blocked_test&genre=article'  # this shows the article form, one of the forms that would show a `blocked` status.
+        rslt_dct = self.get_request_key( dummy_openurl )
+        log.debug( 'rslt, ```%s```' % rslt_dct )
+        if rslt_dct.get( 'errors', None ):
+            if 'you have been blocked' in rslt_dct['errors'].lower():
+                self.blocked_patron = True
+                self.registered = True
+        return_val = self.blocked_patron
+        log.debug( 'return_val, `%s`' % return_val )
+        return return_val
+
+    # def check_blocked_2(self):
+    #     """ Hits a form url to check for blocked response.
+    #         Called by problem_check() """
+    #     dummy_openurl = 'Action=10&Form=30&sid=bul_illiad_api_blocked_test&genre=article'  # this shows the article form, one of the forms that would show a `blocked` status.
+    #     rslt_dct = self.get_request_key( dummy_openurl )
+    #     log.debug( 'rslt, ```%s```' % rslt_dct )
+    #     if 'you have been blocked' in rslt_dct.get( 'errors', '' ).lower():
+    #         self.blocked_patron = True
+    #         self.registered = True
+    #         return_val = True
+    #     else:
+    #         return_val = False
+    #     log.debug( 'return_val, `%s`' % return_val )
+    #     return return_val
 
     def _check_disavowed( self, resp_text ):
         """ Checks if login attempt indicates user is disavowed.
