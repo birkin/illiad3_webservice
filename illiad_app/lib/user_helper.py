@@ -9,6 +9,15 @@ from illiad_app.lib import basic_auth
 log = logging.getLogger(__name__)
 
 
+class CreateUserHandler( object ):
+    """ Creates new user. """
+
+    def __init__( self ):
+        self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
+
+    ## end class CreateUserHandler()
+
+
 class CheckUserHelper( object ):
     """ Checks user status -- meaning 'registered', 'blocked', etc. """
 
