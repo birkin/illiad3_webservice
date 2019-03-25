@@ -56,6 +56,14 @@ class CreateUserHandler( object ):
         log.debug( 'data_good_check, `%s`' % data_good_check )
         return data_good_check
 
+    def create_user( self, request ):
+        """ Registers the user.
+            Called by views.create_user() """
+        usr_dct = dict( request.POST.items() )
+        log.debug( 'usr_dct, ```%s```' % pprint.pformat(usr_dct) )
+        return { 'message': 'coming' }
+
+
     ## end class CreateUserHandler()
 
 

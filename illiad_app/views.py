@@ -50,7 +50,7 @@ def create_user( request ):
     log.debug( '%s - starting' % handler.request_id )
     if handler.data_check( request ) == 'invalid':
         return HttpResponseBadRequest( 'Bad Request' )
-    return HttpResponse( 'coming' )
+    # return HttpResponse( 'coming' )
     result_data = handler.create_user( request )
     output_dct = handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
