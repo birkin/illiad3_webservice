@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFou
 from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
 from illiad_app.lib.status import CheckStatusHandler, UpdateStatusHandler
-from illiad_app.lib.user_helper import CheckUserHelper
+from illiad_app.lib.user_helper import CheckUserHelper, CreateUserHandler
 from illiad_app.models import V2_Helper
 
 
@@ -45,7 +45,6 @@ def make_request_v2( request ):
 def create_user( request ):
     """ Handles new-user creation. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
-    return HttpResponse( 'coming' )
     rq_now = datetime.datetime.now()
     handler = CreateUserHandler()
     log.debug( '%s - starting' % handler.request_id )
