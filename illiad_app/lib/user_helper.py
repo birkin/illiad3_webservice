@@ -102,6 +102,7 @@ class CheckUserHelper( object ):
         log.debug( '%s - user, `%s`' % (self.request_id, user) )
         illiad_session = IlliadSession( settings_app.ILLIAD_REMOTE_AUTH_URL, settings_app.ILLIAD_REMOTE_AUTH_KEY, user )
         login_response_dct = illiad_session.login()
+        log.debug( 'login_response_dct, ```%s```' % pprint.pformat(login_response_dct) )
         data_dct = self.prep_data_dct( login_response_dct )
         output_dct = self.prep_output_dct( start_time, request, data_dct )
         return output_dct
@@ -121,10 +122,11 @@ class CheckUserHelper( object ):
         """ Adds new-user assessment from raw login-response.
             Called by prep_data_dct() """
         data_dct['interpreted_new_user'] = False
-        if data_dct['blocked'] == None:
-            if data_dct['disavowed'] == None:
-                if data_dct['registered'] == None:
-                    data_dct['interpreted_new_user'] == True
+        if data_dct['authenticated'] == True:
+            if data_dct['blocked'] == None:
+                if data_dct['disavowed'] == None:
+                    if data_dct['registered'] == None or data_dct['registered'] == False:
+                        data_dct['interpreted_new_user'] = True
         log.debug( '%s - data_dct, ```%s```' % (self.request_id, pprint.pformat(data_dct)) )
         return data_dct
 
