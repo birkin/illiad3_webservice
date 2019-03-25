@@ -18,7 +18,7 @@ class ClientCreateUser_Test( TestCase ):
             'email': 'bar'
             }
         response = c.post( '/create_user/', params )
-        self.assertEqual( 400, response.status_code )
+        self.assertEqual( 200, response.status_code )
         # jdct = json.loads( response.content )
         # self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
 

@@ -19,33 +19,39 @@ class CreateUserHandler( object ):
     def data_check( self, request ):
         """ Checks data.
             Called by views.create_user() """
-        log.debug( '%s - request.__dict__, `%s`' % (self.request_id, pprint.pformat(request.__dict__)) )
-        log.debug( '%s - request.POST, `%s`' % (self.request_id, pprint.pformat(request.POST)) )
         ## auth-key check
-        auth_key_good = False
+        summary_check = 'invalid'
+        if self.auth_key_good( request ) is True:
+            if self.data_good( request ) is True:
+                summary_check = 'valid'
+        log.debug( 'summary_check, `%s`' % summary_check )
+        return summary_check
+
+    def auth_key_good( self, request ):
+        """ Checks the auth_key and ip.
+            Called by data_check() """
+        auth_key_check = False
         if 'auth_key' in request.POST.keys():
             if request.POST['auth_key'] == settings_app.API_KEY:
                 source_ip = request.META.get('REMOTE_ADDR', 'unavailable')
                 if source_ip in settings_app.LEGIT_IPS:
-                    auth_key_good = True
-        log.debug( 'auth_key_good, `%s`' % auth_key_good )
-        if auth_key_good is False:
-            return 'invalid'
-        ## data-check
-        data_good = False
-        user_keys = list( request.POST.keys() )
-        check_flag = 'init'
+                    auth_key_check = True
+        log.debug( 'auth_key_check, `%s`' % auth_key_check )
+        return auth_key_check
+
+    def data_good( self, request ):
+        """ Checks for required params.
+            Called by data_check() """
+        ( data_good_check, user_keys, check_flag ) = ( False, list(request.POST.keys()), 'init' )
         for element in self.required_elements:
             if element not in user_keys:
                 log.debug( 'missing element, `%s`; will return False' % element )
                 check_flag = 'failed'
                 break
         if check_flag == 'init':
-            data_good  = True
-        log.debug( 'data_good, `%s`' % data_good )
-        if data_good is False:
-            return 'invalid'
-        return  # never gets here
+            data_good_check  = True
+        log.debug( 'data_good_check, `%s`' % data_good_check )
+        return data_good_check
 
     ## end class CreateUserHandler()
 
