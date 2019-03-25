@@ -21,30 +21,31 @@ class CreateUserHandler( object ):
             Called by views.create_user() """
         log.debug( '%s - request.__dict__, `%s`' % (self.request_id, pprint.pformat(request.__dict__)) )
         log.debug( '%s - request.POST, `%s`' % (self.request_id, pprint.pformat(request.POST)) )
-        summary_check = 'invalid'
         ## auth-key check
         auth_key_good = False
-        if request.POST['auth_key'] == settings_app.API_KEY:
-            if source_ip in settings_app.LEGIT_IPS:
-                auth_key_good = True
+        if 'auth_key' in request.POST.keys():
+            if request.POST['auth_key'] == settings_app.API_KEY:
+                source_ip = request.META.get('REMOTE_ADDR', 'unavailable')
+                if source_ip in settings_app.LEGIT_IPS:
+                    auth_key_good = True
         log.debug( 'auth_key_good, `%s`' % auth_key_good )
+        if auth_key_good is False:
+            return 'invalid'
         ## data-check
         data_good = False
-        if sorted( request.POST.keys() == ['auth_key', 'user_data'] ):
-            user_keys = list( request.POST['user_data'].keys() )
-            check_flag = 'init'
-            for element in self.required_elements:
-                if element not in user_keys:
-                    log.debug( 'missing element, `%s`; will return False' % element )
-                    check_flag = 'failed'
-                    break
-            if check_flag == 'init':
-                data_good  = True
+        user_keys = list( request.POST.keys() )
+        check_flag = 'init'
+        for element in self.required_elements:
+            if element not in user_keys:
+                log.debug( 'missing element, `%s`; will return False' % element )
+                check_flag = 'failed'
+                break
+        if check_flag == 'init':
+            data_good  = True
         log.debug( 'data_good, `%s`' % data_good )
-        if auth_key_good is True and data_good is True:
-                summary_check = 'valid'
-        log.debug( '%s - summary_check, `%s`' % (self.request_id, summary_check) )
-        return summary_check
+        if data_good is False:
+            return 'invalid'
+        return  # never gets here
 
     ## end class CreateUserHandler()
 
