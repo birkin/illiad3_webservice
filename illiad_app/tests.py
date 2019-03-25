@@ -9,12 +9,26 @@ from django.test import Client, TestCase
 class ClientCreateUser_Test( TestCase ):
     """ Tests views.create_user() """
 
-    def test_create_user(self):
-        """ Checks happy path response. """
+    def test_create_user__good_data(self):
+        """ Checks good data. """
+        c = Client()
+        params = {
+            'auth_key': settings_app.API_KEY,  # brown internal api
+            'auth_id': 'foo',
+            'email': 'bar'
+            }
+        response = c.post( '/create_user/', params )
+        self.assertEqual( 400, response.status_code )
+        # jdct = json.loads( response.content )
+        # self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+
+    def test_create_user__bad_data(self):
+        """ Checks bad data. """
         c = Client()
         response = c.post( '/create_user/', {'aa': 'foo_a', 'bb': 'foo_b'} )
-        jdct = json.loads( response.content )
-        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+        self.assertEqual( 400, response.status_code )
+        # jdct = json.loads( response.content )
+        # self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
 
     ## end class ClientCheckUser_Test()
 
