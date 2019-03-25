@@ -33,8 +33,11 @@ class CreateUserHandler( object ):
         auth_key_check = False
         if 'auth_key' in request.POST.keys():
             if request.POST['auth_key'] == settings_app.API_KEY:
+                log.debug( 'auth_key ok' )
                 source_ip = request.META.get('REMOTE_ADDR', 'unavailable')
+                log.debug( 'source_ip, ```%s```' % source_ip )
                 if source_ip in settings_app.LEGIT_IPS:
+                    log.debug( 'source_ip ok' )
                     auth_key_check = True
         log.debug( 'auth_key_check, `%s`' % auth_key_check )
         return auth_key_check
