@@ -49,6 +49,7 @@ def create_user( request ):
     handler = CreateUserHandler()
     log.debug( '%s - starting' % handler.request_id )
     if handler.data_check( request ) == 'invalid':
+        log.debug( 'returning `BadRequest` response' )
         return HttpResponseBadRequest( 'Bad Request' )
     # return HttpResponse( 'coming' )
     result_data = handler.create_user( request )

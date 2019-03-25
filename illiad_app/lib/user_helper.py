@@ -14,7 +14,7 @@ class CreateUserHandler( object ):
 
     def __init__( self ):
         self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
-        self.required_elements = [ 'auth_id', 'email' ]
+        self.required_elements = [ 'auth_id', 'email', 'first_name', 'last_name' ]
 
     def data_check( self, request ):
         """ Checks data.
