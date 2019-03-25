@@ -9,7 +9,8 @@ from illiad_app.lib import basic_auth
 log = logging.getLogger(__name__)
 
 
-class UserHelper( object ):
+class CheckUserHelper( object ):
+    """ Checks user status -- meaning 'registered', 'blocked', etc. """
 
     def __init__( self ):
         self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
@@ -93,4 +94,4 @@ class UserHelper( object ):
             }
         return response_dct
 
-    ## end class UserHelper()
+    ## end class CheckUserHelper()
