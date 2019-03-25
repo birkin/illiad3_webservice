@@ -258,12 +258,72 @@ class IlliadSession( object ):
                           cookies=self.cookies,
                           verify=True,
                           timeout=15)
+        log.debug( 'resp.status_code, `%s`' % resp.status_code )
+        log.debug( 'new-user response, ```%s```' % resp.content )
         out = {}
-        #out['meta'] = r.content
+        if (resp.status_code is not 200) or ('statusError' in resp.content.decode('utf-8', 'replace')):  # `statusError` element or attribute (can't remember which) in html when, eg, a required element is missing (only seen for first-name and last-name)
+            self.registered = False
+            out['status'] = 'registration_failed'
+        else:
+            self.registered = True
+            out['status'] = 'Registered'
         out['status_code'] = resp.status_code
-        self.registered = True
-        out['status'] = 'Registered'
+        log.debug( 'register_user output for `%s`, ```%s```' % (self.username, pprint.pformat(out)) )
         return out
+
+        ## end def register_user()
+
+    # def register_user(self, user_dict, **kwargs):
+    #     """
+    #     user_dict contains the required information about the patron.
+
+    #     Pass in alternate keywords to specify other user attributes,
+    #     e.g: site="Medical Library"
+
+    #     """
+    #     #pull appropriate user dict variables.  Set some defaults.
+    #     first_name = user_dict.get('first_name', None)
+    #     last_name = user_dict.get('last_name', None)
+    #     email = user_dict.get('email', None)
+    #     #Faculty, staff, student, etct
+    #     status = user_dict.get('status', 'Student')
+    #     address = user_dict.get('address', 'See campus directory')
+    #     phone = user_dict.get('phone', 'N/A')
+    #     reg_key = {}
+    #     reg_key['SessionID'] = self.session_id
+    #     reg_key['ILLiadForm'] = 'ChangeUserInformation'
+    #     reg_key['Username'] = self.username
+    #     reg_key['FirstName'] = first_name
+    #     reg_key['LastName'] = last_name
+    #     reg_key['EMailAddress'] = email
+    #     reg_key['StatusGroup'] = status
+    #     reg_key['Phone'] = phone
+    #     reg_key['Address'] = address
+    #     #defaults
+    #     reg_key['NotifyGroup'] = 'E-Mail'
+    #     reg_key['DeliveryGroup'] = 'Electronic Delivery if Possible'
+    #     reg_key['LoanDeliveryGroup'] = 'Hold for Pickup'
+    #     reg_key['WebDeliveryGroup'] = 'Yes'
+    #     reg_key['Site'] = kwargs.get('site', 'Rockefeller Circ. Desk')
+    #     reg_key['NVTGC'] = 'ILL'
+    #     reg_key['SubmitButton'] = 'Submit Information'
+    #     reg_key['Department'] = kwargs.get('department', 'Other - Unlisted')
+
+    #     log.info("Registering %s with ILLiad as %s." % (self.username, status))
+
+    #     resp = requests.post(self.url,
+    #                       data=reg_key,
+    #                       headers=self.header,
+    #                       cookies=self.cookies,
+    #                       verify=True,
+    #                       timeout=15)
+    #     log.debug( 'new-user response, ```%s```' % resp.content )
+    #     out = {}
+    #     #out['meta'] = r.content
+    #     out['status_code'] = resp.status_code
+    #     self.registered = True
+    #     out['status'] = 'Registered'
+    #     return out
 
     ## end class class IlliadSession()
 
