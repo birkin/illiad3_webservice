@@ -16,10 +16,12 @@ class ClientCreateUser_Test( TestCase ):
             'auth_key': settings_app.API_KEY,  # brown internal api
             # 'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
             'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,
+            'first_name': 'the-first-name',
+            'last_name': 'the-last-name',
             'email': 'bar'
             }
         response = c.post( '/create_user/', params )
-        # self.assertEqual( 200, response.status_code )
+        self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
 
@@ -28,6 +30,20 @@ class ClientCreateUser_Test( TestCase ):
         c = Client()
         response = c.post( '/create_user/', {'aa': 'foo_a', 'bb': 'foo_b'} )
         self.assertEqual( 400, response.status_code )
+
+    def test_create_user__missing_data(self):
+        """ Checks missing data. """
+        c = Client()
+        params = {
+            'auth_key': settings_app.API_KEY,  # brown internal api
+            'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,
+            # 'first_name': 'the-first-name',  # first_name is required
+            'last_name': 'the-last-name',
+            'email': 'bar'
+            }
+        response = c.post( '/create_user/', params )
+        self.assertEqual( 400, response.status_code )
+
 
     ## end class ClientCheckUser_Test()
 
