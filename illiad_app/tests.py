@@ -9,18 +9,18 @@ from django.test import Client, TestCase
 class ClientCreateUser_Test( TestCase ):
     """ Tests views.create_user() """
 
-    def test_create_user__good_data(self):
-        """ Checks good data. """
-        c = Client()
-        params = {
-            'auth_key': settings_app.API_KEY,  # brown internal api
-            'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
-            'email': 'bar'
-            }
-        response = c.post( '/create_user/', params )
-        # self.assertEqual( 200, response.status_code )
-        jdct = json.loads( response.content )
-        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+    # def test_create_user__good_data(self):
+    #     """ Checks good data. """
+    #     c = Client()
+    #     params = {
+    #         'auth_key': settings_app.API_KEY,  # brown internal api
+    #         'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
+    #         'email': 'bar'
+    #         }
+    #     response = c.post( '/create_user/', params )
+    #     # self.assertEqual( 200, response.status_code )
+    #     jdct = json.loads( response.content )
+    #     self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
 
     def test_create_user__bad_data(self):
         """ Checks bad data. """
@@ -82,8 +82,22 @@ class ClientCheckUser_Test( TestCase ):
             jdct['response']['status_data']
             )
 
-    # def test_check_new_user(self):
-    #     TODO -- if I can auto-delete the new user
+    def test_check_unregistered_user(self):
+        """ Checks unregistered user.
+            NOTE: any user 'new' to illiad is entered into the database and looks like this user. """
+        b64_bytes = base64.b64encode( b'%s:%s' % (settings_app.BASIC_AUTH_USER.encode('utf-8'), settings_app.BASIC_AUTH_PASSWORD.encode('utf-8')) )
+        headers = {
+            'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
+            'User-Agent': 'bul-test-client' }
+        c = Client()
+        response = c.get( '/check_user/', {'user': settings_app.TEST_UNREGISTERED_USERNAME}, **headers )
+        self.assertEqual( 200, response.status_code )
+        jdct = json.loads( response.content )
+        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+        self.assertEqual(
+            {'authenticated': True, 'blocked': None, 'disavowed': None, 'registered': False, 'interpreted_new_user': True},
+            jdct['response']['status_data']
+            )
 
     ## end class ClientCheckUser_Test()
 
