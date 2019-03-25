@@ -61,6 +61,11 @@ class CreateUserHandler( object ):
             Called by views.create_user() """
         usr_dct = dict( request.POST.items() )
         log.debug( 'usr_dct, ```%s```' % pprint.pformat(usr_dct) )
+        illiad_session = IlliadSession( settings_app.ILLIAD_REMOTE_AUTH_URL, settings_app.ILLIAD_REMOTE_AUTH_KEY, usr_dct['auth_id'] )
+        login_response_dct = illiad_session.login()
+        log.debug( 'login_response_dct, ```%s```' % pprint.pformat(login_response_dct) )
+        register_response_dct = illiad_session.register_user( usr_dct )
+        log.debug( 'register_response_dct, ```%s```' % pprint.pformat(register_response_dct) )
         return { 'message': 'coming' }
 
 
