@@ -5,8 +5,22 @@ from . import settings_app
 from django.test import Client, TestCase
 
 
+
+class ClientCreateUser_Test( TestCase ):
+    """ Tests views.create_user() """
+
+    def test_create_user(self):
+        """ Checks happy path response. """
+        c = Client()
+        response = c.post( '/create_user/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        jdct = json.loads( response.content )
+        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+
+    ## end class ClientCheckUser_Test()
+
+
 class ClientCheckUser_Test( TestCase ):
-    """ Tests views.check_user() """
+    """ Tests views.check_user() -- for status meaning `blocked`, `registered`, etc. """
 
     def test_check_good_existing_user(self):
         """ Checks happy path. """
@@ -62,7 +76,6 @@ class ClientCheckUser_Test( TestCase ):
     ## end class ClientCheckUser_Test()
 
 
-
 class ClientV2_Test( TestCase ):
     """ Tests easyBorrow-api v2 """
 
@@ -87,20 +100,6 @@ class ClientV2_Test( TestCase ):
     #     response = c.post(
     #         '/v2/make_request/',
     #         { 'auth_key': settings_app.TEST_AUTH_KEY, 'openurl': 'foo_b', 'request_id': 'foo_c', 'username': settings_app.TEST_EXISTING_GOOD_USER }
-    #         )
-    #     self.assertEqual( 200, response.status_code )
-    #     response_dct = json.loads( response.content )
-    #     self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
-    #     self.assertEqual( 'submission_successful', response_dct['status'] )
-
-    # def test__new_user(self):
-    #     """ New user POST should submit a request and return a transaction number.
-    #         TODO: This test needs work; it is disabled so as not to submit unnecessary real requests. """
-    #     c = Client()
-    #     username = '{test_root}{random}'.format( test_root=settings_app.TEST_NEW_USER_ROOT, random=random.randint(11111, 99999) )
-    #     response = c.post(
-    #         '/v2/make_request/',
-    #         { 'auth_key': settings_app.TEST_AUTH_KEY, 'openurl': 'foo_b', 'request_id': 'foo_c', 'username': username }
     #         )
     #     self.assertEqual( 200, response.status_code )
     #     response_dct = json.loads( response.content )
