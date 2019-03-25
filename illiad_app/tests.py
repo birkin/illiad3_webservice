@@ -27,8 +27,6 @@ class ClientCreateUser_Test( TestCase ):
         c = Client()
         response = c.post( '/create_user/', {'aa': 'foo_a', 'bb': 'foo_b'} )
         self.assertEqual( 400, response.status_code )
-        # jdct = json.loads( response.content )
-        # self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
 
     ## end class ClientCheckUser_Test()
 
