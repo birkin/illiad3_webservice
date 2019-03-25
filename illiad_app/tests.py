@@ -14,13 +14,13 @@ class ClientCreateUser_Test( TestCase ):
         c = Client()
         params = {
             'auth_key': settings_app.API_KEY,  # brown internal api
-            'auth_id': 'foo',
+            'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
             'email': 'bar'
             }
         response = c.post( '/create_user/', params )
-        self.assertEqual( 200, response.status_code )
-        # jdct = json.loads( response.content )
-        # self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+        # self.assertEqual( 200, response.status_code )
+        jdct = json.loads( response.content )
+        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
 
     def test_create_user__bad_data(self):
         """ Checks bad data. """
