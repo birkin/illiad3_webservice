@@ -44,7 +44,8 @@ def make_request_v2( request ):
 
 def create_user( request ):
     """ Handles new-user creation. """
-     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    return HttpResponse( 'coming' )
     rq_now = datetime.datetime.now()
     handler = CreateUserHandler()
     log.debug( '%s - starting' % handler.request_id )
