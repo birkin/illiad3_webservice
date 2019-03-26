@@ -15,7 +15,7 @@ class ClientCreateUser_Test( TestCase ):
         params = {
             'auth_key': settings_app.API_KEY,  # brown internal api
             # 'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
-            'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,
+            'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,  # functionally the line above is more accurate, but this is fine for regular automated tests.
             'first_name': 'the-first-name',
             'last_name': 'the-last-name',
             'email': 'bar'
@@ -99,22 +99,24 @@ class ClientCheckUser_Test( TestCase ):
             jdct['response']['status_data']
             )
 
-    def test_check_unregistered_user(self):
-        """ Checks unregistered user.
-            NOTE: any user 'new' to illiad is entered into the database and looks like this user. """
-        b64_bytes = base64.b64encode( b'%s:%s' % (settings_app.BASIC_AUTH_USER.encode('utf-8'), settings_app.BASIC_AUTH_PASSWORD.encode('utf-8')) )
-        headers = {
-            'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
-            'User-Agent': 'bul-test-client' }
-        c = Client()
-        response = c.get( '/check_user/', {'user': settings_app.TEST_UNREGISTERED_USERNAME}, **headers )
-        self.assertEqual( 200, response.status_code )
-        jdct = json.loads( response.content )
-        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
-        self.assertEqual(
-            {'authenticated': True, 'blocked': None, 'disavowed': None, 'registered': False, 'interpreted_new_user': True},
-            jdct['response']['status_data']
-            )
+    # def test_check_unregistered_user(self):
+    #     """ Checks unregistered user.
+    #         NOTE: any user 'new' to illiad is entered into the database and looks like this user.
+    #               ...meaning that this test WILL CREATE A NEW USER """
+    #     b64_bytes = base64.b64encode( b'%s:%s' % (settings_app.BASIC_AUTH_USER.encode('utf-8'), settings_app.BASIC_AUTH_PASSWORD.encode('utf-8')) )
+    #     headers = {
+    #         'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
+    #         'User-Agent': 'bul-test-client' }
+    #     c = Client()
+    #     # response = c.get( '/check_user/', {'user': settings_app.TEST_UNREGISTERED_USERNAME}, **headers )
+    #     response = c.get( '/check_user/', {'user': '%s%s' % ( 'zzzz', random.randint(1111, 9999) )}, **headers )
+    #     self.assertEqual( 200, response.status_code )
+    #     jdct = json.loads( response.content )
+    #     self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+    #     self.assertEqual(
+    #         {'authenticated': True, 'blocked': None, 'disavowed': None, 'registered': False, 'interpreted_new_user': True},
+    #         jdct['response']['status_data']
+    #         )
 
     ## end class ClientCheckUser_Test()
 
