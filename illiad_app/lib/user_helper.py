@@ -66,8 +66,31 @@ class CreateUserHandler( object ):
         log.debug( 'login_response_dct, ```%s```' % pprint.pformat(login_response_dct) )
         register_response_dct = illiad_session.register_user( usr_dct )
         log.debug( 'register_response_dct, ```%s```' % pprint.pformat(register_response_dct) )
-        return { 'message': 'coming' }
+        return register_response_dct
 
+    def prep_output_dct( self, start_time, request, data_dct ):
+        """ Preps output-dct.
+            Called by views.create_user() """
+        params = dict( request.POST.items() )
+        params.pop( 'auth_key', None )
+        output_dct = {
+            'request': {
+                'url': '%s://%s%s' % (
+                    request.scheme, request.META.get('HTTP_HOST', '127.0.0.1'), request.META['PATH_INFO'] ),  # HTTP_HOST doesn't exist for client-tests
+                'params': params,
+                'timestamp': str( start_time ) },
+            'response': self.prep_response_segment( start_time, data_dct ) }
+        log.debug( '%s - output_dct, ```%s```' % (self.request_id, pprint.pformat(output_dct)) )
+        return output_dct
+
+    def prep_response_segment( self, start_time, data_dct ):
+        """ Returns response part of context dct.
+            Called by prep_output_dct() """
+        response_dct = {
+            'elapsed_time': str( datetime.datetime.now() - start_time ),
+            'status_data': data_dct
+            }
+        return response_dct
 
     ## end class CreateUserHandler()
 
