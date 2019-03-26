@@ -24,6 +24,9 @@ class ClientCreateUser_Test( TestCase ):
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+        self.assertEqual( ['params', 'timestamp', 'url'], sorted(list(jdct['request'].keys())) )
+        self.assertEqual( ['elapsed_time', 'status_data'], sorted(list(jdct['response'].keys())) )
+        self.assertEqual( {'status': 'Registered', 'status_code': 200}, jdct['response']['status_data'] )
 
     def test_create_user__bad_data(self):
         """ Checks bad data. """
