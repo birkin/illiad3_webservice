@@ -22,7 +22,7 @@ class MakeBookRequestManager( object ):
 
     def check_validity( self, request ):
         """ Checks post, auth_key, ip, & params.
-            Called by views.make_request_v3() """
+            Called by views.cloud_book_request() """
         log.debug( '%s - starting check_validity()' % self.request_id )
         return_val = False
         if request.method == 'POST':
@@ -47,5 +47,14 @@ class MakeBookRequestManager( object ):
         return_val = True if ( return_val is None ) else False
         log.debug( '%s - return_val, `%s`' % (self.request_id, return_val) )
         return return_val
+
+    def manage_request( self, request):
+        """ - Checks that user status is ok (_new_ user check already done in easyAccess),
+            - Parses openurl,
+            - Submits request to illiad-cloud-api transaction endpoint.
+            Called by views.cloud_book_request() """
+        dummy_output_dct = { 'status': 'foo', 'transaction_number': 'bar' }
+        log.debug( '%s - output-dct, `%s`' % (self.request_id, dummy_output_dct) )
+        return dummy_output_dct
 
     ## end class MakeRequestManager()

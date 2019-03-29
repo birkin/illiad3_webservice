@@ -193,6 +193,6 @@ class ClientCloudBookRequest_Test( TestCase ):
         self.assertEqual( 200, response.status_code )
         response_dct = json.loads( response.content )
         self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
-        self.assertEqual( 'submission_successful', response_dct['status'] )
+        self.assertEqual( 'foo', response_dct['status'] )
 
     ## end class ClientCloudBookRequest_Test()

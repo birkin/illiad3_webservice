@@ -50,8 +50,9 @@ def cloud_book_request( request ):
     bk_rq_manager = MakeBookRequestManager( request.POST.get('request_id', 'no_id') )
     if bk_rq_manager.check_validity( request ) is False:
         return HttpResponseBadRequest( 'Bad Request' )
-    output_dct = bk_rq_manager.run_request( request )
+    output_dct = bk_rq_manager.manage_request( request )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
 def create_user( request ):
