@@ -163,13 +163,13 @@ class ClientV2_Test( TestCase ):
     ## end class ClientV2_Test()
 
 
-class ClientV3_MakeBookRequest_Test( TestCase ):
-    """ Tests easyBorrow-api v3 """
+class ClientCloudBookRequest_Test( TestCase ):
+    """ Tests new easyBorrow-api using cloud ILLiad-api """
 
     def test__check_bad_method(self):
         """ GET (api requires POST) should return 400. """
         c = Client()
-        response = c.get( '/v3/make_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        response = c.get( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
         self.assertEqual( 400, response.status_code )
         self.assertEqual( b'Bad Request', response.content )
 
@@ -178,7 +178,7 @@ class ClientV3_MakeBookRequest_Test( TestCase ):
             eg: $ python ./manage.py test illiad_app.tests.ClientV3_MakeBookRequest_Test.test__check_bad_post_params
             """
         c = Client()
-        response = c.post( '/v3/make_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        response = c.post( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
         self.assertEqual( 400, response.status_code )
         self.assertEqual( b'Bad Request', response.content )
 
@@ -187,7 +187,7 @@ class ClientV3_MakeBookRequest_Test( TestCase ):
             This test is good, just disabled so as not to auto-submit real requests. """
         c = Client()
         response = c.post(
-            '/v3/make_book_request/',
+            '/cloud_book_request/',
             { 'auth_key': settings_app.TEST_AUTH_KEY, 'openurl': 'foo_b', 'request_id': 'foo_c', 'username': settings_app.TEST_EXISTING_GOOD_USER }
             )
         self.assertEqual( 200, response.status_code )
@@ -195,5 +195,4 @@ class ClientV3_MakeBookRequest_Test( TestCase ):
         self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
         self.assertEqual( 'submission_successful', response_dct['status'] )
 
-    ## end class ClientV2_Test()
-
+    ## end class ClientCloudBookRequest_Test()
