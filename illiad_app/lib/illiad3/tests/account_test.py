@@ -16,6 +16,7 @@ class SessionTest(unittest.TestCase):
         self.ILLIAD_REMOTE_AUTH_URL = os.environ['ILLIAD_MODULE__TEST_REMOTE_AUTH_URL']
         self.ILLIAD_REMOTE_AUTH_KEY = os.environ['ILLIAD_MODULE__TEST_REMOTE_AUTH_KEY']
         self.ILLIAD_USERNAME = os.environ['ILLIAD_MODULE__TEST_USERNAME']
+        self.BLOCKED_ILLIAD_USERNAME = os.environ['ILLIAD_MODULE__TEST_BLOCKED_USERNAME']
         self.DISAVOWED_ILLIAD_USERNAME = os.environ['ILLIAD_MODULE__TEST_DISAVOWED_USERNAME']
         self.ill = IlliadSession(
             self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY, self.ILLIAD_USERNAME )
@@ -25,27 +26,51 @@ class SessionTest(unittest.TestCase):
         self.ill.logout()
 
     def test_login(self):
+        """ Checks good existing-user login response.
+            NOTE: there is no 'login' test for a new-user, because the nature of submitting a new-user _creates_ the user. """
         login_resp_dct = self.ill.login()
         self.assertTrue( 'session_id' in login_resp_dct.keys()  )
         self.assertTrue( 'authenticated' in login_resp_dct.keys() )
         self.assertTrue( 'registered' in login_resp_dct.keys() )
-        self.assertTrue( login_resp_dct['authenticated'] )
         self.assertTrue( 'blocked' not in login_resp_dct.keys() )
         self.assertTrue( 'disavowed' not in login_resp_dct.keys() )
+        self.assertEqual( len(login_resp_dct['session_id']) > 0, True )
+        self.assertEqual( login_resp_dct['authenticated'], True )
+        self.assertEqual( login_resp_dct['registered'], True )
 
     def test_disavowed_login(self):
+        """ Checks disavowed response. """
         custom_ill = IlliadSession(
             self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY, self.DISAVOWED_ILLIAD_USERNAME )
         login_resp_dct = custom_ill.login()
         log.debug( 'TEMP; login_resp_dct, ```%s```' % pprint.pformat(login_resp_dct) )
         self.assertTrue( 'session_id' in login_resp_dct.keys()  )
-        self.assertEqual( login_resp_dct['session_id'], None  )
         self.assertTrue( 'authenticated' in login_resp_dct.keys() )
-        self.assertEqual( login_resp_dct['authenticated'], False  )
         self.assertTrue( 'registered' not in login_resp_dct.keys() )
         self.assertTrue( 'blocked' not in login_resp_dct.keys() )
         self.assertTrue( 'disavowed' in login_resp_dct.keys() )
+        self.assertEqual( login_resp_dct['session_id'], None  )
+        self.assertEqual( login_resp_dct['authenticated'], False  )
         self.assertEqual( login_resp_dct['disavowed'], True  )
+        custom_ill.logout()
+
+    def test_blocked_login(self):
+        """ Checks blocked response.
+            NOTE: if this test fails, it's possible that the "blocked" test-user was deleted or unblocked. """
+        custom_ill = IlliadSession(
+            self.ILLIAD_REMOTE_AUTH_URL, self.ILLIAD_REMOTE_AUTH_KEY, self.BLOCKED_ILLIAD_USERNAME )
+        login_resp_dct = custom_ill.login()
+        log.debug( 'TEMP; login_resp_dct, ```%s```' % pprint.pformat(login_resp_dct) )
+        self.assertTrue( 'session_id' in login_resp_dct.keys()  )
+        self.assertTrue( 'authenticated' in login_resp_dct.keys() )
+        self.assertTrue( 'registered' in login_resp_dct.keys() )
+        # self.assertTrue( 'blocked' not in login_resp_dct.keys() )
+        self.assertTrue( 'blocked' in login_resp_dct.keys() )
+        self.assertTrue( 'disavowed' not in login_resp_dct.keys() )
+        # self.assertEqual( len(login_resp_dct['session_id']) > 0, True )
+        self.assertEqual( login_resp_dct['session_id'], None  )
+        self.assertEqual( login_resp_dct['authenticated'], True  )
+        self.assertEqual( login_resp_dct['registered'], True  )
         custom_ill.logout()
 
     ## submit_key tests ##
