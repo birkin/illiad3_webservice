@@ -27,7 +27,7 @@ class MakeBookRequestManager( object ):
         return_val = False
         if request.method == 'POST':
             if self.check_params( request ) is True:
-                if request.POST['auth_key'] == self.API_KEY:
+                if request.POST['auth_key'] == settings_app.API_KEY:
                     return_val = True
                 else:
                     log.debug( '%s - ip, `%s`' % (self.request_id, request.META.get('REMOTE_ADDR', 'unavailable')) )
