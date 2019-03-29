@@ -67,7 +67,6 @@ def create_user( request ):
     result_data = handler.create_user( request )
     output_dct = handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
->>>>>>> dev
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
