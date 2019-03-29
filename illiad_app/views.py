@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
 from illiad_app.lib.make_request_v3 import MakeBookRequestManager
 from illiad_app.lib.status import CheckStatusHandler, UpdateStatusHandler
+from illiad_app.lib.user_helper import CheckUserHelper, CreateUserHandler
 from illiad_app.models import V2_Helper
 
 
@@ -42,7 +43,7 @@ def make_request_v2( request ):
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
-def make_book_request_v3( request ):
+def cloud_book_request( request ):
     """ Handles current (March 2019) easyBorrow controller illiad call -- via hitting ILLiad API. """
     log.debug( 'starting' )
     # log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
@@ -51,11 +52,29 @@ def make_book_request_v3( request ):
         return HttpResponseBadRequest( 'Bad Request' )
     v3_response_dct = v3_rq_manager.run_request( request )
     output = json.dumps( v3_response_dct, sort_keys=True, indent=2 )
+
+
+def create_user( request ):
+    """ Handles new-user creation. """
+    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    rq_now = datetime.datetime.now()
+    handler = CreateUserHandler()
+    log.debug( '%s - starting' % handler.request_id )
+    if handler.data_check( request ) == 'invalid':
+        log.debug( 'returning `BadRequest` response' )
+        return HttpResponseBadRequest( 'Bad Request' )
+    # return HttpResponse( 'coming' )
+    result_data = handler.create_user( request )
+    output_dct = handler.prep_output_dct( rq_now, request, result_data )
+    output = json.dumps( output_dct, sort_keys=True, indent=2 )
+>>>>>>> dev
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
 def check_status_via_shib( request ):
-    """ Handles shib-protected check-user-status. """
+    """ Handles shib-protected check-user-status.
+        Status meaning "type", eg, `Staff`, `Undergraduate`.
+        TODO: change this 'status' reference to 'type'. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_checker_handler = CheckStatusHandler()
@@ -69,7 +88,9 @@ def check_status_via_shib( request ):
 
 
 def update_status( request ):
-    """ Interface for updating user-status. """
+    """ Interface for updating user-status.
+        Status meaning "type", eg, `Staff`, `Undergraduate`.
+        TODO: change this 'status' reference to 'type'. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_update_handler = UpdateStatusHandler()
@@ -77,6 +98,23 @@ def update_status( request ):
     if status_update_handler.data_check( request ) == 'invalid':
         return HttpResponseBadRequest( 'Bad Request' )
     result_data = status_update_handler.manage_status_update( request, rq_now )
+    output_dct = json.dumps( result_data, sort_keys=True, indent=2 )
+    return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
+
+
+def check_user( request ):
+    """ Handles logging a user in, evaluating response, and returning basic status info.
+        Status meaning `registered`, `new-user`, `blocked`, `revoked`.
+        This was created in the shift to have the article part of easyAccess hit this illiad api instead of its pip-install module.
+        TODO... Eventually don't hit this url, and then a separte 'create-new-user' url...
+                instead, perhaps hit a check_user_and_create_new_user_if_necessary() url. """
+    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    rq_now = datetime.datetime.now()
+    check_user_handler = CheckUserHelper()
+    log.debug( '%s - starting' % check_user_handler.request_id )
+    if check_user_handler.data_check( request ) == 'invalid':
+        return HttpResponseBadRequest( 'Bad Request' )
+    result_data = check_user_handler.manage_check( request, rq_now )
     output_dct = json.dumps( result_data, sort_keys=True, indent=2 )
     return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
 
