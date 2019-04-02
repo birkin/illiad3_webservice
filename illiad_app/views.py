@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFou
 from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
 from illiad_app.lib.cloud_request import MakeBookRequestManager
+from illiad_app.lib.cloud_api_create_user import CloudCreateUserHandler
 from illiad_app.lib.status import CheckStatusHandler, UpdateStatusHandler
 from illiad_app.lib.user_helper import CheckUserHelper, CreateUserHandler
 from illiad_app.models import V2_Helper
@@ -65,6 +66,21 @@ def create_user( request ):
         log.debug( 'returning `BadRequest` response' )
         return HttpResponseBadRequest( 'Bad Request' )
     # return HttpResponse( 'coming' )
+    result_data = handler.create_user( request )
+    output_dct = handler.prep_output_dct( rq_now, request, result_data )
+    output = json.dumps( output_dct, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
+
+
+def cloud_create_user( request ):
+    """ Handles new-user creation via official illiad-cloud-api."""
+    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    rq_now = datetime.datetime.now()
+    handler = CloudCreateUserHandler()
+    log.debug( '%s - starting' % handler.request_id )
+    if handler.data_check( request ) == 'invalid':
+        log.debug( 'returning `BadRequest` response' )
+        return HttpResponseBadRequest( 'Bad Request' )
     result_data = handler.create_user( request )
     output_dct = handler.prep_output_dct( rq_now, request, result_data )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
