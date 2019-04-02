@@ -5,6 +5,33 @@ from . import settings_app
 from django.test import Client, TestCase
 
 
+class ClientCloudCreateUser_Test( TestCase ):
+    """ Tests views.cloud_create_user() """
+
+    def test_create_user__good_data(self):
+        """ Checks good data. """
+        c = Client()
+        params = {
+            'auth_key': settings_app.API_KEY,  # brown internal api
+            'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
+            # 'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,  # functionally the line above is more accurate, but this is fine for regular automated tests.
+            'department': 'test-department',
+            'email': 'test@test.edu',
+            'first_name': 'test-first-name',
+            'last_name': 'test-last-name',
+            'phone': 'unavailable',
+            'status': 'test-status'  # eg 'Undergraduate Students'
+            }
+        response = c.post( '/cloud_create_user/', params )
+        self.assertEqual( 200, response.status_code )
+        jdct = json.loads( response.content )
+        self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+        self.assertEqual( ['params', 'timestamp', 'url'], sorted(list(jdct['request'].keys())) )
+        self.assertEqual( ['elapsed_time', 'raw_data', 'status_data'], sorted(list(jdct['response'].keys())) )
+        self.assertEqual( {'status': 'Registered', 'status_code': 200}, jdct['response']['status_data'] )
+
+    ## end class ClientCloudCreateUser_Test()
+
 
 class ClientCreateUser_Test( TestCase ):
     """ Tests views.create_user() """
@@ -47,8 +74,7 @@ class ClientCreateUser_Test( TestCase ):
         response = c.post( '/create_user/', params )
         self.assertEqual( 400, response.status_code )
 
-
-    ## end class ClientCheckUser_Test()
+    ## end class ClientCreateUser_Test()
 
 
 class ClientCheckUser_Test( TestCase ):
