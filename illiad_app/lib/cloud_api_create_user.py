@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import logging, pprint, random
+import logging, os, pprint, random
+import requests
 from illiad_app import settings_app
 
 
@@ -23,7 +24,7 @@ class CloudCreateUserHandler( object ):
             ## data check
             if self.data_good( request ) is True:
                 summary_check = 'valid'
-        log.debug( '%s - summary_check, `%s`' % summary_check )
+        log.debug( '%s - summary_check, `%s`' % (self.request_id, summary_check) )
         return summary_check
 
     def auth_key_good( self, request ):
@@ -61,11 +62,11 @@ class CloudCreateUserHandler( object ):
         usr_dct = dict( request.POST.items() )
         params = {
             ## non-user
-            'DeliveryMethod': 'Electronic Delivery if Possible',
+            'DeliveryMethod': 'Hold for Pickup',
             'LoanDeliveryMethod': 'Hold for Pickup',
-            'NotificationMethod': 'E-Mail',
+            'NotificationMethod': 'Electronic',
             'Web': True,
-            # 'AuthType': 'RemoteAuth',  # don't send
+            # 'AuthType': 'Default',  # don't send, will be set to `Default`
             ## user
             'Username': usr_dct['auth_id'],
             'FirstName': usr_dct['first_name'],
@@ -73,7 +74,7 @@ class CloudCreateUserHandler( object ):
             'EmailAddress': usr_dct['email'],
             'Phone': usr_dct['phone'],
             'Status': usr_dct['status'],  # "type, eg `Undergraduate Student`"
-            'Department': '',
+            'Department': usr_dct['department'],
             'Address': '',
             'Address2': '',
             'City': '',
@@ -84,7 +85,7 @@ class CloudCreateUserHandler( object ):
             }
         log.debug( '%s - params, ```%s```' % (self.request_id, pprint.pformat(params)) )
 
-        url = '%s%s' % ( os.environ['ILLIAD_WS__OFFICIAL_ILLIAD_API_URL'], 'Users' )  # root url contains ending-slash
+        url = '%s%s' % ( settings_app.ILLIAD_API_URL, 'Users' )  # root url contains ending-slash
         log.debug( '%s - url, ```%s```' % (self.request_id, url) )
 
         headers = {
@@ -94,7 +95,7 @@ class CloudCreateUserHandler( object ):
         try:
             r = requests.post( url, data=params, headers=headers, timeout=60, verify=True )
             log.debug( '%s - response, ```%s```' % (self.request_id, pprint.pformat(r.json())) )
-        except:
+        except Exception as e:
             log.error( '%s - exception creating new user, ```%s```' % (self.request_id, repr(e)) )
 
     ## end class class CloudCreateUserHandler()
