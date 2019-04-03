@@ -29,6 +29,7 @@ class ClientCloudCreateUser_Test( TestCase ):
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
         self.assertEqual( ['params', 'timestamp', 'url'], sorted(list(jdct['request'].keys())) )
         self.assertEqual( ['elapsed_time', 'status_data'], sorted(list(jdct['response'].keys())) )
+        self.assertEqual( {'status': 'Registered', 'status_code': 200}, jdct['response']['status_data'] )
         self.assertEqual( params['auth_id'], jdct['response']['status_data']['UserName'] )
 
     ## end class ClientCloudCreateUser_Test()
