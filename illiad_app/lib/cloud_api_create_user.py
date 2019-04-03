@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging, random
+from illiad_app import settings_app
 
 
 log = logging.getLogger(__name__)
@@ -24,6 +25,40 @@ class CloudCreateUserHandler( object ):
                 summary_check = 'valid'
         log.debug( 'summary_check, `%s`' % summary_check )
         return summary_check
+
+    def auth_key_good( self, request ):
+        """ Checks the auth_key and ip.
+            Called by data_check() """
+        auth_key_check = False
+        if 'auth_key' in request.POST.keys():
+            if request.POST['auth_key'] == settings_app.API_KEY:
+                log.debug( 'auth_key ok' )
+                source_ip = request.META.get('REMOTE_ADDR', 'unavailable')
+                log.debug( 'source_ip, ```%s```' % source_ip )
+                if source_ip in settings_app.LEGIT_IPS:
+                    log.debug( 'source_ip ok' )
+                    auth_key_check = True
+        log.debug( 'auth_key_check, `%s`' % auth_key_check )
+        return auth_key_check
+
+    def data_good( self, request ):
+        """ Checks for required params.
+            Called by data_check() """
+        ( data_good_check, user_keys, check_flag ) = ( False, list(request.POST.keys()), 'init' )
+        for element in self.required_elements:
+            if element not in user_keys:
+                log.debug( 'missing element, `%s`; will return False' % element )
+                check_flag = 'failed'
+                break
+        if check_flag == 'init':
+            data_good_check  = True
+        log.debug( 'data_good_check, `%s`' % data_good_check )
+        return data_good_check
+
+
+    ## end class class CloudCreateUserHandler()
+
+
 
 
 # import os, requests
