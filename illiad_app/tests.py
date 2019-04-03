@@ -6,29 +6,30 @@ from django.test import Client, TestCase
 
 
 class ClientCloudCreateUser_Test( TestCase ):
-    """ Tests views.cloud_create_user() """
+    """ Tests views.cloud_create_user()
+        NOTE: will really create new-user, so this test will likely be disabled. """
 
     def test_create_user__good_data(self):
-        """ Checks good data. """
+        """ Checks successful new-user creation. """
         c = Client()
         params = {
             'auth_key': settings_app.API_KEY,  # brown internal api
             'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
-            # 'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,  # functionally the line above is more accurate, but this is fine for regular automated tests.
+            # 'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,
             'department': 'test-department',
             'email': 'test@test.edu',
             'first_name': 'test-first-name',
             'last_name': 'test-last-name',
             'phone': 'unavailable',
-            'status': 'test-status'  # eg 'Undergraduate Students'
+            'status': 'test-status'  # really 'type', eg 'Undergraduate Student'
             }
         response = c.post( '/cloud_create_user/', params )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
         self.assertEqual( ['params', 'timestamp', 'url'], sorted(list(jdct['request'].keys())) )
-        self.assertEqual( ['elapsed_time', 'raw_data', 'status_data'], sorted(list(jdct['response'].keys())) )
-        self.assertEqual( {'status': 'Registered', 'status_code': 200}, jdct['response']['status_data'] )
+        self.assertEqual( ['elapsed_time', 'status_data'], sorted(list(jdct['response'].keys())) )
+        self.assertEqual( params['auth_id'], jdct['response']['status_data']['UserName'] )
 
     ## end class ClientCloudCreateUser_Test()
 
