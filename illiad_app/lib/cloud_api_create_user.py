@@ -95,10 +95,13 @@ class CloudCreateUserHandler( object ):
         try:
             r = requests.post( url, data=params, headers=headers, timeout=60, verify=True )
             response_dct = r.json()
+            response_dct['added_status_code'] = r.status_code
             log.debug( '%s - response, ```%s```' % (self.request_id, pprint.pformat(response_dct)) )
             return response_dct
         except Exception as e:
-            log.error( '%s - exception creating new user, ```%s```' % (self.request_id, repr(e)) )
+            message = 'exception creating new user, ```%s```' % repr(e)
+            log.error( '%s - ```%s```' % (self.request_id, message) )
+            return { 'error': message }
 
     def prep_output_dct( self, start_time, request, data_dct ):
         """ Preps output-dct.
@@ -111,16 +114,22 @@ class CloudCreateUserHandler( object ):
                     request.scheme, request.META.get('HTTP_HOST', '127.0.0.1'), request.META['PATH_INFO'] ),  # HTTP_HOST doesn't exist for client-tests
                 'params': params,
                 'timestamp': str( start_time ) },
-            'response': self.prep_response_segment( start_time, data_dct ) }
+            'response': self.prep_response_segment( start_time, data_dct, params['auth_id'] ) }
         log.debug( '%s - output_dct, ```%s```' % (self.request_id, pprint.pformat(output_dct)) )
         return output_dct
 
-    def prep_response_segment( self, start_time, data_dct ):
+    def prep_response_segment( self, start_time, data_dct, submitted_username ):
         """ Returns response part of context dct.
             Called by prep_output_dct() """
+        returned_status_code = data_dct['added_status_code']
+        if data_dct['UserName'] == submitted_username and returned_status_code == 200:
+            summary_dct = {'status': 'Registered', 'status_code': 200}
+        else:
+            summary_dct = { 'status': 'Failure', 'status_code': returned_status_code }
         response_dct = {
             'elapsed_time': str( datetime.datetime.now() - start_time ),
-            'status_data': data_dct
+            'raw_data': data_dct,
+            'status_data': summary_dct
             }
         return response_dct
 
