@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging, random
+import logging, pprint, random
 from illiad_app import settings_app
 
 
@@ -16,14 +16,14 @@ class CloudCreateUserHandler( object ):
 
     def data_check( self, request ):
         """ Checks data.
-            Called by views.create_user() """
+            Called by views.cloud_create_user() """
         ## auth-key check
         summary_check = 'invalid'
         if self.auth_key_good( request ) is True:
             ## data check
             if self.data_good( request ) is True:
                 summary_check = 'valid'
-        log.debug( 'summary_check, `%s`' % summary_check )
+        log.debug( '%s - summary_check, `%s`' % summary_check )
         return summary_check
 
     def auth_key_good( self, request ):
@@ -32,13 +32,13 @@ class CloudCreateUserHandler( object ):
         auth_key_check = False
         if 'auth_key' in request.POST.keys():
             if request.POST['auth_key'] == settings_app.API_KEY:
-                log.debug( 'auth_key ok' )
+                log.debug( '%s - auth_key ok' % self.request_id )
                 source_ip = request.META.get('REMOTE_ADDR', 'unavailable')
-                log.debug( 'source_ip, ```%s```' % source_ip )
+                log.debug( '%s - source_ip, ```%s```' % (self.request_id, source_ip) )
                 if source_ip in settings_app.LEGIT_IPS:
-                    log.debug( 'source_ip ok' )
+                    log.debug( '%s - source_ip ok' % self.request_id )
                     auth_key_check = True
-        log.debug( 'auth_key_check, `%s`' % auth_key_check )
+        log.debug( '%s - auth_key_check, `%s`' % (self.request_id, auth_key_check) )
         return auth_key_check
 
     def data_good( self, request ):
@@ -47,14 +47,55 @@ class CloudCreateUserHandler( object ):
         ( data_good_check, user_keys, check_flag ) = ( False, list(request.POST.keys()), 'init' )
         for element in self.required_elements:
             if element not in user_keys:
-                log.debug( 'missing element, `%s`; will return False' % element )
+                log.debug( '%s - missing element, `%s`; will return False' % (self.request_id, element) )
                 check_flag = 'failed'
                 break
         if check_flag == 'init':
             data_good_check  = True
-        log.debug( 'data_good_check, `%s`' % data_good_check )
+        log.debug( '%s - data_good_check, `%s`' % (self.request_id, data_good_check) )
         return data_good_check
 
+    def create_user( self, request ):
+        """ Creates new user via official illiad cloud api.
+            Called by views.cloud_create_user() """
+        usr_dct = dict( request.POST.items() )
+        params = {
+            ## non-user
+            'DeliveryMethod': 'Electronic Delivery if Possible',
+            'LoanDeliveryMethod': 'Hold for Pickup',
+            'NotificationMethod': 'E-Mail',
+            'Web': True,
+            # 'AuthType': 'RemoteAuth',  # don't send
+            ## user
+            'Username': usr_dct['auth_id'],
+            'FirstName': usr_dct['first_name'],
+            'LastName': usr_dct['last_name'],
+            'EmailAddress': usr_dct['email'],
+            'Phone': usr_dct['phone'],
+            'Status': usr_dct['status'],  # "type, eg `Undergraduate Student`"
+            'Department': '',
+            'Address': '',
+            'Address2': '',
+            'City': '',
+            'State': '',
+            'Zip': '',
+            # 'ExternalUserId': '',  # don't send
+            # 'PlainTextPassword': '',  # don't send
+            }
+        log.debug( '%s - params, ```%s```' % (self.request_id, pprint.pformat(params)) )
+
+        url = '%s%s' % ( os.environ['ILLIAD_WS__OFFICIAL_ILLIAD_API_URL'], 'Users' )  # root url contains ending-slash
+        log.debug( '%s - url, ```%s```' % (self.request_id, url) )
+
+        headers = {
+            'Accept-Type': 'application/json; charset=utf-8',
+            'ApiKey': os.environ['ILLIAD_WS__OFFICIAL_ILLIAD_API_KEY']
+            }
+        try:
+            r = requests.post( url, data=params, headers=headers, timeout=60, verify=True )
+            log.debug( '%s - response, ```%s```' % (self.request_id, pprint.pformat(r.json())) )
+        except:
+            log.error( '%s - exception creating new user, ```%s```' % (self.request_id, repr(e)) )
 
     ## end class class CloudCreateUserHandler()
 
