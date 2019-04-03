@@ -6,16 +6,38 @@ from django.test import Client, TestCase
 
 
 class ClientCloudCreateUser_Test( TestCase ):
-    """ Tests views.cloud_create_user()
-        NOTE: will really create new-user, so this test will likely be disabled. """
+    """ Tests views.cloud_create_user() """
 
-    def test_create_user__good_data(self):
-        """ Checks successful new-user creation. """
+    # def test_create_user__good_data(self):
+    #     """ Checks successful new-user creation.
+    #         NOTE: will really create new-user, so this test will likely be disabled. """
+    #     c = Client()
+    #     params = {
+    #         'auth_key': settings_app.API_KEY,  # brown internal api
+    #         'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
+    #         # 'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,
+    #         'department': 'test-department',
+    #         'email': 'test@test.edu',
+    #         'first_name': 'test-first-name',
+    #         'last_name': 'test-last-name',
+    #         'phone': 'unavailable',
+    #         'status': 'test-status'  # really 'type', eg 'Undergraduate Student'
+    #         }
+    #     response = c.post( '/cloud_create_user/', params )
+    #     self.assertEqual( 200, response.status_code )
+    #     jdct = json.loads( response.content )
+    #     self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
+    #     self.assertEqual( ['params', 'timestamp', 'url'], sorted(list(jdct['request'].keys())) )
+    #     self.assertEqual( ['elapsed_time', 'raw_data', 'status_data'], sorted(list(jdct['response'].keys())) )
+    #     self.assertEqual( {'status': 'Registered', 'status_code': 200}, jdct['response']['status_data'] )
+    #     self.assertEqual( params['auth_id'], jdct['response']['raw_data']['UserName'] )
+
+    def test_create_user__already_exists(self):
+        """ Checks handling when user already exists. """
         c = Client()
         params = {
             'auth_key': settings_app.API_KEY,  # brown internal api
-            'auth_id': '%s%s' % ( 'zzzz', random.randint(1111, 9999) ),
-            # 'auth_id': settings_app.TEST_UNREGISTERED_USERNAME,
+            'auth_id': settings_app.TEST_EXISTING_GOOD_USER,
             'department': 'test-department',
             'email': 'test@test.edu',
             'first_name': 'test-first-name',
@@ -29,8 +51,7 @@ class ClientCloudCreateUser_Test( TestCase ):
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
         self.assertEqual( ['params', 'timestamp', 'url'], sorted(list(jdct['request'].keys())) )
         self.assertEqual( ['elapsed_time', 'raw_data', 'status_data'], sorted(list(jdct['response'].keys())) )
-        self.assertEqual( {'status': 'Registered', 'status_code': 200}, jdct['response']['status_data'] )
-        self.assertEqual( params['auth_id'], jdct['response']['raw_data']['UserName'] )
+        self.assertEqual( {'status': 'Failure', 'status_code': 400}, jdct['response']['status_data'] )  # see log for 'raw_data' response.
 
     ## end class ClientCloudCreateUser_Test()
 
