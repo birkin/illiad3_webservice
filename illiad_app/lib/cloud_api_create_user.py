@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging, os, pprint, random
+import datetime, logging, os, pprint, random
 import requests
 from illiad_app import settings_app
 
@@ -94,9 +94,35 @@ class CloudCreateUserHandler( object ):
             }
         try:
             r = requests.post( url, data=params, headers=headers, timeout=60, verify=True )
-            log.debug( '%s - response, ```%s```' % (self.request_id, pprint.pformat(r.json())) )
+            response_dct = r.json()
+            log.debug( '%s - response, ```%s```' % (self.request_id, pprint.pformat(response_dct)) )
+            return response_dct
         except Exception as e:
             log.error( '%s - exception creating new user, ```%s```' % (self.request_id, repr(e)) )
+
+    def prep_output_dct( self, start_time, request, data_dct ):
+        """ Preps output-dct.
+            Called by views.cloud_create_user() """
+        params = dict( request.POST.items() )
+        params.pop( 'auth_key', None )
+        output_dct = {
+            'request': {
+                'url': '%s://%s%s' % (
+                    request.scheme, request.META.get('HTTP_HOST', '127.0.0.1'), request.META['PATH_INFO'] ),  # HTTP_HOST doesn't exist for client-tests
+                'params': params,
+                'timestamp': str( start_time ) },
+            'response': self.prep_response_segment( start_time, data_dct ) }
+        log.debug( '%s - output_dct, ```%s```' % (self.request_id, pprint.pformat(output_dct)) )
+        return output_dct
+
+    def prep_response_segment( self, start_time, data_dct ):
+        """ Returns response part of context dct.
+            Called by prep_output_dct() """
+        response_dct = {
+            'elapsed_time': str( datetime.datetime.now() - start_time ),
+            'status_data': data_dct
+            }
+        return response_dct
 
     ## end class class CloudCreateUserHandler()
 
