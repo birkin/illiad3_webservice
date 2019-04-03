@@ -122,7 +122,7 @@ class CloudCreateUserHandler( object ):
         """ Returns response part of context dct.
             Called by prep_output_dct() """
         returned_status_code = data_dct['added_status_code']
-        if data_dct['UserName'] == submitted_username and returned_status_code == 200:
+        if 'UserName' in data_dct and data_dct['UserName'] == submitted_username and returned_status_code == 200:
             summary_dct = {'status': 'Registered', 'status_code': 200}
         else:
             summary_dct = { 'status': 'Failure', 'status_code': returned_status_code }
