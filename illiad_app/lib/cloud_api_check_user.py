@@ -34,10 +34,9 @@ class CloudCheckUserHandler( object ):
         user = request.GET['user']
         log.debug( '%s - user, `%s`' % (self.request_id, user) )
 
-        login_response_dct = self.run_check( request )
+        api_response_dct = self.run_check( request )
 
-        log.debug( 'login_response_dct, ```%s```' % pprint.pformat(login_response_dct) )
-        data_dct = self.prep_data_dct( login_response_dct )
+        data_dct = self.prep_data_dct( api_response_dct, user )
         output_dct = self.prep_output_dct( start_time, request, data_dct )
         return output_dct
 
@@ -81,28 +80,37 @@ class CloudCheckUserHandler( object ):
 
 
 
-    def prep_data_dct( self, login_response_dct ):
-        """ Takes values from login_response_dct and prepares data-dct to be returned.
+    def prep_data_dct( self, api_response_dct, submitted_username ):
+        """ Takes values from api_response_dct and prepares data-dct to be returned.
+            The output_dct here is designed to maintain compatibility with calling code.
+            If this were to be done over, there wouldn't be both (now-identical) `authenticated` and `registered` categories.
             Called by manage_check() """
-        data_dct = {'authenticated': None, 'registered': None, 'blocked': None, 'disavowed': None, 'interpreted_new_user': None}
-        for key in login_response_dct:
-            if key in data_dct.keys():  # ignores session_id
-                data_dct[key] = login_response_dct[key]
-        data_dct = self.determine_new_user( data_dct )
-        log.debug( '%s - data_dct, ```%s```' % (self.request_id, pprint.pformat(data_dct)) )
-        return data_dct
+        output_dct = {'authenticated': None, 'registered': None, 'blocked': None, 'disavowed': None, 'interpreted_new_user': None}
+        if self.check_registered( api_response_dct, submitted_username ) is True:  # most common by _far_
+            output_dct = {'authenticated': True, 'registered': True, 'blocked': False, 'disavowed': False, 'interpreted_new_user': False}
+        elif self.check_blocked( api_response_dct ) is True:
+            output_dct = {'authenticated': True, 'registered': True, 'blocked': True, 'disavowed': False, 'interpreted_new_user': False}
+        elif self.check_disavowed( api_response_dct ) is True:
+            output_dct = {'authenticated': False, 'registered': False, 'blocked': False, 'disavowed': True, 'interpreted_new_user': False}
+        elif self.check_newuser( api_response_dct ) is True:
+            output_dct = {'authenticated': False, 'registered': False, 'blocked': False, 'disavowed': False, 'interpreted_new_user': True}
+        else:
+            log.warning( '%s - should not get here' % self.request_id )
+        log.debug( '%s - output_dct, ```%s```' % (self.request_id, pprint.pformat(output_dct)) )
+        return output_dct
 
-    def determine_new_user( self, data_dct ):
-        """ Adds new-user assessment from raw login-response.
+
+
+    def check_registered( self, api_response_dct, submitted_username ):
+        """ Assesses if user is registered from cloud-api response.
             Called by prep_data_dct() """
-        data_dct['interpreted_new_user'] = False
-        if data_dct['authenticated'] == True:
-            if data_dct['blocked'] == None:
-                if data_dct['disavowed'] == None:
-                    if data_dct['registered'] == None or data_dct['registered'] == False:
-                        data_dct['interpreted_new_user'] = True
-        log.debug( '%s - data_dct, ```%s```' % (self.request_id, pprint.pformat(data_dct)) )
-        return data_dct
+        registered = False
+        if 'UserName' in api_response_dct and api_response_dct['UserName'] == submitted_username:
+            registered = True
+        log.debug( '%s - registered, `%s`' % (self.request_id, registered) )
+        return registered
+
+
 
     def prep_output_dct( self, start_time, request, data_dct ):
         """ Preps output-dct.
