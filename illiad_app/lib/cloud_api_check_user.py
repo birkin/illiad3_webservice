@@ -120,7 +120,11 @@ class CloudCheckUserHandler( object ):
         return blocked
 
     def check_disavowed( self, api_response_dct ):
-        return False
+        disavowed = False
+        if api_response_dct['Cleared'].lower() == 'dis':
+            disavowed = True
+        log.debug( '%s - disavowed, `%s`' % (self.request_id, disavowed) )
+        return disavowed
 
     def check_newuser( self, api_response_dct ):
         return False
