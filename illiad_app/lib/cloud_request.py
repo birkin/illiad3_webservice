@@ -12,7 +12,7 @@ from illiad_app import settings_app
 log = logging.getLogger(__name__)
 
 
-class MakeBookRequestManager( object ):
+class BookRequestHandler( object ):
     """ `Book` hardcoded for now, for easyBorrow requests.
         Will later do the `Article` manager for easyAccess requests, and then refactor for common features. """
 
@@ -49,12 +49,14 @@ class MakeBookRequestManager( object ):
         return return_val
 
     def manage_request( self, request):
-        """ - Checks that user status is ok (_new_ user check already done in easyAccess),
-            - Parses openurl,
+        """ - Parses openurl
+            - Prepares other params.
             - Submits request to illiad-cloud-api transaction endpoint.
+            - Prepares response.
             Called by views.cloud_book_request() """
-        dummy_output_dct = { 'status': 'foo', 'transaction_number': 'bar' }
-        log.debug( '%s - output-dct, `%s`' % (self.request_id, dummy_output_dct) )
-        return dummy_output_dct
+        output_dct = { 'status': None, 'transaction_number': None, 'raw_data': None }
+        open_url_params = self.parse_openurl( request.POST['openurl'] )
+        log.debug( '%s - output_dct, `%s`' % (self.request_id, output_dct) )
+        return output_dct
 
-    ## end class MakeRequestManager()
+    ## end class BookRequestHandler()
