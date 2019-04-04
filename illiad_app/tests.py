@@ -311,7 +311,10 @@ class ClientCloudBookRequest_Test( TestCase ):
         c = Client()
         response = c.post(
             '/cloud_book_request/',
-            { 'auth_key': settings_app.TEST_AUTH_KEY, 'openurl': 'foo_b', 'request_id': 'foo_c', 'username': settings_app.TEST_EXISTING_GOOD_USER }
+            { 'auth_key': settings_app.TEST_AUTH_KEY,
+                'openurl': 'isbn=9780857021052&title=The%20SAGE%20Handbook%20of%20Remote%20Sensing&notes=p.barcode%2C+%6021236009704581%60+--+volumes%2C+%60N%2FA%60',
+                'request_id': str(random.randint(1111, 9999)),
+                'username': settings_app.TEST_EXISTING_GOOD_USER }
             )
         self.assertEqual( 200, response.status_code )
         response_dct = json.loads( response.content )
