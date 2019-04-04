@@ -19,6 +19,7 @@ class BookRequestHandler( object ):
     def __init__( self, request_id ):
         # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
         self.request_id = request_id
+        self.API_KEY = settings_app.API_KEY
 
     def check_validity( self, request ):
         """ Checks post, auth_key, ip, & params.
@@ -27,7 +28,7 @@ class BookRequestHandler( object ):
         return_val = False
         if request.method == 'POST':
             if self.check_params( request ) is True:
-                if request.POST['auth_key'] == settings_app.API_KEY:
+                if request.POST['auth_key'] == API_KEY:
                     return_val = True
                 else:
                     log.debug( '%s - ip, `%s`' % (self.request_id, request.META.get('REMOTE_ADDR', 'unavailable')) )
@@ -55,8 +56,26 @@ class BookRequestHandler( object ):
             - Prepares response.
             Called by views.cloud_book_request() """
         output_dct = { 'status': None, 'transaction_number': None, 'raw_data': None }
-        open_url_params = self.parse_openurl( request.POST['openurl'] )
+        param_builder = ILLiadParamBuilder( self.request_id )
+        open_url_params = param_builder.parse_openurl( request.POST['openurl'] )
         log.debug( '%s - output_dct, `%s`' % (self.request_id, output_dct) )
         return output_dct
 
     ## end class BookRequestHandler()
+
+
+class ILLiadParamBuilder( object ):
+    """ Handles conversion of openurl and mapping to illiad-cloud-api keys. """
+
+    def __init__( self, request_id ):
+        # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
+        self.request_id = request_id
+        self.OURL_API_URL = 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/'
+
+    def parse_openurl( self, openurl ):
+        """ Prepares ILLiad-compatible params.
+            Called by manage_request() """
+        log.debug( '%s - initial openurl, ```%s```' % (self.request_id, openurl) )
+        1/0
+
+    ## end class ILLiadParamBuilder()
