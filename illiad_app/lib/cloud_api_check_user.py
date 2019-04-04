@@ -3,6 +3,7 @@
 import datetime, logging, os, pprint, random
 import requests
 from illiad_app import settings_app
+from illiad_app.lib import basic_auth
 
 
 log = logging.getLogger(__name__)
@@ -17,7 +18,7 @@ class CloudCheckUserHandler( object ):
 
     def data_check( self, request ):
         """ Checks data.
-            Called by views.check_user() """
+            Called by views.cloud_check_user() """
         log.debug( '%s - request.GET, `%s`' % (self.request_id, request.GET) )
         return_val = 'invalid'
         if 'user' in request.GET.keys():
@@ -29,15 +30,56 @@ class CloudCheckUserHandler( object ):
 
     def manage_check( self, request, start_time ):
         """ Runs login and response evaluation.
-            Called by views.check_user() """
+            Called by views.cloud_check_user() """
         user = request.GET['user']
         log.debug( '%s - user, `%s`' % (self.request_id, user) )
-        illiad_session = IlliadSession( settings_app.ILLIAD_REMOTE_AUTH_URL, settings_app.ILLIAD_REMOTE_AUTH_KEY, user )
-        login_response_dct = illiad_session.login()
+
+        login_response_dct = self.run_check( request )
+
         log.debug( 'login_response_dct, ```%s```' % pprint.pformat(login_response_dct) )
         data_dct = self.prep_data_dct( login_response_dct )
         output_dct = self.prep_output_dct( start_time, request, data_dct )
         return output_dct
+
+
+
+    def run_check( self, request ):
+        """ Hits cloud-api.
+            Called by manage_check() """
+        output_dct = { 'error_message': None, 'status_code': None }
+        status_code = 'init'
+        url = '%s%s/%s' % ( settings_app.ILLIAD_API_URL, 'Users', request.GET['user'] )  # root url contains ending-slash
+        log.debug( 'url, ```%s```' % url )
+        headers = {
+            'Accept-Type': 'application/json; charset=utf-8',
+            'ApiKey': os.environ['ILLIAD_WS__OFFICIAL_ILLIAD_API_KEY']
+            }
+
+        try:
+            r = requests.get( url, headers=headers, timeout=60, verify=True )
+            log.debug( 'status_code, `%s`; content-response, ```%s```' % (r.status_code, r.content.decode('utf-8')) )
+        except Exception as e:
+            message = 'exception making request, ```%s```' % repr(e)
+            log.error( '%s - %s' % (self.request_id, message) )
+            output_dct['error_message'] = message
+            log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
+            return output_dct
+
+        try:
+            jdct_response = r.json()
+        except Exception as e:
+            message = 'exception reading response, ```%s```' % repr(e)
+            log.error( '%s - %s' % (self.request_id, message) )
+            output_dct['error_message'] = message
+            output_dct['status_code'] = r.status_code
+            log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
+            return output_dct
+
+        output_dct.update( jdct_response )  # if here, we have a jdct_response
+        log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
+        return output_dct
+
+
 
     def prep_data_dct( self, login_response_dct ):
         """ Takes values from login_response_dct and prepares data-dct to be returned.
