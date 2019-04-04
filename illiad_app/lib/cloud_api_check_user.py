@@ -110,7 +110,7 @@ class CloudCheckUserHandler( object ):
             Called by prep_data_dct() """
         registered_and_good = False
         if 'Cleared' in api_response_dct.keys():
-            if api_response_dct['Cleared'].lower() == 'yes':
+            if api_response_dct['Cleared'].lower() == 'yes' or api_response_dct['Cleared'].lower() == 'no':  # `no` is ok, when staff sets it to `Yes` an email will go out to the user with info about ILLiad.
                 registered_and_good = True
         log.debug( '%s - registered_and_good, `%s`' % (self.request_id, registered_and_good) )
         return registered_and_good
