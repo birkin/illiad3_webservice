@@ -183,7 +183,8 @@ class ClientCloudCheckUser_Test( TestCase ):
             'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
             'User-Agent': 'bul-test-client' }
         c = Client()
-        response = c.get( '/cloud_check_user/', {'user': settings_app.TEST_EXISTING_GOOD_USER}, **headers )
+        # response = c.get( '/cloud_check_user/', {'user': settings_app.TEST_EXISTING_GOOD_USER}, **headers )
+        response = c.get( '/check_user/', {'user': settings_app.TEST_EXISTING_GOOD_USER}, **headers )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
@@ -199,7 +200,8 @@ class ClientCloudCheckUser_Test( TestCase ):
             'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
             'User-Agent': 'bul-test-client' }
         c = Client()
-        response = c.get( '/cloud_check_user/', {'user': settings_app.TEST_DISAVOWED_USERNAME}, **headers )
+        # response = c.get( '/cloud_check_user/', {'user': settings_app.TEST_DISAVOWED_USERNAME}, **headers )
+        response = c.get( '/check_user/', {'user': settings_app.TEST_DISAVOWED_USERNAME}, **headers )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
@@ -215,7 +217,8 @@ class ClientCloudCheckUser_Test( TestCase ):
             'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
             'User-Agent': 'bul-test-client' }
         c = Client()
-        response = c.get( '/cloud_check_user/', {'user': settings_app.TEST_BLOCKED_USERNAME}, **headers )
+        # response = c.get( '/cloud_check_user/', {'user': settings_app.TEST_BLOCKED_USERNAME}, **headers )
+        response = c.get( '/check_user/', {'user': settings_app.TEST_BLOCKED_USERNAME}, **headers )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
@@ -233,8 +236,8 @@ class ClientCloudCheckUser_Test( TestCase ):
             'HTTP_AUTHORIZATION': 'Basic ' + b64_bytes.decode('utf-8'),
             'User-Agent': 'bul-test-client' }
         c = Client()
-        # response = c.get( '/cloud_check_user/', {'user': settings_app.TEST_UNREGISTERED_USERNAME}, **headers )
-        response = c.get( '/cloud_check_user/', {'user': '%s%s' % ( 'zzzz', random.randint(1111, 9999) )}, **headers )
+        # response = c.get( '/cloud_check_user/', {'user': '%s%s' % ( 'zzzz', random.randint(1111, 9999) )}, **headers )
+        response = c.get( '/check_user/', {'user': '%s%s' % ( 'zzzz', random.randint(1111, 9999) )}, **headers )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
@@ -286,39 +289,39 @@ class ClientV2_Test( TestCase ):
     ## end class ClientV2_Test()
 
 
-class ClientCloudBookRequest_Test( TestCase ):
-    """ Tests new easyBorrow-api using cloud ILLiad-api """
+# class ClientCloudBookRequest_Test( TestCase ):
+#     """ Tests new easyBorrow-api using cloud ILLiad-api """
 
-    def test__check_bad_method(self):
-        """ GET (api requires POST) should return 400. """
-        c = Client()
-        response = c.get( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
-        self.assertEqual( 400, response.status_code )
-        self.assertEqual( b'Bad Request', response.content )
+#     def test__check_bad_method(self):
+#         """ GET (api requires POST) should return 400. """
+#         c = Client()
+#         response = c.get( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+#         self.assertEqual( 400, response.status_code )
+#         self.assertEqual( b'Bad Request', response.content )
 
-    def test__check_bad_post_params(self):
-        """ POST with bad params should return 400.
-            eg: $ python ./manage.py test illiad_app.tests.ClientV3_MakeBookRequest_Test.test__check_bad_post_params
-            """
-        c = Client()
-        response = c.post( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
-        self.assertEqual( 400, response.status_code )
-        self.assertEqual( b'Bad Request', response.content )
+#     def test__check_bad_post_params(self):
+#         """ POST with bad params should return 400.
+#             eg: $ python ./manage.py test illiad_app.tests.ClientV3_MakeBookRequest_Test.test__check_bad_post_params
+#             """
+#         c = Client()
+#         response = c.post( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+#         self.assertEqual( 400, response.status_code )
+#         self.assertEqual( b'Bad Request', response.content )
 
-    def test__check_good_post_params__known_user(self):
-        """ POST with good params should submit a request and return a transaction number.
-            This test is good, just disabled so as not to auto-submit real requests. """
-        c = Client()
-        response = c.post(
-            '/cloud_book_request/',
-            { 'auth_key': settings_app.TEST_AUTH_KEY,
-                'openurl': 'isbn=9780857021052&title=The%20SAGE%20Handbook%20of%20Remote%20Sensing&notes=p.barcode%2C+%6021236009704581%60+--+volumes%2C+%60N%2FA%60',
-                'request_id': str(random.randint(1111, 9999)),
-                'username': settings_app.TEST_EXISTING_GOOD_USER }
-            )
-        self.assertEqual( 200, response.status_code )
-        response_dct = json.loads( response.content )
-        self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
-        self.assertEqual( 'submission_successful', response_dct['status'] )
+#     def test__check_good_post_params__known_user(self):
+#         """ POST with good params should submit a request and return a transaction number.
+#             This test is good, just disabled so as not to auto-submit real requests. """
+#         c = Client()
+#         response = c.post(
+#             '/cloud_book_request/',
+#             { 'auth_key': settings_app.TEST_AUTH_KEY,
+#                 'openurl': 'isbn=9780857021052&title=The%20SAGE%20Handbook%20of%20Remote%20Sensing&notes=p.barcode%2C+%6021236009704581%60+--+volumes%2C+%60N%2FA%60',
+#                 'request_id': str(random.randint(1111, 9999)),
+#                 'username': settings_app.TEST_EXISTING_GOOD_USER }
+#             )
+#         self.assertEqual( 200, response.status_code )
+#         response_dct = json.loads( response.content )
+#         self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
+#         self.assertEqual( 'submission_successful', response_dct['status'] )
 
-    ## end class ClientCloudBookRequest_Test()
+#     ## end class ClientCloudBookRequest_Test()
