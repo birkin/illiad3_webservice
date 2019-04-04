@@ -5,7 +5,8 @@ Submits ILLiad request via hitting the ILLiad API instead of simulating browser 
 Implemented in preparation for ILLiad cloud switch-over.
 """
 
-import datetime, logging, pprint, random, time
+import datetime, logging, pprint, random, time, urllib.parse
+import requests
 from illiad_app import settings_app
 
 
@@ -28,7 +29,7 @@ class BookRequestHandler( object ):
         return_val = False
         if request.method == 'POST':
             if self.check_params( request ) is True:
-                if request.POST['auth_key'] == API_KEY:
+                if request.POST['auth_key'] == self.API_KEY:
                     return_val = True
                 else:
                     log.debug( '%s - ip, `%s`' % (self.request_id, request.META.get('REMOTE_ADDR', 'unavailable')) )
@@ -76,6 +77,26 @@ class ILLiadParamBuilder( object ):
         """ Prepares ILLiad-compatible params.
             Called by manage_request() """
         log.debug( '%s - initial openurl, ```%s```' % (self.request_id, openurl) )
+        decoded_openurl_querystring = self.decode_openurl_querystring( openurl )
+        params = { 'ourl': decoded_openurl_querystring }
+        r = requests.get( self.OURL_API_URL, params=params, timeout=30, verify=True )
+        log.debug( '%s - full url, ```%s```' % (self.request_id, r.url) )
+        log.debug( '%s - status_code, `%s`; content-response, ```%s```' % (self.request_id, r.status_code, r.content.decode('utf-8')) )
         1/0
+
+    def decode_openurl_querystring( self, querystring ):
+        """ Fully decodes the querystring.
+            Called by parse_openurl() """
+        ( last_try, decoded_querystring, flag ) = ( 'init', 'init', 'continue' )
+        while flag == 'continue':
+            decoded_querystring = urllib.parse.unquote( querystring )
+            if decoded_querystring == last_try:
+                log.debug( '%s - decoding done' % self.request_id )
+                flag = 'stop'
+            else:
+                last_try = decoded_querystring
+                log.debug( '%s - will decode once more; decoded_querystring currently, ```%s```' % (self.request_id, decoded_querystring) )
+        log.debug( '%s - final decoded_querystring, ```%s```' % (self.request_id, decoded_querystring) )
+        return decoded_querystring
 
     ## end class ILLiadParamBuilder()
