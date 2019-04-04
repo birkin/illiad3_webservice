@@ -135,6 +135,22 @@ def check_user( request ):
     return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
 
 
+
+
+def cloud_check_user( request ):
+    """ Handles checking a user's status -- meaing `registered`, `new-user`, `blocked`, `revoked`. """
+    rq_now = datetime.datetime.now()
+    check_user_handler = CloudCheckUserHandler()
+    log.debug( '%s - starting' % check_user_handler.request_id )
+    if check_user_handler.data_check( request ) == 'invalid':
+        return HttpResponseBadRequest( 'Bad Request' )
+    result_data = check_user_handler.manage_check( request, rq_now )
+    output_dct = json.dumps( result_data, sort_keys=True, indent=2 )
+    return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
+
+
+
+
 def error_check( request ):
     """ For checking that admins receive error-emails. """
     if project_settings.DEBUG == True:
