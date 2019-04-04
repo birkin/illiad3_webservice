@@ -82,6 +82,7 @@ class ILLiadParamBuilder( object ):
         r = requests.get( self.OURL_API_URL, params=params, timeout=30, verify=True )
         log.debug( '%s - full url, ```%s```' % (self.request_id, r.url) )
         log.debug( '%s - status_code, `%s`; content-response, ```%s```' % (self.request_id, r.status_code, r.content.decode('utf-8')) )
+        illiad_params = self.map_to_illiad_keys( r.json() )
         1/0
 
     def decode_openurl_querystring( self, querystring ):
@@ -98,5 +99,26 @@ class ILLiadParamBuilder( object ):
                 log.debug( '%s - will decode once more; decoded_querystring currently, ```%s```' % (self.request_id, decoded_querystring) )
         log.debug( '%s - final decoded_querystring, ```%s```' % (self.request_id, decoded_querystring) )
         return decoded_querystring
+
+    def map_to_illiad_keys( self, bib_json_dct ):
+        """ Returns dct using illiad-cloud-api keys.
+            Called by parse_openurl() """
+        defaults = {
+            'RequestType': 'Book',
+            'ProcessType' : 'Borrowing'
+            }
+        user = {
+            "Username" : None,  # fill later
+            }
+        item = {
+            'ESPNumber'  # OCLC number
+            'ISSN'  # really ISBN
+            'LoanAuthor'
+            'LoanDate'
+            'LoanPlace'
+            'LoanPublisher'
+            'LoanTitle'
+            'Notes'
+            }
 
     ## end class ILLiadParamBuilder()
