@@ -48,6 +48,7 @@ def make_request_v2( request ):
 def cloud_book_request( request ):
     """ Handles current (March 2019) easyBorrow controller illiad call -- via hitting ILLiad API. """
     log.debug( 'starting' )
+    return HttpResponse( 'cloud book request coming' )
     log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
     book_handler = BookRequestHandler( request.POST.get('request_id', 'no_id') )
     if book_handler.check_validity( request ) is False:
