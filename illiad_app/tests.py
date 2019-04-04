@@ -23,7 +23,8 @@ class ClientCloudCreateUser_Test( TestCase ):
     #         'phone': 'unavailable',
     #         'status': 'test-status'  # really 'type', eg 'Undergraduate Student'
     #         }
-    #     response = c.post( '/cloud_create_user/', params )
+    #     # response = c.post( '/cloud_create_user/', params )
+    #     response = c.post( '/create_user/', params )
     #     self.assertEqual( 200, response.status_code )
     #     jdct = json.loads( response.content )
     #     self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
@@ -45,7 +46,8 @@ class ClientCloudCreateUser_Test( TestCase ):
             'phone': 'unavailable',
             'status': 'test-status'  # really 'type', eg 'Undergraduate Student'
             }
-        response = c.post( '/cloud_create_user/', params )
+        # response = c.post( '/cloud_create_user/', params )
+        response = c.post( '/create_user/', params )
         self.assertEqual( 200, response.status_code )
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )

@@ -21,8 +21,9 @@ urlpatterns = [
     url( r'^check_status_via_shib/$', views.check_status_via_shib, name='check_status_via_shib' ),  # (remote-auth method) status meaning 'Undergrad', 'Staff', etc.
     url( r'^update_status/$', views.update_status, name='update_status' ),  # (remote-auth method)
 
-    url( r'^create_user/$', views.create_user, name='create_user' ),
-    url( r'^cloud_create_user/$', views.cloud_create_user, name='cloud_create_user' ),
+    # url( r'^create_user/$', views.create_user, name='create_user' ),
+    # url( r'^cloud_create_user/$', views.cloud_create_user, name='cloud_create_user' ),
+    url( r'^create_user/$', views.cloud_create_user, name='cloud_create_user' ),
 
     url( r'^cloud_book_request/$', views.cloud_book_request, name='cloud_book_request' ),  # (official illiad-api) submits request
 
