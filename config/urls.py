@@ -13,6 +13,7 @@ urlpatterns = [
     # url( r'^admin/', include(admin.site.urls) ),
 
     url( r'^check_user/$', views.check_user, name='check_user' ),  # (remote-auth method) checks status meaning 'registered', 'blocked', etc.
+    url( r'^cloud_check_user/$', views.cloud_check_user, name='cloud_check_user' ),
 
     url( r'^v2/make_request/$', views.make_request_v2, name='request_v2' ),  # (remote-auth method) simulated web access to submit request
 
