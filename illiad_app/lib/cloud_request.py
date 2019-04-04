@@ -82,23 +82,45 @@ class ILLiadParamBuilder( object ):
         r = requests.get( self.OURL_API_URL, params=params, timeout=30, verify=True )
         log.debug( '%s - full url, ```%s```' % (self.request_id, r.url) )
         log.debug( '%s - status_code, `%s`; content-response, ```%s```' % (self.request_id, r.status_code, r.content.decode('utf-8')) )
+        bib_json_dct = r.json()
+        notes_dct = self.extract_notes( decoded_openurl_querystring )
         illiad_params = self.map_to_illiad_keys( r.json() )
         1/0
 
     def decode_openurl_querystring( self, querystring ):
-        """ Fully decodes the querystring.
+        """ Runs one decode on the querystring.
             Called by parse_openurl() """
-        ( last_try, decoded_querystring, flag ) = ( 'init', 'init', 'continue' )
-        while flag == 'continue':
-            decoded_querystring = urllib.parse.unquote( querystring )
-            if decoded_querystring == last_try:
-                log.debug( '%s - decoding done' % self.request_id )
-                flag = 'stop'
-            else:
-                last_try = decoded_querystring
-                log.debug( '%s - will decode once more; decoded_querystring currently, ```%s```' % (self.request_id, decoded_querystring) )
-        log.debug( '%s - final decoded_querystring, ```%s```' % (self.request_id, decoded_querystring) )
+        decoded_querystring = urllib.parse.unquote( querystring )
+        log.debug( '%s - decoded_querystring, ```%s```' % (self.request_id, decoded_querystring) )
         return decoded_querystring
+
+    # def decode_openurl_querystring( self, querystring ):
+    #     """ Fully decodes the querystring.
+    #         Called by parse_openurl() """
+    #     ( last_try, decoded_querystring, flag ) = ( 'init', 'init', 'continue' )
+    #     while flag == 'continue':
+    #         decoded_querystring = urllib.parse.unquote( querystring )
+    #         if decoded_querystring == last_try:
+    #             log.debug( '%s - decoding done' % self.request_id )
+    #             flag = 'stop'
+    #         else:
+    #             last_try = decoded_querystring
+    #             log.debug( '%s - will decode once more; decoded_querystring currently, ```%s```' % (self.request_id, decoded_querystring) )
+    #     log.debug( '%s - final decoded_querystring, ```%s```' % (self.request_id, decoded_querystring) )
+    #     return decoded_querystring
+
+    def extract_notes( decoded_openurl_querystring ):
+        """ Returns notes-dct.
+            Called by parse_openurl() """
+        notes = 'no notes'
+        parts_dct = urllib.parse.parse_qs( decoded_openurl_querystring )  # <https://pymotw.com/3/urllib.parse/>
+        log.debug( '%s - parts_dct, ```%s```' % (self.request_id, pprint.pformat(parts_dct)) )
+        if 'notes' in parts_dct.keys():
+            notes = parts_dct['notes'][0]  # all values are in list
+        log.debug( '%s - notes, ```%s```' % (self.request_id, notes) )
+        return notes
+
+
 
     def map_to_illiad_keys( self, bib_json_dct ):
         """ Returns dct using illiad-cloud-api keys.
