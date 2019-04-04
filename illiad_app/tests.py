@@ -239,7 +239,7 @@ class ClientCloudCheckUser_Test( TestCase ):
         jdct = json.loads( response.content )
         self.assertEqual( ['request', 'response'], sorted(list(jdct.keys())) )
         self.assertEqual(
-            {'authenticated': True, 'blocked': None, 'disavowed': None, 'registered': False, 'interpreted_new_user': True},
+            {'authenticated': False, 'blocked': False, 'disavowed': False, 'registered': False, 'interpreted_new_user': True},
             jdct['response']['status_data']
             )
 

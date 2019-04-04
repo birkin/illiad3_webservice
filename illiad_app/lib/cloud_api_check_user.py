@@ -33,14 +33,10 @@ class CloudCheckUserHandler( object ):
             Called by views.cloud_check_user() """
         user = request.GET['user']
         log.debug( '%s - user, `%s`' % (self.request_id, user) )
-
         api_response_dct = self.run_check( request )
-
         data_dct = self.prep_data_dct( api_response_dct, user )
         output_dct = self.prep_output_dct( start_time, request, data_dct )
         return output_dct
-
-
 
     def run_check( self, request ):
         """ Hits cloud-api.
@@ -53,9 +49,10 @@ class CloudCheckUserHandler( object ):
             'Accept-Type': 'application/json; charset=utf-8',
             'ApiKey': os.environ['ILLIAD_WS__OFFICIAL_ILLIAD_API_KEY']
             }
-
+        ## hit cloud-api
         try:
             r = requests.get( url, headers=headers, timeout=60, verify=True )
+            output_dct['status_code'] = r.status_code
             log.debug( 'status_code, `%s`; content-response, ```%s```' % (r.status_code, r.content.decode('utf-8')) )
         except Exception as e:
             message = 'exception making request, ```%s```' % repr(e)
@@ -63,22 +60,20 @@ class CloudCheckUserHandler( object ):
             output_dct['error_message'] = message
             log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
             return output_dct
-
+        ## load json-response
         try:
             jdct_response = r.json()
         except Exception as e:
             message = 'exception reading response, ```%s```' % repr(e)
             log.error( '%s - %s' % (self.request_id, message) )
             output_dct['error_message'] = message
-            output_dct['status_code'] = r.status_code
             log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
             return output_dct
-
+        ## prepare output-data
         output_dct.update( jdct_response )  # if here, we have a jdct_response
         log.debug( 'output_dct, ```%s```' % pprint.pformat(output_dct) )
         return output_dct
-
-
+        ## end def run_check()
 
     def prep_data_dct( self, api_response_dct, submitted_username ):
         """ Takes values from api_response_dct and prepares data-dct to be returned.
@@ -86,7 +81,7 @@ class CloudCheckUserHandler( object ):
             If this were to be done over, there wouldn't be both (now-identical) `authenticated` and `registered` categories.
             Called by manage_check() """
         output_dct = {'authenticated': None, 'registered': None, 'blocked': None, 'disavowed': None, 'interpreted_new_user': None}
-        if self.check_registered( api_response_dct, submitted_username ) is True:  # most common by _far_
+        if self.check_registered_and_good( api_response_dct, submitted_username ) is True:  # most common by _far_
             output_dct = {'authenticated': True, 'registered': True, 'blocked': False, 'disavowed': False, 'interpreted_new_user': False}
         elif self.check_blocked( api_response_dct ) is True:
             output_dct = {'authenticated': True, 'registered': True, 'blocked': True, 'disavowed': False, 'interpreted_new_user': False}
@@ -99,37 +94,52 @@ class CloudCheckUserHandler( object ):
         log.debug( '%s - output_dct, ```%s```' % (self.request_id, pprint.pformat(output_dct)) )
         return output_dct
 
+    # def check_registered( self, api_response_dct, submitted_username ):
+    #     """ Assesses if user is registered from cloud-api response.
+    #         Called by prep_data_dct() """
+    #     registered = False
+    #     if 'UserName' in api_response_dct:
+    #         if api_response_dct['UserName'] == submitted_username:
+    #             if api_response_dct['Cleared'].lower() == 'yes':
+    #                 registered = True
+    #     log.debug( '%s - registered, `%s`' % (self.request_id, registered) )
+    #     return registered
 
-
-    def check_registered( self, api_response_dct, submitted_username ):
-        """ Assesses if user is registered from cloud-api response.
+    def check_registered_and_good( self, api_response_dct, submitted_username ):
+        """ Assesses if user is registered AND IN GOOD STANDING from cloud-api response.
             Called by prep_data_dct() """
-        registered = False
-        if 'UserName' in api_response_dct:
-            if api_response_dct['UserName'] == submitted_username:
-                if api_response_dct['Cleared'].lower() == 'yes':
-                    registered = True
-        log.debug( '%s - registered, `%s`' % (self.request_id, registered) )
-        return registered
+        registered_and_good = False
+        if 'Cleared' in api_response_dct.keys():
+            if api_response_dct['Cleared'].lower() == 'yes':
+                registered_and_good = True
+        log.debug( '%s - registered_and_good, `%s`' % (self.request_id, registered_and_good) )
+        return registered_and_good
 
     def check_blocked( self, api_response_dct ):
         blocked = False
-        if api_response_dct['Cleared'].lower() == 'b' or api_response_dct['Cleared'].lower() == 'bo':
-            blocked = True
+        if 'Cleared' in api_response_dct.keys():
+            if api_response_dct['Cleared'].lower() == 'b' or api_response_dct['Cleared'].lower() == 'bo':
+                blocked = True
         log.debug( '%s - blocked, `%s`' % (self.request_id, blocked) )
         return blocked
 
     def check_disavowed( self, api_response_dct ):
         disavowed = False
-        if api_response_dct['Cleared'].lower() == 'dis':
-            disavowed = True
+        if 'Cleared' in api_response_dct.keys():
+            if api_response_dct['Cleared'].lower() == 'dis':
+                disavowed = True
         log.debug( '%s - disavowed, `%s`' % (self.request_id, disavowed) )
         return disavowed
 
     def check_newuser( self, api_response_dct ):
-        return False
-
-
+        """ Meaning user not in ILLiad.
+            Called by prep_data_dct() """
+        newuser = False
+        if 'Message' in api_response_dct.keys():
+            if 'not found' in api_response_dct['Message']:
+                newuser = True
+        log.debug( '%s - newuser, `%s`' % (self.request_id, newuser) )
+        return newuser
 
     def prep_output_dct( self, start_time, request, data_dct ):
         """ Preps output-dct.
