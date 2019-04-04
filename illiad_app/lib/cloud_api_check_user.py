@@ -105,19 +105,19 @@ class CloudCheckUserHandler( object ):
         """ Assesses if user is registered from cloud-api response.
             Called by prep_data_dct() """
         registered = False
-        ## check blocked
-
-        ## check disavowed
-
-        ## then...
-
-        if 'UserName' in api_response_dct and api_response_dct['UserName'] == submitted_username:
-            registered = True
+        if 'UserName' in api_response_dct:
+            if api_response_dct['UserName'] == submitted_username:
+                if api_response_dct['Cleared'].lower() == 'yes':
+                    registered = True
         log.debug( '%s - registered, `%s`' % (self.request_id, registered) )
         return registered
 
     def check_blocked( self, api_response_dct ):
-        return False
+        blocked = False
+        if api_response_dct['Cleared'].lower() == 'b' or api_response_dct['Cleared'].lower() == 'bo':
+            blocked = True
+        log.debug( '%s - blocked, `%s`' % (self.request_id, blocked) )
+        return blocked
 
     def check_disavowed( self, api_response_dct ):
         return False
