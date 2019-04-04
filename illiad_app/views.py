@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
 from illiad_app.lib.cloud_api_check_user import CloudCheckUserHandler
 from illiad_app.lib.cloud_api_create_user import CloudCreateUserHandler
-from illiad_app.lib.cloud_request import MakeBookRequestManager
+from illiad_app.lib.cloud_request import BookRequestHandler
 from illiad_app.lib.status import CheckStatusHandler, UpdateStatusHandler
 from illiad_app.lib.user_helper import CheckUserHelper, CreateUserHandler
 from illiad_app.models import V2_Helper
@@ -48,11 +48,12 @@ def make_request_v2( request ):
 def cloud_book_request( request ):
     """ Handles current (March 2019) easyBorrow controller illiad call -- via hitting ILLiad API. """
     log.debug( 'starting' )
-    # log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
-    bk_rq_manager = MakeBookRequestManager( request.POST.get('request_id', 'no_id') )
-    if bk_rq_manager.check_validity( request ) is False:
+    log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
+    book_handler = BookRequestHandler( request.POST.get('request_id', 'no_id') )
+    if book_handler.check_validity( request ) is False:
         return HttpResponseBadRequest( 'Bad Request' )
-    output_dct = bk_rq_manager.manage_request( request )
+    result_dct = book_handler.manage_request( request )
+    output_dct = book_handler.prep_output_dct( rq_now, request, result_dct )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
