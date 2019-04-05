@@ -216,7 +216,7 @@ class Mapper( object ):
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         date = ''
         try:
-            pass
+            date = bib_dct['response']['bib']['year']
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - date, `%s`' % (self.request_id, date) )
