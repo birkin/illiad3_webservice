@@ -238,7 +238,7 @@ class Mapper( object ):
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         publisher = ''
         try:
-            pass
+            publisher = bib_dct['response']['bib']['publisher']
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - publisher, `%s`' % (self.request_id, publisher) )
