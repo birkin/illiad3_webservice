@@ -198,7 +198,10 @@ class Mapper( object ):
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         author = ''
         try:
-            pass
+            authors = bib_dct['response']['bib']['author']
+            for element_dct in authors:
+                if 'name' in element_dct.keys():
+                    author = element_dct['name']
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - author, `%s`' % (self.request_id, author) )
