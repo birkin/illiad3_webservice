@@ -312,3 +312,36 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_date(bib_dct), '2018' )
         self.assertEqual( self.mapper.grab_place(bib_dct), '' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
+
+    def test_bib_dct_D(self):
+        """ Checks mapping of WorldCat oclc# 918241430. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-05 16:53:50.905525',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26isbn%3D9781452691848%26title%3DGod%2527s%2Bhotel%2B%253A%2Ba%2Bdoctor%252C%2Ba%2Bhospital%252C%2Band%2Ba%2Bpilgrimage%2Bto%2Bthe%2Bheart%2Bof%2Bmedicine%26date%3D2015%26aulast%3DSweet%26aufirst%3DVictoria%26id%3Ddoi%253A%26pid%3D918241430%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dunknown%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E918241430%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F918241430%26rft_id%3Durn%253AISBN%253A9781452691848%26rft.aulast%3DSweet%26rft.aufirst%3DVictoria%26rft.title%3DGod%2527s%2Bhotel%2B%253A%2Ba%2Bdoctor%252C%2Ba%2Bhospital%252C%2Band%2Ba%2Bpilgrimage%2Bto%2Bthe%2Bheart%2Bof%2Bmedicine%26rft.date%3D2015%26rft.isbn%3D9781452691848%26rft.aucorp%3DTantor%2BMedia.%26rft.place%3DOld%2BSaybrook%252C%2BConn.%2B%253A%26rft.pub%3DTantor%2BMedia%252C%26rft.genre%3Dunknown'},
+ 'response': {'bib': {'_rfr': 'info:sid/firstsearch.oclc.org:WorldCat',
+                      'author': [{'firstname': 'Victoria',
+                                  'lastname': 'Sweet',
+                                  'name': 'Sweet, Victoria'}],
+                      'end_page': None,
+                      'identifier': [{'id': '9781452691848', 'type': 'isbn'},
+                                     {'id': '918241430', 'type': 'oclc'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': 'Old Saybrook, Conn. :',
+                      'publisher': 'Tantor Media,',
+                      'start_page': None,
+                      'title': "God's hotel : a doctor, a hospital, and a "
+                               'pilgrimage to the heart of medicine',
+                      'type': 'book',
+                      'volume': None,
+                      'year': '2015'},
+              'decoded_openurl': "sid=FirstSearch:WorldCat&isbn=9781452691848&title=God's+hotel+:+a+doctor,+a+hospital,+and+a+pilgrimage+to+the+heart+of+medicine&date=2015&aulast=Sweet&aufirst=Victoria&id=doi:&pid=918241430<fssessid>0</fssessid>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=unknown&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>918241430</accessionnumber>&rft_id=info:oclcnum/918241430&rft_id=urn:ISBN:9781452691848&rft.aulast=Sweet&rft.aufirst=Victoria&rft.title=God's+hotel+:+a+doctor,+a+hospital,+and+a+pilgrimage+to+the+heart+of+medicine&rft.date=2015&rft.isbn=9781452691848&rft.aucorp=Tantor+Media.&rft.place=Old+Saybrook,+Conn.+:&rft.pub=Tantor+Media,&rft.genre=unknown",
+              'elapsed_time': '0:00:00.017019'}}
+        self.assertEqual( self.mapper.grab_title(bib_dct), "God's hotel : a doctor, a hospital, and a pilgrimage to the heart of medicine" )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Sweet, Victoria' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/firstsearch.oclc.org:WorldCat' )
+        self.assertEqual( self.mapper.grab_espn(bib_dct), '918241430' )
+        self.assertEqual( self.mapper.grab_isbn(bib_dct), '9781452691848' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2015' )
+        self.assertEqual( self.mapper.grab_place(bib_dct), 'Old Saybrook, Conn. :' )
+        self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Tantor Media,' )
