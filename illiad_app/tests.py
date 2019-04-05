@@ -251,7 +251,7 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
 
     def test_bib_dct_B(self):
-        """ Checks mapping of lots of data. """
+        """ Checks mapping of FirstSearch oclc# 254605206. """
         bib_dct = {
  'query': {'date_time': '2019-04-05 14:20:42.044218',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9780300059915%26title%3DThe%2Btexture%2Bof%2Bmemory%2B%253A%2BHolocaust%2Bmemorials%2Band%2Bmeaning%26date%3D2000%26aulast%3DYoung%26aufirst%3DJames%26auinitm%3DEdward%26id%3Ddoi%253A%26pid%3D254605206%253Cfssessid%253E0%253C%252Ffssessid%253E%253Cedition%253E%255BNachdr.%255D%253C%252Fedition%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E254605206%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F254605206%26rft_id%3Durn%253AISBN%253A9780300059915%26rft.aulast%3DYoung%26rft.aufirst%3DJames%26rft.auinitm%3DEdward%26rft.btitle%3DThe%2Btexture%2Bof%2Bmemory%2B%253A%2BHolocaust%2Bmemorials%2Band%2Bmeaning%26rft.date%3D2000%26rft.isbn%3D9780300059915%26rft.place%3DNew%2BHaven%2B%2BCT%26rft.pub%3DYale%2BUniv.%2BPress%26rft.edition%3D%255BNachdr.%255D%26rft.genre%3Dbook'},
@@ -283,3 +283,32 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_date(bib_dct), '2000' )
         self.assertEqual( self.mapper.grab_place(bib_dct), 'New Haven  CT' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Yale Univ. Press' )
+
+    def test_bib_dct_C(self):
+        """ Checks mapping of BUL:Josiah:b8160392. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-05 16:16:45.638661',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=url_ver%3DZ39.88-2004%26url_ctx_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Actx%26ctx_ver%3DZ39.88-2004%26ctx_tim%3D2019-04-05T13%253A54%253A31-04%253A00%26ctx_id%3D%26ctx_enc%3Dinfo%253Aofi%252Fenc%253AUTF-8%26rft.btitle%3DThe%2Bline%2Bbecomes%2Ba%2Briver%26rft.au%3DCant%25C3%25BA%252C%2BFrancisco%2B%2528Essayist%2529%26rft.date%3D2018%26rft.format%3Dbook%26rft.sid%3DBUL%253AJosiah%253Ab8160392%26rft.isbn%3D9780735217713%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook'},
+ 'response': {'bib': {'_rfr': None,
+                      'author': [{'name': 'Cantú, Francisco (Essayist)'}],
+                      'end_page': None,
+                      'identifier': [{'id': '9780735217713', 'type': 'isbn'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': None,
+                      'publisher': None,
+                      'start_page': None,
+                      'title': 'The line becomes a river',
+                      'type': 'book',
+                      'volume': None,
+                      'year': '2018'},
+              'decoded_openurl': 'url_ver=Z39.88-2004&url_ctx_fmt=info:ofi/fmt:kev:mtx:ctx&ctx_ver=Z39.88-2004&ctx_tim=2019-04-05T13:54:31-04:00&ctx_id=&ctx_enc=info:ofi/enc:UTF-8&rft.btitle=The+line+becomes+a+river&rft.au=Cantú,+Francisco+(Essayist)&rft.date=2018&rft.format=book&rft.sid=BUL:Josiah:b8160392&rft.isbn=9780735217713&rft_val_fmt=info:ofi/fmt:kev:mtx:book',
+              'elapsed_time': '0:00:00.013324'}}
+        self.assertEqual( self.mapper.grab_title(bib_dct), 'The line becomes a river' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Cantú, Francisco (Essayist)' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'BUL:Josiah:b8160392' )
+        self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_isbn(bib_dct), '9780735217713' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2018' )
+        self.assertEqual( self.mapper.grab_place(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
