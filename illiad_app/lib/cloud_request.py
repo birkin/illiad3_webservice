@@ -161,7 +161,7 @@ class Mapper( object ):
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         sid = ''
         try:
-            pass
+            sid = bib_dct['response']['bib']['_rfr']
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - sid, `%s`' % (self.request_id, sid) )
