@@ -172,7 +172,11 @@ class Mapper( object ):
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         oclc = ''
         try:
-            pass
+            identifiers = bib_dct['response']['bib']['identifier']
+            for element_dct in identifiers:
+                if element_dct['type'] == 'oclc':
+                    oclc = element_dct['id']
+                    break
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - oclc, `%s`' % (self.request_id, oclc) )
