@@ -83,8 +83,8 @@ class ILLiadParamBuilder( object ):
         log.debug( '%s - full url, ```%s```' % (self.request_id, r.url) )
         log.debug( '%s - status_code, `%s`; content-response, ```%s```' % (self.request_id, r.status_code, r.content.decode('utf-8')) )
         bib_json_dct = r.json()
-        notes_dct = self.extract_notes( decoded_openurl_querystring )
-        illiad_params = self.map_to_illiad_keys( r.json() )
+        notes = self.extract_notes( decoded_openurl_querystring )
+        illiad_params = self.map_to_illiad_keys( bib_json_dct, notes )
         1/0
 
     def decode_openurl_querystring( self, querystring ):
@@ -109,7 +109,7 @@ class ILLiadParamBuilder( object ):
     #     log.debug( '%s - final decoded_querystring, ```%s```' % (self.request_id, decoded_querystring) )
     #     return decoded_querystring
 
-    def extract_notes( decoded_openurl_querystring ):
+    def extract_notes( self, decoded_openurl_querystring ):
         """ Returns notes-dct.
             Called by parse_openurl() """
         notes = 'no notes'
@@ -122,25 +122,113 @@ class ILLiadParamBuilder( object ):
 
 
 
-    def map_to_illiad_keys( self, bib_json_dct ):
+    def map_to_illiad_keys( self, bib_json_dct, notes ):
         """ Returns dct using illiad-cloud-api keys.
             Called by parse_openurl() """
-        defaults = {
-            'RequestType': 'Book',
-            'ProcessType' : 'Borrowing'
-            }
-        user = {
-            "Username" : None,  # fill later
-            }
+        # defaults = {
+        #     'RequestType': 'Book',
+        #     'ProcessType' : 'Borrowing'
+        #     }
+        # user = {
+        #     "Username" : None,  # fill later
+        #     }
+        mapper = Mapper( self.request_id )
         item = {
-            'ESPNumber'  # OCLC number
-            'ISSN'  # really ISBN
-            'LoanAuthor'
-            'LoanDate'
-            'LoanPlace'
-            'LoanPublisher'
-            'LoanTitle'
-            'Notes'
+            'ESPNumber': mapper.grab_espn( bib_json_dct ),  # OCLC number
+            'ISSN': mapper.grab_isbn( bib_json_dct ),  # really ISBN
+            'LoanAuthor': mapper.grab_author( bib_json_dct ),
+            'LoanDate': mapper.grab_date( bib_json_dct ),
+            'LoanPlace': mapper.grab_place( bib_json_dct ),
+            'LoanPublisher': mapper.grab_publisher( bib_json_dct ),
+            'LoanTitle': mapper.grab_title( bib_json_dct ),
+            'Notes': notes,
             }
 
     ## end class ILLiadParamBuilder()
+
+
+class Mapper( object ):
+    """ Extracts necessary values from bib_dct. """
+
+    def __init__( self, request_id ):
+        # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
+        self.request_id = request_id
+
+    def grab_espn:
+        """ Returns oclc number.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        oclc = ''
+        try:
+            pass
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        log.debug( '%s - oclc, `%s`' % (self.request_id, oclc) )
+        return oclc
+
+    def grab_isbn:
+        """ Returns isbn.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        isbn = ''
+        try:
+            pass
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        log.debug( '%s - isbn, `%s`' % (self.request_id, isbn) )
+        return isbn
+
+    def grab_author:
+        """ Returns author.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        author = ''
+        try:
+            pass
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        log.debug( '%s - author, `%s`' % (self.request_id, author) )
+        return author
+
+    def grab_date:
+        """ Returns date number.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        date = ''
+        try:
+            pass
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        log.debug( '%s - date, `%s`' % (self.request_id, date) )
+        return date
+
+    def grab_place:
+        """ Returns place number.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        place = ''
+        try:
+            pass
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        log.debug( '%s - place, `%s`' % (self.request_id, place) )
+        return place
+
+    def grab_publisher:
+        """ Returns publisher number.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        publisher = ''
+        try:
+            pass
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        log.debug( '%s - publisher, `%s`' % (self.request_id, publisher) )
+        return publisher
+
+    def grab_title:
+        """ Returns title number.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        title = ''
+        try:
+            pass
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        log.debug( '%s - title, `%s`' % (self.request_id, title) )
+        return title
+
+    ## end class Mapper()
