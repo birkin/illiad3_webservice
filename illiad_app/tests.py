@@ -379,3 +379,36 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_place(bib_dct), 'London' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Pandora' )
 
+    def test_bib_dct_F(self):
+        """ Checks mapping of WorldCat oclc# `1083853313`. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-05 17:07:01.482800',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9780692196380%26title%3DLinear%2Balgebra%2Band%2Blearning%2Bfrom%2Bdata%26date%3D2019%26aulast%3DStrang%26aufirst%3DGilbert%26id%3Ddoi%253A%26pid%3D1083853313%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E1083853313%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F1083853313%26rft_id%3Durn%253AISBN%253A9780692196380%26rft.aulast%3DStrang%26rft.aufirst%3DGilbert%26rft.btitle%3DLinear%2Balgebra%2Band%2Blearning%2Bfrom%2Bdata%26rft.date%3D2019%26rft.isbn%3D9780692196380%26rft.genre%3Dbook'},
+ 'response': {'bib': {'_rfr': 'info:sid/firstsearch.oclc.org:WorldCat',
+                      'author': [{'firstname': 'Gilbert',
+                                  'lastname': 'Strang',
+                                  'name': 'Strang, Gilbert'}],
+                      'end_page': None,
+                      'identifier': [{'id': '9780692196380', 'type': 'isbn'},
+                                     {'id': '1083853313', 'type': 'oclc'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': None,
+                      'publisher': None,
+                      'start_page': None,
+                      'title': 'Linear algebra and learning from data',
+                      'type': 'book',
+                      'volume': None,
+                      'year': '2019'},
+              'decoded_openurl': 'sid=FirstSearch:WorldCat&genre=book&isbn=9780692196380&title=Linear+algebra+and+learning+from+data&date=2019&aulast=Strang&aufirst=Gilbert&id=doi:&pid=1083853313<fssessid>0</fssessid>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>1083853313</accessionnumber>&rft_id=info:oclcnum/1083853313&rft_id=urn:ISBN:9780692196380&rft.aulast=Strang&rft.aufirst=Gilbert&rft.btitle=Linear+algebra+and+learning+from+data&rft.date=2019&rft.isbn=9780692196380&rft.genre=book',
+              'elapsed_time': '0:00:00.014083'}}
+        self.assertEqual( self.mapper.grab_title(bib_dct), 'Linear algebra and learning from data' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Strang, Gilbert' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/firstsearch.oclc.org:WorldCat' )
+        self.assertEqual( self.mapper.grab_espn(bib_dct), '1083853313' )
+        self.assertEqual( self.mapper.grab_isbn(bib_dct), '9780692196380' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
+        self.assertEqual( self.mapper.grab_place(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
+
+    ## end class class Mapper_Test()
