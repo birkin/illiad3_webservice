@@ -3,6 +3,7 @@
 import base64, json, random
 from . import settings_app
 from django.test import Client, TestCase
+from illiad_app.lib.cloud_request import Mapper
 
 
 class ClientCloudCreateUser_Test( TestCase ):
@@ -210,3 +211,36 @@ class ClientCloudBookRequest_Test( TestCase ):
         self.assertEqual( 'submission_successful', response_dct['status'] )
 
     ## end class ClientCloudBookRequest_Test()
+
+
+class Mapper_Test( TestCase ):
+    """ Tests parsing of bib-dcts. """
+
+    def setUp(self):
+        self.log_id = random.randint(1111, 9999)
+        self.mapper = Mapper( self.log_id )
+
+    def test_bib_dct_a(self):
+        """ Checks mapping of isbn and title. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-05 12:50:30.120365',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=isbn%3D9780857021052%26title%3DThe+SAGE+Handbook+of+Remote+Sensing%26notes%3Dp.barcode%2C%2B%6021236009704581%60%2B--%2Bvolumes%2C%2B%60N%2FA%60'},
+ 'response': {'bib': {'_rfr': None,
+                      'author': [],
+                      'end_page': None,
+                      'identifier': [{'id': '9780857021052', 'type': 'isbn'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': None,
+                      'publisher': None,
+                      'start_page': None,
+                      'title': 'The SAGE Handbook of Remote Sensing',
+                      'type': 'book',
+                      'volume': None},
+              'decoded_openurl': 'isbn=9780857021052&title=The SAGE Handbook '
+                                 'of Remote '
+                                 'Sensing&notes=p.barcode,+`21236009704581`+--+volumes,+`N/A`',
+              'elapsed_time': '0:00:00.008798'}}
+        self.assertEqual( 'The SAGE Handbook of Remote Sensing', self.mapper.grab_title(bib_dct) )
+        self.assertEqual( '', self.mapper.grab_author(bib_dct) )
+        self.assertEqual( '9780857021052', self.mapper.grab_isbn(bib_dct) )
