@@ -93,7 +93,8 @@ def cloud_create_user( request ):
 def check_status_via_shib( request ):
     """ Handles shib-protected check-user-status.
         Status meaning "type", eg, `Staff`, `Undergraduate`.
-        TODO: change this 'status' reference to 'type'. """
+        TODO: change this 'status' reference to 'type'.
+        TODO: update code to return data like `cloud_check_user()` does. """
     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     status_checker_handler = CheckStatusHandler()
@@ -107,18 +108,26 @@ def check_status_via_shib( request ):
 
 
 def update_status( request ):
-    """ Interface for updating user-status.
-        Status meaning "type", eg, `Staff`, `Undergraduate`.
-        TODO: change this 'status' reference to 'type'. """
-    # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
-    rq_now = datetime.datetime.now()
-    status_update_handler = UpdateStatusHandler()
-    log.debug( '%s - starting' % status_update_handler.request_id )
-    if status_update_handler.data_check( request ) == 'invalid':
-        return HttpResponseBadRequest( 'Bad Request' )
-    result_data = status_update_handler.manage_status_update( request, rq_now )
-    output_dct = json.dumps( result_data, sort_keys=True, indent=2 )
-    return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
+    """ No longer possible.
+        Status meant "type", eg, `Staff`, `Undergraduate`.
+        This endpoint will be removed; tracking it for now to see what's calling it so I disable those calls. """
+    log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+    return HttpResponseNotFound( '404 / Not Found' )
+
+
+# def update_status( request ):
+#     """ Interface for updating user-status.
+#         Status meaning "type", eg, `Staff`, `Undergraduate`.
+#         TODO: change this 'status' reference to 'type'. """
+#     # log.debug( 'request_dct, ```%s```' % pprint.pformat(request.__dict__) )
+#     rq_now = datetime.datetime.now()
+#     status_update_handler = UpdateStatusHandler()
+#     log.debug( '%s - starting' % status_update_handler.request_id )
+#     if status_update_handler.data_check( request ) == 'invalid':
+#         return HttpResponseBadRequest( 'Bad Request' )
+#     result_data = status_update_handler.manage_status_update( request, rq_now )
+#     output_dct = json.dumps( result_data, sort_keys=True, indent=2 )
+#     return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
 
 
 def check_user( request ):
@@ -138,8 +147,6 @@ def check_user( request ):
     return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
 
 
-
-
 def cloud_check_user( request ):
     """ Handles checking a user's status -- meaing `registered`, `new-user`, `blocked`, `revoked`. """
     rq_now = datetime.datetime.now()
@@ -150,8 +157,6 @@ def cloud_check_user( request ):
     result_data = check_user_handler.manage_check( request, rq_now )
     output_dct = json.dumps( result_data, sort_keys=True, indent=2 )
     return HttpResponse( output_dct, content_type='application/json; charset=utf-8' )
-
-
 
 
 def error_check( request ):
