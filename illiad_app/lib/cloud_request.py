@@ -156,19 +156,6 @@ class Mapper( object ):
         # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
         self.request_id = request_id
 
-    # def grab_sid( self, bib_dct ):
-    #     """ Returns sid number.
-    #         Called by ILLiadParamBuilder.map_to_illiad_keys() """
-    #     sid = ''
-    #     try:
-    #         sid = bib_dct['response']['bib']['_rfr']
-    #         if sid is None:
-    #             sid = ''
-    #     except Exception as e:
-    #         log.error( '%s - repr(e)' )
-    #     log.debug( '%s - sid, `%s`' % (self.request_id, sid) )
-    #     return sid
-
     def grab_sid( self, bib_dct ):
         """ Returns sid number.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
@@ -176,15 +163,23 @@ class Mapper( object ):
         try:
             sid = bib_dct['response']['bib']['_rfr']
             if sid is None:
-                parts_dct = urllib.parse.parse_qs( bib_dct['response']['decoded_openurl'] )
-                for key in parts_dct.keys():
-                    if 'sid' in key:
-                        sid = parts_dct[key][0]
-            if sid is None:
-                sid = ''
+                sid = self.check_openurl_for_sid( bib_dct )
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - sid, `%s`' % (self.request_id, sid) )
+        return sid
+
+    def check_openurl_for_sid( self, bib_dct ):
+        """ Checks openurl for sid-like key.
+            Called by grab_sid() """
+        sid = ''
+        parts_dct = urllib.parse.parse_qs( bib_dct['response']['decoded_openurl'] )
+        for key in parts_dct.keys():
+            if 'sid' in key:
+                sid = parts_dct[key][0]
+        if sid is None:
+            sid = ''
+        log.debug( '%s - sid from openurl-check, `%s`' % (self.request_id, sid) )
         return sid
 
     def grab_espn( self, bib_dct ):
