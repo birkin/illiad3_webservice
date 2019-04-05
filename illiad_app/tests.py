@@ -251,7 +251,7 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
 
     def test_bib_dct_B(self):
-        """ Checks mapping of FirstSearch oclc# 254605206. """
+        """ Checks mapping of FirstSearch oclc# `254605206`. """
         bib_dct = {
  'query': {'date_time': '2019-04-05 14:20:42.044218',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9780300059915%26title%3DThe%2Btexture%2Bof%2Bmemory%2B%253A%2BHolocaust%2Bmemorials%2Band%2Bmeaning%26date%3D2000%26aulast%3DYoung%26aufirst%3DJames%26auinitm%3DEdward%26id%3Ddoi%253A%26pid%3D254605206%253Cfssessid%253E0%253C%252Ffssessid%253E%253Cedition%253E%255BNachdr.%255D%253C%252Fedition%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E254605206%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F254605206%26rft_id%3Durn%253AISBN%253A9780300059915%26rft.aulast%3DYoung%26rft.aufirst%3DJames%26rft.auinitm%3DEdward%26rft.btitle%3DThe%2Btexture%2Bof%2Bmemory%2B%253A%2BHolocaust%2Bmemorials%2Band%2Bmeaning%26rft.date%3D2000%26rft.isbn%3D9780300059915%26rft.place%3DNew%2BHaven%2B%2BCT%26rft.pub%3DYale%2BUniv.%2BPress%26rft.edition%3D%255BNachdr.%255D%26rft.genre%3Dbook'},
@@ -285,7 +285,7 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Yale Univ. Press' )
 
     def test_bib_dct_C(self):
-        """ Checks mapping of BUL:Josiah:b8160392. """
+        """ Checks mapping of `BUL:Josiah:b8160392`. """
         bib_dct = {
  'query': {'date_time': '2019-04-05 16:16:45.638661',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=url_ver%3DZ39.88-2004%26url_ctx_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Actx%26ctx_ver%3DZ39.88-2004%26ctx_tim%3D2019-04-05T13%253A54%253A31-04%253A00%26ctx_id%3D%26ctx_enc%3Dinfo%253Aofi%252Fenc%253AUTF-8%26rft.btitle%3DThe%2Bline%2Bbecomes%2Ba%2Briver%26rft.au%3DCant%25C3%25BA%252C%2BFrancisco%2B%2528Essayist%2529%26rft.date%3D2018%26rft.format%3Dbook%26rft.sid%3DBUL%253AJosiah%253Ab8160392%26rft.isbn%3D9780735217713%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook'},
@@ -314,7 +314,7 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
 
     def test_bib_dct_D(self):
-        """ Checks mapping of WorldCat oclc# 918241430. """
+        """ Checks mapping of WorldCat oclc# `918241430`. """
         bib_dct = {
  'query': {'date_time': '2019-04-05 16:53:50.905525',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26isbn%3D9781452691848%26title%3DGod%2527s%2Bhotel%2B%253A%2Ba%2Bdoctor%252C%2Ba%2Bhospital%252C%2Band%2Ba%2Bpilgrimage%2Bto%2Bthe%2Bheart%2Bof%2Bmedicine%26date%3D2015%26aulast%3DSweet%26aufirst%3DVictoria%26id%3Ddoi%253A%26pid%3D918241430%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dunknown%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E918241430%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F918241430%26rft_id%3Durn%253AISBN%253A9781452691848%26rft.aulast%3DSweet%26rft.aufirst%3DVictoria%26rft.title%3DGod%2527s%2Bhotel%2B%253A%2Ba%2Bdoctor%252C%2Ba%2Bhospital%252C%2Band%2Ba%2Bpilgrimage%2Bto%2Bthe%2Bheart%2Bof%2Bmedicine%26rft.date%3D2015%26rft.isbn%3D9781452691848%26rft.aucorp%3DTantor%2BMedia.%26rft.place%3DOld%2BSaybrook%252C%2BConn.%2B%253A%26rft.pub%3DTantor%2BMedia%252C%26rft.genre%3Dunknown'},
@@ -345,3 +345,37 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_date(bib_dct), '2015' )
         self.assertEqual( self.mapper.grab_place(bib_dct), 'Old Saybrook, Conn. :' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Tantor Media,' )
+
+    def test_bib_dct_E(self):
+        """ Checks mapping of WorlCat oclc# `973822484`. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-05 17:01:04.738055',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9780863584305%26title%3DTrauma%2Band%2Brecovery%26date%3D2015%26aulast%3DHerman%26aufirst%3DJudith%26auinitm%3DLewis%26id%3Ddoi%253A%26pid%3D973822484%253Cfssessid%253E0%253C%252Ffssessid%253E%253Cedition%253E%255BNew%2Bed.%255D.%253C%252Fedition%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E973822484%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F973822484%26rft_id%3Durn%253AISBN%253A9780863584305%26rft.aulast%3DHerman%26rft.aufirst%3DJudith%26rft.auinitm%3DLewis%26rft.btitle%3DTrauma%2Band%2Brecovery%26rft.date%3D2015%26rft.isbn%3D9780863584305%26rft.place%3DLondon%26rft.pub%3DPandora%26rft.edition%3D%255BNew%2Bed.%255D.%26rft.genre%3Dbook'},
+ 'response': {'bib': {'_rfr': 'info:sid/firstsearch.oclc.org:WorldCat',
+                      'author': [{'_minitial': 'Lewis',
+                                  'firstname': 'Judith',
+                                  'lastname': 'Herman',
+                                  'name': 'Herman, Judith'}],
+                      'end_page': None,
+                      'identifier': [{'id': '9780863584305', 'type': 'isbn'},
+                                     {'id': '973822484', 'type': 'oclc'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': 'London',
+                      'publisher': 'Pandora',
+                      'start_page': None,
+                      'title': 'Trauma and recovery',
+                      'type': 'book',
+                      'volume': None,
+                      'year': '2015'},
+              'decoded_openurl': 'sid=FirstSearch:WorldCat&genre=book&isbn=9780863584305&title=Trauma+and+recovery&date=2015&aulast=Herman&aufirst=Judith&auinitm=Lewis&id=doi:&pid=973822484<fssessid>0</fssessid><edition>[New+ed.].</edition>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>973822484</accessionnumber>&rft_id=info:oclcnum/973822484&rft_id=urn:ISBN:9780863584305&rft.aulast=Herman&rft.aufirst=Judith&rft.auinitm=Lewis&rft.btitle=Trauma+and+recovery&rft.date=2015&rft.isbn=9780863584305&rft.place=London&rft.pub=Pandora&rft.edition=[New+ed.].&rft.genre=book',
+              'elapsed_time': '0:00:00.017204'}}
+        self.assertEqual( self.mapper.grab_title(bib_dct), 'Trauma and recovery' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Herman, Judith' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/firstsearch.oclc.org:WorldCat' )
+        self.assertEqual( self.mapper.grab_espn(bib_dct), '973822484' )
+        self.assertEqual( self.mapper.grab_isbn(bib_dct), '9780863584305' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2015' )
+        self.assertEqual( self.mapper.grab_place(bib_dct), 'London' )
+        self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Pandora' )
+
