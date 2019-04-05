@@ -133,6 +133,7 @@ class ILLiadParamBuilder( object ):
         #     }
         mapper = Mapper( self.request_id )
         item = {
+            'CitedIn': mapper.grab_sid( bib_json_dct ),  # often 'source-id/sid' in openurl
             'ESPNumber': mapper.grab_espn( bib_json_dct ),  # OCLC number
             'ISSN': mapper.grab_isbn( bib_json_dct ),  # really ISBN
             'LoanAuthor': mapper.grab_author( bib_json_dct ),
@@ -154,6 +155,17 @@ class Mapper( object ):
     def __init__( self, request_id ):
         # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
         self.request_id = request_id
+
+    def grab_sid( self, bib_dct ):
+        """ Returns sid number.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        sid = ''
+        try:
+            pass
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        log.debug( '%s - sid, `%s`' % (self.request_id, sid) )
+        return sid
 
     def grab_espn( self, bib_dct ):
         """ Returns oclc number.
