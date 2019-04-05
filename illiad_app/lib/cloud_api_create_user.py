@@ -65,6 +65,7 @@ class CloudCreateUserHandler( object ):
             'DeliveryMethod': 'Hold for Pickup',
             'LoanDeliveryMethod': 'Hold for Pickup',
             'NotificationMethod': 'Electronic',
+            'Site': 'Rockefeller Circ. Desk',
             'Web': True,
             # 'AuthType': 'Default',  # don't send, will be set to `Default`
             ## user
