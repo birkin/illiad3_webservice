@@ -162,6 +162,8 @@ class Mapper( object ):
         sid = ''
         try:
             sid = bib_dct['response']['bib']['_rfr']
+            if sid is None:
+                sid = ''
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - sid, `%s`' % (self.request_id, sid) )
@@ -228,6 +230,8 @@ class Mapper( object ):
         place = ''
         try:
             place = bib_dct['response']['bib']['place_of_publication']
+            if place is None:
+                place = ''
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - place, `%s`' % (self.request_id, place) )
@@ -239,6 +243,8 @@ class Mapper( object ):
         publisher = ''
         try:
             publisher = bib_dct['response']['bib']['publisher']
+            if publisher is None:
+                publisher = ''
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - publisher, `%s`' % (self.request_id, publisher) )
