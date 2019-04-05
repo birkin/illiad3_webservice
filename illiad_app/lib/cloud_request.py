@@ -81,8 +81,9 @@ class ILLiadParamBuilder( object ):
         params = { 'ourl': decoded_openurl_querystring }
         r = requests.get( self.OURL_API_URL, params=params, timeout=30, verify=True )
         log.debug( '%s - full url, ```%s```' % (self.request_id, r.url) )
-        log.debug( '%s - status_code, `%s`; content-response, ```%s```' % (self.request_id, r.status_code, r.content.decode('utf-8')) )
+        log.debug( '%s - status_code, `%s`' % (self.request_id, r.status_code) )
         bib_json_dct = r.json()
+        log.debug( '%s - bib-dct, ```%s```' % (self.request_id, pprint.pformat(bib_json_dct)) )
         notes = self.extract_notes( decoded_openurl_querystring )
         illiad_params = self.map_to_illiad_keys( bib_json_dct, notes )
         1/0
@@ -120,8 +121,6 @@ class ILLiadParamBuilder( object ):
         log.debug( '%s - notes, ```%s```' % (self.request_id, notes) )
         return notes
 
-
-
     def map_to_illiad_keys( self, bib_json_dct, notes ):
         """ Returns dct using illiad-cloud-api keys.
             Called by parse_openurl() """
@@ -143,6 +142,8 @@ class ILLiadParamBuilder( object ):
             'LoanTitle': mapper.grab_title( bib_json_dct ),
             'Notes': notes,
             }
+        log.debug( '%s - illiad_dct, ```%s```' % (self.request_id, pprint.pformat(item)) )
+        return item
 
     ## end class ILLiadParamBuilder()
 
@@ -154,7 +155,7 @@ class Mapper( object ):
         # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
         self.request_id = request_id
 
-    def grab_espn:
+    def grab_espn( self, bib_dct ):
         """ Returns oclc number.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         oclc = ''
@@ -165,18 +166,22 @@ class Mapper( object ):
         log.debug( '%s - oclc, `%s`' % (self.request_id, oclc) )
         return oclc
 
-    def grab_isbn:
+    def grab_isbn( self, bib_dct ):
         """ Returns isbn.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         isbn = ''
         try:
-            pass
+            identifiers = bib_dct['response']['bib']['identifier']
+            for element_dct in identifiers:
+                if element_dct['type'] == 'isbn':
+                    isbn = element_dct['id']
+                    break
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - isbn, `%s`' % (self.request_id, isbn) )
         return isbn
 
-    def grab_author:
+    def grab_author( self, bib_dct ):
         """ Returns author.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         author = ''
@@ -187,7 +192,7 @@ class Mapper( object ):
         log.debug( '%s - author, `%s`' % (self.request_id, author) )
         return author
 
-    def grab_date:
+    def grab_date( self, bib_dct ):
         """ Returns date number.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         date = ''
@@ -198,7 +203,7 @@ class Mapper( object ):
         log.debug( '%s - date, `%s`' % (self.request_id, date) )
         return date
 
-    def grab_place:
+    def grab_place( self, bib_dct ):
         """ Returns place number.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         place = ''
@@ -209,7 +214,7 @@ class Mapper( object ):
         log.debug( '%s - place, `%s`' % (self.request_id, place) )
         return place
 
-    def grab_publisher:
+    def grab_publisher( self, bib_dct ):
         """ Returns publisher number.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         publisher = ''
@@ -220,12 +225,12 @@ class Mapper( object ):
         log.debug( '%s - publisher, `%s`' % (self.request_id, publisher) )
         return publisher
 
-    def grab_title:
+    def grab_title( self, bib_dct ):
         """ Returns title number.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         title = ''
         try:
-            pass
+            title = bib_dct['response']['bib']['title']
         except Exception as e:
             log.error( '%s - repr(e)' )
         log.debug( '%s - title, `%s`' % (self.request_id, title) )
