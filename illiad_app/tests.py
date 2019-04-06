@@ -411,4 +411,37 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_place(bib_dct), '' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
 
+    def test_bib_dct_G(self):
+        """ Checks mapping of WorldCat oclc# `19056429`. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-06 09:54:58.656953',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9780062508591%26title%3DJambalaya%2B%253A%2Bthe%2Bnatural%2Bwoman%2527s%2Bbook%2Bof%2Bpersonal%2Bcharms%2Band%2Bpractical%2Brituals%26date%3D1988%26aulast%3DTeish%26aufirst%3DLuisah%26id%3Ddoi%253A%26pid%3D19056429%253Cfssessid%253E0%253C%252Ffssessid%253E%253Cedition%253E1st%2BHarper%2B%2526%2BRow%2Bpbk.%2Bed.%253C%252Fedition%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E19056429%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F19056429%26rft_id%3Durn%253AISBN%253A9780062508591%26rft.aulast%3DTeish%26rft.aufirst%3DLuisah%26rft.btitle%3DJambalaya%2B%253A%2Bthe%2Bnatural%2Bwoman%2527s%2Bbook%2Bof%2Bpersonal%2Bcharms%2Band%2Bpractical%2Brituals%26rft.date%3D1988%26rft.isbn%3D9780062508591%26rft.place%3DSan%2BFrancisco%26rft.pub%3DHarper%2B%2526%2BRow%26rft.edition%3D1st%2BHarper%2B%2526%2BRow%2Bpbk.%2Bed.%26rft.genre%3Dbook'},
+ 'response': {'bib': {'_rfr': 'info:sid/firstsearch.oclc.org:WorldCat',
+                      'author': [{'firstname': 'Luisah',
+                                  'lastname': 'Teish',
+                                  'name': 'Teish, Luisah'}],
+                      'end_page': None,
+                      'identifier': [{'id': '9780062508591', 'type': 'isbn'},
+                                     {'id': '19056429', 'type': 'oclc'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': 'San Francisco',
+                      'publisher': 'Harper ',
+                      'start_page': None,
+                      'title': "Jambalaya : the natural woman's book of "
+                               'personal charms and practical rituals',
+                      'type': 'book',
+                      'volume': None,
+                      'year': '1988'},
+              'decoded_openurl': "sid=FirstSearch:WorldCat&genre=book&isbn=9780062508591&title=Jambalaya+:+the+natural+woman's+book+of+personal+charms+and+practical+rituals&date=1988&aulast=Teish&aufirst=Luisah&id=doi:&pid=19056429<fssessid>0</fssessid><edition>1st+Harper+&+Row+pbk.+ed.</edition>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>19056429</accessionnumber>&rft_id=info:oclcnum/19056429&rft_id=urn:ISBN:9780062508591&rft.aulast=Teish&rft.aufirst=Luisah&rft.btitle=Jambalaya+:+the+natural+woman's+book+of+personal+charms+and+practical+rituals&rft.date=1988&rft.isbn=9780062508591&rft.place=San+Francisco&rft.pub=Harper+&+Row&rft.edition=1st+Harper+&+Row+pbk.+ed.&rft.genre=book",
+              'elapsed_time': '0:00:00.016115'}}
+        self.assertEqual( self.mapper.grab_title(bib_dct), "Jambalaya : the natural woman's book of personal charms and practical rituals" )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Teish, Luisah' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/firstsearch.oclc.org:WorldCat' )
+        self.assertEqual( self.mapper.grab_espn(bib_dct), '19056429' )
+        self.assertEqual( self.mapper.grab_isbn(bib_dct), '9780062508591' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '1988' )
+        self.assertEqual( self.mapper.grab_place(bib_dct), 'San Francisco' )
+        self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Harper ' )
+
     ## end class class Mapper_Test()
