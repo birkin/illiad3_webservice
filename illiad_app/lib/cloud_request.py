@@ -65,6 +65,40 @@ class BookRequestHandler( object ):
         log.debug( '%s - output_dct, `%s`' % (self.request_id, pprint.pformat(output_dct)) )
         return output_dct
 
+    def add_additional_params( self, param_dct, username ):
+        """ Adds additional params needed for illiad-api submission.
+            Called by manage_request() """
+        param_dct['RequestType'] = 'Book'
+        param_dct['ProcessType'] = 'Borrowing'
+        param_dct['Username'] = username
+        log.debug( '%s - updated param_dct, ```%s```' % (self.request_id, pprint.pformat(param_dct)) )
+        return param_dct
+
+    def submit_transaction( self, param_dct ):
+        """ Submits request to illiad-api.
+            Called by manage_request() """
+        ( url, headers ) = self.prepare_submit_request()
+        try:
+            r = requests.post( url, data=param_dct, headers=headers, timeout=30, verify=True )
+            response_dct = r.json()
+            response_dct['added_status_code'] = r.status_code
+            log.debug( '%s - response, ```%s```' % (self.request_id, pprint.pformat(response_dct)) )
+            return response_dct
+        except Exception as e:
+            message = 'exception submitting book transaction, ```%s```' % repr(e)
+            log.error( '%s - ```%s```' % (self.request_id, message) )
+            return { 'error': message }
+
+    def prepare_submit_request( self ):
+        """ Sets url & headers.
+            Called by submit_transaction() """
+        url = '%s%s' % ( settings_app.ILLIAD_API_URL, 'transaction' )  # root url contains ending-slash
+        log.debug( '%s - url, ```%s```' % (self.request_id, url) )
+        headers = {
+            'Accept-Type': 'application/json; charset=utf-8',
+            'ApiKey': settings_app.ILLIAD_API_KEY }
+        return ( url, headers )
+
     ## end class BookRequestHandler()
 
 
