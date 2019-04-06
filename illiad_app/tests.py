@@ -203,7 +203,8 @@ class ClientCloudBookRequest_Test( TestCase ):
         pass
         # c = Client()
         # response = c.post(
-        #     '/cloud_book_request/',
+        #     # '/cloud_book_request/',
+        #     '/v2/make_request/',
         #     { 'auth_key': settings_app.TEST_AUTH_KEY,
         #         'openurl': 'isbn=9780857021052&title=The%20SAGE%20Handbook%20of%20Remote%20Sensing&notes=p.barcode%2C+%6021236009704581%60+--+volumes%2C+%60N%2FA%60',
         #         'request_id': str(random.randint(1111, 9999)),
