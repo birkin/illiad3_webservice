@@ -510,4 +510,39 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_place(bib_dct), '' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Routledge' )
 
+    def test_bib_dct_J(self):
+        """ Checks mapping of WorlCat oclc# `989593565`. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-06 10:13:24.926351',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9783883757346%26title%3DTerritories%2B%253A%2Bislands%252C%2Bcamps%2Band%2Bother%2Bstates%2Bof%2Butopia%26date%3D2003%26aulast%3DBiesenbach%26aufirst%3DKlaus%26id%3Ddoi%253A%26pid%3D989593565%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E989593565%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F989593565%26rft_id%3Durn%253AISBN%253A9783883757346%26rft.aulast%3DBiesenbach%26rft.aufirst%3DKlaus%26rft.btitle%3DTerritories%2B%253A%2Bislands%252C%2Bcamps%2Band%2Bother%2Bstates%2Bof%2Butopia%26rft.date%3D2003%26rft.isbn%3D9783883757346%26rft.place%3DKo%25CC%2588ln%26rft.pub%3DKo%25CC%2588nig%26rft.genre%3Dbook'},
+ 'response': {'bib': {'_rfr': 'info:sid/firstsearch.oclc.org:WorldCat',
+                      'author': [{'firstname': 'Klaus',
+                                  'lastname': 'Biesenbach',
+                                  'name': 'Biesenbach, Klaus'}],
+                      'end_page': None,
+                      'identifier': [{'id': '9783883757346', 'type': 'isbn'},
+                                     {'id': '989593565', 'type': 'oclc'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': 'Köln',
+                      'publisher': 'König',
+                      'start_page': None,
+                      'title': 'Territories : islands, camps and other states '
+                               'of utopia',
+                      'type': 'book',
+                      'volume': None,
+                      'year': '2003'},
+              'decoded_openurl': 'sid=FirstSearch:WorldCat&genre=book&isbn=9783883757346&title=Territories+:+islands,+camps+and+other+states+of+utopia&date=2003&aulast=Biesenbach&aufirst=Klaus&id=doi:&pid=989593565<fssessid>0</fssessid>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>989593565</accessionnumber>&rft_id=info:oclcnum/989593565&rft_id=urn:ISBN:9783883757346&rft.aulast=Biesenbach&rft.aufirst=Klaus&rft.btitle=Territories+:+islands,+camps+and+other+states+of+utopia&rft.date=2003&rft.isbn=9783883757346&rft.place=Köln&rft.pub=König&rft.genre=book',
+              'elapsed_time': '0:00:00.017138'}}
+        self.assertEqual( self.mapper.grab_title(bib_dct), 'Territories : islands, camps and other states of utopia' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Biesenbach, Klaus' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/firstsearch.oclc.org:WorldCat' )
+        self.assertEqual( self.mapper.grab_espn(bib_dct), '989593565' )
+        self.assertEqual( self.mapper.grab_isbn(bib_dct), '9783883757346' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2003' )
+        self.assertEqual( self.mapper.grab_place(bib_dct), 'Köln' )
+        self.assertEqual( self.mapper.grab_publisher(bib_dct), 'König' )
+
+
+
     ## end class class Mapper_Test()
