@@ -59,7 +59,10 @@ class BookRequestHandler( object ):
         output_dct = { 'status': None, 'transaction_number': None, 'raw_data': None }
         param_builder = ILLiadParamBuilder( self.request_id )
         open_url_params = param_builder.parse_openurl( request.POST['openurl'] )
-        log.debug( '%s - output_dct, `%s`' % (self.request_id, output_dct) )
+        full_illiad_params = self.add_additional_params( open_url_params, request.POST['username'] )
+        cloud_api_response = self.submit_transaction( full_illiad_params )
+        output_dct = self.prepare_output_dct( cloud_api_response )
+        log.debug( '%s - output_dct, `%s`' % (self.request_id, pprint.pformat(output_dct)) )
         return output_dct
 
     ## end class BookRequestHandler()
@@ -75,7 +78,7 @@ class ILLiadParamBuilder( object ):
 
     def parse_openurl( self, openurl ):
         """ Prepares ILLiad-compatible params.
-            Called by manage_request() """
+            Called by BookRequestHandler.manage_request() """
         log.debug( '%s - initial openurl, ```%s```' % (self.request_id, openurl) )
         decoded_openurl_querystring = self.decode_openurl_querystring( openurl )
         params = { 'ourl': decoded_openurl_querystring }
@@ -86,7 +89,8 @@ class ILLiadParamBuilder( object ):
         log.debug( '%s - bib-dct, ```%s```' % (self.request_id, pprint.pformat(bib_json_dct)) )
         notes = self.extract_notes( decoded_openurl_querystring )
         illiad_params = self.map_to_illiad_keys( bib_json_dct, notes )
-        1/0
+        log.debug( '%s - illiad_params from openurl, ```%s`' % (self.request_id, pprint.pformat(illiad_params)) )
+        return illiad_params
 
     def decode_openurl_querystring( self, querystring ):
         """ Runs one decode on the querystring.
@@ -95,6 +99,7 @@ class ILLiadParamBuilder( object ):
         log.debug( '%s - decoded_querystring, ```%s```' % (self.request_id, decoded_querystring) )
         return decoded_querystring
 
+    ## KEEP this commented-out function in case we determine we need to further decode the querystring
     # def decode_openurl_querystring( self, querystring ):
     #     """ Fully decodes the querystring.
     #         Called by parse_openurl() """
