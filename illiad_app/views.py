@@ -46,15 +46,15 @@ def make_request_v2( request ):
 
 
 def cloud_book_request( request ):
-    """ Handles current (March 2019) easyBorrow controller illiad call -- via hitting ILLiad API. """
+    """ Handles current (April 2019) easyBorrow controller illiad call -- via hitting ILLiad API. """
     log.debug( 'starting' )
-    # return HttpResponse( 'cloud book request coming' )
     log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
     book_handler = BookRequestHandler( request.POST.get('request_id', 'no_id') )
     if book_handler.check_validity( request ) is False:
         return HttpResponseBadRequest( 'Bad Request' )
-    result_dct = book_handler.manage_request( request )
-    output_dct = book_handler.prep_output_dct( rq_now, request, result_dct )
+    cloud_api_response_dct = book_handler.manage_request( request )
+    # output_dct = book_handler.prep_output_dct( rq_now, request, cloud_api_response_dct )  # future TODO
+    output_dct = book_handler.prepare_V2_output_dct( cloud_api_response_dct )  # this is compatible with the April 2019 format of the easyBorrow internal-illiad-api call
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 

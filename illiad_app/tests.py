@@ -196,7 +196,8 @@ class ClientCloudBookRequest_Test( TestCase ):
 
     def test__check_good_post_params__known_user(self):
         """ POST with good params should submit a request and return a transaction number.
-            This test is good, just disabled so as not to auto-submit real requests. """
+            This test is GOOD, just disabled so as not to auto-submit real requests. """
+        pass
         c = Client()
         response = c.post(
             '/cloud_book_request/',

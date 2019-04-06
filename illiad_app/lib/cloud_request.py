@@ -60,15 +60,14 @@ class BookRequestHandler( object ):
         param_builder = ILLiadParamBuilder( self.request_id )
         open_url_params = param_builder.parse_openurl( request.POST['openurl'] )
         full_illiad_params = self.add_additional_params( open_url_params, request.POST['username'] )
-        cloud_api_response = self.submit_transaction( full_illiad_params )
-        output_dct = self.prepare_output_dct( cloud_api_response )
-        log.debug( '%s - output_dct, `%s`' % (self.request_id, pprint.pformat(output_dct)) )
-        return output_dct
+        cloud_api_response_dct = self.submit_transaction( full_illiad_params )
+        # output_dct = self.prepare_V2_output_dct( cloud_api_response_dct )
+        return cloud_api_response_dct
 
     def add_additional_params( self, param_dct, username ):
         """ Adds additional params needed for illiad-api submission.
             Called by manage_request() """
-        param_dct['RequestType'] = 'Book'
+        param_dct['RequestType'] = 'Loan'
         param_dct['ProcessType'] = 'Borrowing'
         param_dct['Username'] = username
         log.debug( '%s - updated param_dct, ```%s```' % (self.request_id, pprint.pformat(param_dct)) )
@@ -98,6 +97,16 @@ class BookRequestHandler( object ):
             'Accept-Type': 'application/json; charset=utf-8',
             'ApiKey': settings_app.ILLIAD_API_KEY }
         return ( url, headers )
+
+    def prepare_V2_output_dct( self, cloud_api_response_dct ):
+        """ Prepares response expected by the easyBorrow v2 call.
+            TODO: at some point, update to the more modern api-response format, and update easyBorrow accordingly to handle it.
+            Called by views.cloud_book_request() """
+        v2_response_dct = { 'status': 'submission_failed', 'message': 'see illiad-webservice logs for more info' }
+        if 'TransactionNumber' in cloud_api_response_dct.keys():
+            v2_response_dct = { 'status': 'submission_successful', 'transaction_number': cloud_api_response_dct['TransactionNumber'] }
+        log.debug( '%s - v2_response_dct, ```%s```' % (self.request_id, v2_response_dct) )
+        return v2_response_dct
 
     ## end class BookRequestHandler()
 
