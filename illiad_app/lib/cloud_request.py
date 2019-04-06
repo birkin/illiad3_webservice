@@ -189,7 +189,8 @@ class ILLiadParamBuilder( object ):
             'LoanPlace': mapper.grab_place( bib_json_dct ),
             'LoanPublisher': mapper.grab_publisher( bib_json_dct ),
             'LoanTitle': mapper.grab_title( bib_json_dct ),
-            'Notes': notes,
+            # 'Notes': notes,
+            'CitedTitle': 'NOTES: %s' % notes  # work-around due to the fact that I can't submit Notes directly within this transaction
             }
         log.debug( '%s - illiad_dct, ```%s```' % (self.request_id, pprint.pformat(item)) )
         return item
