@@ -444,4 +444,37 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_place(bib_dct), 'San Francisco' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Harper ' )
 
+    def test_bib_dct_H(self):
+        """ Checks mapping of WorldCat oclc# `1041433507`. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-06 10:01:24.174221',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9781107670815%26title%3DBefore%2Bmestizaje%2B%253A%2Bthe%2Bfrontiers%2Bof%2Brace%2Band%2Bcaste%2Bin%2Bcolonial%2BMexico%26date%3D2018%26aulast%3DVinson%26aufirst%3DBen%26id%3Ddoi%253A%26pid%3D1041433507%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E1041433507%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F1041433507%26rft_id%3Durn%253AISBN%253A9781107670815%26rft.aulast%3DVinson%26rft.aufirst%3DBen%26rft.btitle%3DBefore%2Bmestizaje%2B%253A%2Bthe%2Bfrontiers%2Bof%2Brace%2Band%2Bcaste%2Bin%2Bcolonial%2BMexico%26rft.date%3D2018%26rft.isbn%3D9781107670815%26rft.place%3DNew%2BYork%26rft.pub%3DCambridge%2BUniversity%2BPress%26rft.genre%3Dbook'},
+ 'response': {'bib': {'_rfr': 'info:sid/firstsearch.oclc.org:WorldCat',
+                      'author': [{'firstname': 'Ben',
+                                  'lastname': 'Vinson',
+                                  'name': 'Vinson, Ben'}],
+                      'end_page': None,
+                      'identifier': [{'id': '9781107670815', 'type': 'isbn'},
+                                     {'id': '1041433507', 'type': 'oclc'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': 'New York',
+                      'publisher': 'Cambridge University Press',
+                      'start_page': None,
+                      'title': 'Before mestizaje : the frontiers of race and '
+                               'caste in colonial Mexico',
+                      'type': 'book',
+                      'volume': None,
+                      'year': '2018'},
+              'decoded_openurl': 'sid=FirstSearch:WorldCat&genre=book&isbn=9781107670815&title=Before+mestizaje+:+the+frontiers+of+race+and+caste+in+colonial+Mexico&date=2018&aulast=Vinson&aufirst=Ben&id=doi:&pid=1041433507<fssessid>0</fssessid>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>1041433507</accessionnumber>&rft_id=info:oclcnum/1041433507&rft_id=urn:ISBN:9781107670815&rft.aulast=Vinson&rft.aufirst=Ben&rft.btitle=Before+mestizaje+:+the+frontiers+of+race+and+caste+in+colonial+Mexico&rft.date=2018&rft.isbn=9781107670815&rft.place=New+York&rft.pub=Cambridge+University+Press&rft.genre=book',
+              'elapsed_time': '0:00:00.017586'}}
+        self.assertEqual( self.mapper.grab_title(bib_dct), 'Before mestizaje : the frontiers of race and caste in colonial Mexico' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Vinson, Ben' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/firstsearch.oclc.org:WorldCat' )
+        self.assertEqual( self.mapper.grab_espn(bib_dct), '1041433507' )
+        self.assertEqual( self.mapper.grab_isbn(bib_dct), '9781107670815' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2018' )
+        self.assertEqual( self.mapper.grab_place(bib_dct), 'New York' )
+        self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Cambridge University Press' )
+
     ## end class class Mapper_Test()
