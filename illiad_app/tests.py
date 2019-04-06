@@ -137,22 +137,22 @@ class ClientCloudCheckUser_Test( TestCase ):
 
 
 
-class ClientV2_Test( TestCase ):
-    """ Tests easyBorrow-api v2 """
+# class ClientV2_Test( TestCase ):
+#     """ Tests easyBorrow-api v2 """
 
-    def test__check_bad_method(self):
-        """ GET (api requires POST) should return 400. """
-        c = Client()
-        response = c.get( '/v2/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
-        self.assertEqual( 400, response.status_code )
-        self.assertEqual( b'Bad Request', response.content )
+#     def test__check_bad_method(self):
+#         """ GET (api requires POST) should return 400. """
+#         c = Client()
+#         response = c.get( '/v2/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+#         self.assertEqual( 400, response.status_code )
+#         self.assertEqual( b'Bad Request', response.content )
 
-    def test__check_bad_post_params(self):
-        """ POST with bad params should return 400. """
-        c = Client()
-        response = c.post( '/v2/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
-        self.assertEqual( 400, response.status_code )
-        self.assertEqual( b'Bad Request', response.content )
+#     def test__check_bad_post_params(self):
+#         """ POST with bad params should return 400. """
+#         c = Client()
+#         response = c.post( '/v2/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+#         self.assertEqual( 400, response.status_code )
+#         self.assertEqual( b'Bad Request', response.content )
 
     # def test__check_good_post_params__known_user(self):
     #     """ POST with good params should submit a request and return a transaction number.
@@ -182,7 +182,8 @@ class ClientCloudBookRequest_Test( TestCase ):
     def test__check_bad_method(self):
         """ GET (api requires POST) should return 400. """
         c = Client()
-        response = c.get( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        # response = c.get( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        response = c.get( '/v2/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )  # easyBorrow April-2019 internal-api call-style
         self.assertEqual( 400, response.status_code )
         self.assertEqual( b'Bad Request', response.content )
 
@@ -191,7 +192,8 @@ class ClientCloudBookRequest_Test( TestCase ):
             eg: $ python ./manage.py test illiad_app.tests.ClientV3_MakeBookRequest_Test.test__check_bad_post_params
             """
         c = Client()
-        response = c.post( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        # response = c.post( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        response = c.post( '/v2/make_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )  # easyBorrow April-2019 internal-api call-style
         self.assertEqual( 400, response.status_code )
         self.assertEqual( b'Bad Request', response.content )
 
