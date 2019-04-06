@@ -477,4 +477,37 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_place(bib_dct), 'New York' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Cambridge University Press' )
 
+    def test_bib_dct_I(self):
+        """ Checks mapping of WorldCat oclc# `7390570323`. """
+        bib_dct = {
+ 'query': {'date_time': '2019-04-06 10:06:39.005840',
+           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D978-0-415-27557-6%26title%3DMaritime%2BEconomics%2B3e%26date%3D2009%26aulast%3DStopford%26aufirst%3DMartin%26id%3Ddoi%253A%26pid%3D7390570323%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E7390570323%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F7390570323%26rft_id%3Durn%253AISBN%253A978-0-415-27557-6%26rft.aulast%3DStopford%26rft.aufirst%3DMartin%26rft.btitle%3DMaritime%2BEconomics%2B3e%26rft.date%3D2009%26rft.isbn%3D978-0-415-27557-6%26rft.pub%3DRoutledge%26rft.genre%3Dbook'},
+ 'response': {'bib': {'_rfr': 'info:sid/firstsearch.oclc.org:WorldCat',
+                      'author': [{'firstname': 'Martin',
+                                  'lastname': 'Stopford',
+                                  'name': 'Stopford, Martin'}],
+                      'end_page': None,
+                      'identifier': [{'id': '978-0-415-27557-6',
+                                      'type': 'isbn'},
+                                     {'id': '7390570323', 'type': 'oclc'}],
+                      'issue': None,
+                      'pages': None,
+                      'place_of_publication': None,
+                      'publisher': 'Routledge',
+                      'start_page': None,
+                      'title': 'Maritime Economics 3e',
+                      'type': 'book',
+                      'volume': None,
+                      'year': '2009'},
+              'decoded_openurl': 'sid=FirstSearch:WorldCat&genre=book&isbn=978-0-415-27557-6&title=Maritime+Economics+3e&date=2009&aulast=Stopford&aufirst=Martin&id=doi:&pid=7390570323<fssessid>0</fssessid>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>7390570323</accessionnumber>&rft_id=info:oclcnum/7390570323&rft_id=urn:ISBN:978-0-415-27557-6&rft.aulast=Stopford&rft.aufirst=Martin&rft.btitle=Maritime+Economics+3e&rft.date=2009&rft.isbn=978-0-415-27557-6&rft.pub=Routledge&rft.genre=book',
+              'elapsed_time': '0:00:00.015365'}}
+        self.assertEqual( self.mapper.grab_title(bib_dct), 'Maritime Economics 3e' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Stopford, Martin' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/firstsearch.oclc.org:WorldCat' )
+        self.assertEqual( self.mapper.grab_espn(bib_dct), '7390570323' )
+        self.assertEqual( self.mapper.grab_isbn(bib_dct), '978-0-415-27557-6' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2009' )
+        self.assertEqual( self.mapper.grab_place(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Routledge' )
+
     ## end class class Mapper_Test()
