@@ -198,18 +198,18 @@ class ClientCloudBookRequest_Test( TestCase ):
         """ POST with good params should submit a request and return a transaction number.
             This test is GOOD, just disabled so as not to auto-submit real requests. """
         pass
-        c = Client()
-        response = c.post(
-            '/cloud_book_request/',
-            { 'auth_key': settings_app.TEST_AUTH_KEY,
-                'openurl': 'isbn=9780857021052&title=The%20SAGE%20Handbook%20of%20Remote%20Sensing&notes=p.barcode%2C+%6021236009704581%60+--+volumes%2C+%60N%2FA%60',
-                'request_id': str(random.randint(1111, 9999)),
-                'username': settings_app.TEST_EXISTING_GOOD_USER }
-            )
-        self.assertEqual( 200, response.status_code )
-        response_dct = json.loads( response.content )
-        self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
-        self.assertEqual( 'submission_successful', response_dct['status'] )
+        # c = Client()
+        # response = c.post(
+        #     '/cloud_book_request/',
+        #     { 'auth_key': settings_app.TEST_AUTH_KEY,
+        #         'openurl': 'isbn=9780857021052&title=The%20SAGE%20Handbook%20of%20Remote%20Sensing&notes=p.barcode%2C+%6021236009704581%60+--+volumes%2C+%60N%2FA%60',
+        #         'request_id': str(random.randint(1111, 9999)),
+        #         'username': settings_app.TEST_EXISTING_GOOD_USER }
+        #     )
+        # self.assertEqual( 200, response.status_code )
+        # response_dct = json.loads( response.content )
+        # self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
+        # self.assertEqual( 'submission_successful', response_dct['status'] )
 
     ## end class ClientCloudBookRequest_Test()
 
