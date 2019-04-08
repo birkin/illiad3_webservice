@@ -180,7 +180,7 @@ class ILLiadParamBuilder( object ):
         #     "Username" : None,  # fill later
         #     }
         mapper = Mapper( self.request_id )
-        item = {
+        item_temp = {
             'CitedIn': mapper.grab_sid( bib_json_dct ),  # often 'source-id/sid' in openurl
             'ESPNumber': mapper.grab_espn( bib_json_dct ),  # OCLC number
             'ISSN': mapper.grab_isbn( bib_json_dct ),  # really ISBN
@@ -199,7 +199,10 @@ class ILLiadParamBuilder( object ):
 
 
 class Mapper( object ):
-    """ Extracts necessary values from bib_dct. """
+    """ Extracts necessary values from bib_dct.
+        Truncates data if necessary.
+        - field lengths from <https://support.atlas-sys.com/hc/en-us/articles/360011812074> (scroll down to 'Transactions' table )
+        - no field-length limits are set when above documentation lists `nvarchar(max)` """
 
     def __init__( self, request_id ):
         # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
@@ -207,6 +210,7 @@ class Mapper( object ):
 
     def grab_sid( self, bib_dct ):
         """ Returns sid number.
+            (no field-length limit)
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         sid = ''
         try:
@@ -243,6 +247,7 @@ class Mapper( object ):
                     break
         except Exception as e:
             log.error( '%s - repr(e)' )
+        oclc = self.check_limit( limit=32 )
         log.debug( '%s - oclc, `%s`' % (self.request_id, oclc) )
         return oclc
 
@@ -322,5 +327,15 @@ class Mapper( object ):
             log.error( '%s - repr(e)' )
         log.debug( '%s - title, `%s`' % (self.request_id, title) )
         return title
+
+    def check_limit( self, string_value, limit_num ):
+        """ Returns truncated string with elipsis if necessary.
+            Called by many class functions. """
+        checked_value = string_value
+        elip = normalize( 'NFC', '…' ); assert len(elip) == 1  # to make explicit it's one-character
+        if len( checked_value ) > limit_num:
+            checked_value = '%s%s' % ( checked_value[0:limit_num-1], elip )
+            log.debug( '%s - string value updated; was, ```%s```; now, ```%s```' % (self.request_id, string_value, checked_value) )
+        log.debug( '%s - returning string-value, ```%s```' % (self.request_id, checked_value) )
 
     ## end class Mapper()

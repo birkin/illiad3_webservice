@@ -215,6 +215,24 @@ class ClientCloudBookRequest_Test( TestCase ):
         # self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
         # self.assertEqual( 'submission_successful', response_dct['status'] )
 
+    def test__check_good_content_that_failed(self):
+        """ Checks seemingly good openurl with too-long publisher.
+            This test is GOOD, just disabled so as not to auto-submit real requests. """
+        pass
+        c = Client()
+        # response = c.post(
+        #     # '/cloud_book_request/',
+        #     '/v2/make_request/',
+        #     { 'auth_key': settings_app.TEST_AUTH_KEY,
+        #         'openurl': 'sid=FirstSearch%3AWorldCat&genre=book&isbn=9780615686875&title=Desire+love&date=2012&aulast=Berlant&aufirst=Lauren&auinitm=Gail&id=doi%3A&pid=823176599%3Cfssessid%3E0%3C%2Ffssessid%3E&url_ver=Z39.88-2004&rfr_id=info%3Asid%2Ffirstsearch.oclc.org%3AWorldCat&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&rft.genre=book&req_dat=%3Csessionid%3E0%3C%2Fsessionid%3E&rfe_dat=%3Caccessionnumber%3E823176599%3C%2Faccessionnumber%3E&rft_id=info%3Aoclcnum%2F823176599&rft_id=urn%3AISBN%3A9780615686875&rft.aulast=Berlant&rft.aufirst=Lauren&rft.auinitm=Gail&rft.btitle=Desire+love&rft.date=2012&rft.isbn=9780615686875&rft.place=Brooklyn++New+York&rft.pub=Dead+Letter+Office++BABEL+Working+Group+an+imprint+of+Punctum+Books&rft.genre=book',
+        #         'request_id': str(random.randint(1111, 9999)),
+        #         'username': settings_app.TEST_EXISTING_GOOD_USER }
+        #     )
+        # self.assertEqual( 200, response.status_code )
+        # response_dct = json.loads( response.content )
+        # self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
+        # self.assertEqual( 'submission_successful', response_dct['status'] )
+
     ## end class ClientCloudBookRequest_Test()
 
 
@@ -581,5 +599,39 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
         self.assertEqual( self.mapper.grab_place(bib_dct), '' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
+
+ #    def test_bib_dct_L(self):
+ #        """ Checks mapping of WorldCat oclc# `823176599` - a failure. """
+ #        bib_dct = {
+ # 'query': {'date_time': '2019-04-07 21:30:10.881010',
+ #           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9780615686875%26title%3DDesire%2Blove%26date%3D2012%26aulast%3DBerlant%26aufirst%3DLauren%26auinitm%3DGail%26id%3Ddoi%253A%26pid%3D823176599%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E823176599%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F823176599%26rft_id%3Durn%253AISBN%253A9780615686875%26rft.aulast%3DBerlant%26rft.aufirst%3DLauren%26rft.auinitm%3DGail%26rft.btitle%3DDesire%2Blove%26rft.date%3D2012%26rft.isbn%3D9780615686875%26rft.place%3DBrooklyn%2B%2BNew%2BYork%26rft.pub%3DDead%2BLetter%2BOffice%2B%2BBABEL%2BWorking%2BGroup%2Ban%2Bimprint%2Bof%2BPunctum%2BBooks%26rft.genre%3Dbook'},
+ # 'response': {'bib': {'_rfr': 'info:sid/firstsearch.oclc.org:WorldCat',
+ #                      'author': [{'_minitial': 'Gail',
+ #                                  'firstname': 'Lauren',
+ #                                  'lastname': 'Berlant',
+ #                                  'name': 'Berlant, Lauren'}],
+ #                      'end_page': None,
+ #                      'identifier': [{'id': '9780615686875', 'type': 'isbn'},
+ #                                     {'id': '823176599', 'type': 'oclc'}],
+ #                      'issue': None,
+ #                      'pages': None,
+ #                      'place_of_publication': 'Brooklyn  New York',
+ #                      'publisher': 'Dead Letter Office  BABEL Working Group an '
+ #                                   'imprint of Punctum Books',
+ #                      'start_page': None,
+ #                      'title': 'Desire love',
+ #                      'type': 'book',
+ #                      'volume': None,
+ #                      'year': '2012'},
+ #              'decoded_openurl': 'sid=FirstSearch:WorldCat&genre=book&isbn=9780615686875&title=Desire+love&date=2012&aulast=Berlant&aufirst=Lauren&auinitm=Gail&id=doi:&pid=823176599<fssessid>0</fssessid>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>823176599</accessionnumber>&rft_id=info:oclcnum/823176599&rft_id=urn:ISBN:9780615686875&rft.aulast=Berlant&rft.aufirst=Lauren&rft.auinitm=Gail&rft.btitle=Desire+love&rft.date=2012&rft.isbn=9780615686875&rft.place=Brooklyn++New+York&rft.pub=Dead+Letter+Office++BABEL+Working+Group+an+imprint+of+Punctum+Books&rft.genre=book',
+ #              'elapsed_time': '0:00:00.017579'}}
+ #        self.assertEqual( self.mapper.grab_title(bib_dct), 'The inflamed mind : a radical new approach to depression' )
+ #        self.assertEqual( self.mapper.grab_author(bib_dct), 'Bullmore, Edward' )
+ #        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/firstsearch.oclc.org:WorldCat' )
+ #        self.assertEqual( self.mapper.grab_espn(bib_dct), '1053904626' )
+ #        self.assertEqual( self.mapper.grab_isbn(bib_dct), '9781780723723' )
+ #        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
+ #        self.assertEqual( self.mapper.grab_place(bib_dct), '' )
+ #        self.assertEqual( self.mapper.grab_publisher(bib_dct), '' )
 
     ## end class class Mapper_Test()
