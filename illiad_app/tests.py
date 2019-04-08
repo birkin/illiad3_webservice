@@ -219,7 +219,7 @@ class ClientCloudBookRequest_Test( TestCase ):
         """ Checks seemingly good openurl with too-long publisher.
             This test is GOOD, just disabled so as not to auto-submit real requests. """
         pass
-        c = Client()
+        # c = Client()
         # response = c.post(
         #     # '/cloud_book_request/',
         #     '/v2/make_request/',
