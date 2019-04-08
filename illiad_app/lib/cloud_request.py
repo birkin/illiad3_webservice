@@ -263,6 +263,7 @@ class Mapper( object ):
                     break
         except Exception as e:
             log.error( '%s - repr(e)' )
+        isbn = self.check_limit( string_value=isbn, limit=20 )
         log.debug( '%s - isbn, `%s`' % (self.request_id, isbn) )
         return isbn
 
@@ -277,6 +278,7 @@ class Mapper( object ):
                     author = element_dct['name']
         except Exception as e:
             log.error( '%s - repr(e)' )
+        author = self.check_limit( string_value=author, limit=100 )
         log.debug( '%s - author, `%s`' % (self.request_id, author) )
         return author
 
@@ -288,6 +290,7 @@ class Mapper( object ):
             date = bib_dct['response']['bib']['year']
         except Exception as e:
             log.error( '%s - repr(e)' )
+        date = self.check_limit( string_value=date, limit=30 )
         log.debug( '%s - date, `%s`' % (self.request_id, date) )
         return date
 
@@ -301,6 +304,7 @@ class Mapper( object ):
                 place = ''
         except Exception as e:
             log.error( '%s - repr(e)' )
+        place = self.check_limit( string_value=place, limit=30 )
         log.debug( '%s - place, `%s`' % (self.request_id, place) )
         return place
 
@@ -314,6 +318,7 @@ class Mapper( object ):
                 publisher = ''
         except Exception as e:
             log.error( '%s - repr(e)' )
+        publisher = self.check_limit( string_value=publisher, limit=50 )
         log.debug( '%s - publisher, `%s`' % (self.request_id, publisher) )
         return publisher
 
@@ -325,6 +330,7 @@ class Mapper( object ):
             title = bib_dct['response']['bib']['title']
         except Exception as e:
             log.error( '%s - repr(e)' )
+        title = self.check_limit( string_value=title, limit=255 )
         log.debug( '%s - title, `%s`' % (self.request_id, title) )
         return title
 
