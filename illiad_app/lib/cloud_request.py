@@ -340,7 +340,7 @@ class Mapper( object ):
         checked_value = string_value
         elip = unicodedata.normalize( 'NFC', '…' ); assert len(elip) == 1  # to make explicit it's one-character
         if len( checked_value ) > limit:
-            checked_value = '%s%s' % ( checked_value[0:limit_num-1], elip )
+            checked_value = '%s%s' % ( checked_value[0:limit-1], elip )
             log.debug( '%s - string value updated; was, ```%s```; now, ```%s```' % (self.request_id, string_value, checked_value) )
         log.debug( '%s - returning string-value, ```%s```' % (self.request_id, checked_value) )
         return checked_value
