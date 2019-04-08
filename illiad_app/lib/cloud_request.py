@@ -180,7 +180,7 @@ class ILLiadParamBuilder( object ):
         #     "Username" : None,  # fill later
         #     }
         mapper = Mapper( self.request_id )
-        item_temp = {
+        item = {
             'CitedIn': mapper.grab_sid( bib_json_dct ),  # often 'source-id/sid' in openurl
             'ESPNumber': mapper.grab_espn( bib_json_dct ),  # OCLC number
             'ISSN': mapper.grab_isbn( bib_json_dct ),  # really ISBN
