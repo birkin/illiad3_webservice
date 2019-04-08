@@ -370,7 +370,7 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Tantor Media,' )
 
     def test_bib_dct_E(self):
-        """ Checks mapping of WorlCat oclc# `973822484`. """
+        """ Checks mapping of WorldCat oclc# `973822484`. """
         bib_dct = {
  'query': {'date_time': '2019-04-05 17:01:04.738055',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9780863584305%26title%3DTrauma%2Band%2Brecovery%26date%3D2015%26aulast%3DHerman%26aufirst%3DJudith%26auinitm%3DLewis%26id%3Ddoi%253A%26pid%3D973822484%253Cfssessid%253E0%253C%252Ffssessid%253E%253Cedition%253E%255BNew%2Bed.%255D.%253C%252Fedition%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E973822484%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F973822484%26rft_id%3Durn%253AISBN%253A9780863584305%26rft.aulast%3DHerman%26rft.aufirst%3DJudith%26rft.auinitm%3DLewis%26rft.btitle%3DTrauma%2Band%2Brecovery%26rft.date%3D2015%26rft.isbn%3D9780863584305%26rft.place%3DLondon%26rft.pub%3DPandora%26rft.edition%3D%255BNew%2Bed.%255D.%26rft.genre%3Dbook'},
@@ -534,7 +534,7 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Routledge' )
 
     def test_bib_dct_J(self):
-        """ Checks mapping of WorlCat oclc# `989593565`. """
+        """ Checks mapping of WorldCat oclc# `989593565`. """
         bib_dct = {
  'query': {'date_time': '2019-04-06 10:13:24.926351',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9783883757346%26title%3DTerritories%2B%253A%2Bislands%252C%2Bcamps%2Band%2Bother%2Bstates%2Bof%2Butopia%26date%3D2003%26aulast%3DBiesenbach%26aufirst%3DKlaus%26id%3Ddoi%253A%26pid%3D989593565%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E989593565%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F989593565%26rft_id%3Durn%253AISBN%253A9783883757346%26rft.aulast%3DBiesenbach%26rft.aufirst%3DKlaus%26rft.btitle%3DTerritories%2B%253A%2Bislands%252C%2Bcamps%2Band%2Bother%2Bstates%2Bof%2Butopia%26rft.date%3D2003%26rft.isbn%3D9783883757346%26rft.place%3DKo%25CC%2588ln%26rft.pub%3DKo%25CC%2588nig%26rft.genre%3Dbook'},
@@ -567,7 +567,7 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'König' )
 
     def test_bib_dct_K(self):
-        """ Checks mapping of WorlCat oclc# `1053904626`. """
+        """ Checks mapping of WorldCat oclc# `1053904626`. """
         bib_dct = {
  'query': {'date_time': '2019-04-06 10:18:39.101961',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=sid%3DFirstSearch%253AWorldCat%26genre%3Dbook%26isbn%3D9781780723723%26title%3DThe%2Binflamed%2Bmind%2B%253A%2Ba%2Bradical%2Bnew%2Bapproach%2Bto%2Bdepression%26date%3D2019%26aulast%3DBullmore%26aufirst%3DEdward%26auinitm%3DT%26id%3Ddoi%253A%26pid%3D1053904626%253Cfssessid%253E0%253C%252Ffssessid%253E%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%253Asid%252Ffirstsearch.oclc.org%253AWorldCat%26rft_val_fmt%3Dinfo%253Aofi%252Ffmt%253Akev%253Amtx%253Abook%26rft.genre%3Dbook%26req_dat%3D%253Csessionid%253E0%253C%252Fsessionid%253E%26rfe_dat%3D%253Caccessionnumber%253E1053904626%253C%252Faccessionnumber%253E%26rft_id%3Dinfo%253Aoclcnum%252F1053904626%26rft_id%3Durn%253AISBN%253A9781780723723%26rft.aulast%3DBullmore%26rft.aufirst%3DEdward%26rft.auinitm%3DT%26rft.btitle%3DThe%2Binflamed%2Bmind%2B%253A%2Ba%2Bradical%2Bnew%2Bapproach%2Bto%2Bdepression%26rft.date%3D2019%26rft.isbn%3D9781780723723%26rft.genre%3Dbook'},

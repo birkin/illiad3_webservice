@@ -5,7 +5,7 @@ Submits ILLiad request via hitting the ILLiad API instead of simulating browser 
 Implemented in preparation for ILLiad cloud switch-over.
 """
 
-import datetime, logging, pprint, random, time, urllib.parse
+import datetime, logging, pprint, random, time, unicodedata, urllib.parse
 import requests
 from illiad_app import settings_app
 
@@ -247,7 +247,7 @@ class Mapper( object ):
                     break
         except Exception as e:
             log.error( '%s - repr(e)' )
-        oclc = self.check_limit( limit=32 )
+        oclc = self.check_limit( string_value=oclc, limit=32 )
         log.debug( '%s - oclc, `%s`' % (self.request_id, oclc) )
         return oclc
 
@@ -328,14 +328,15 @@ class Mapper( object ):
         log.debug( '%s - title, `%s`' % (self.request_id, title) )
         return title
 
-    def check_limit( self, string_value, limit_num ):
+    def check_limit( self, string_value, limit ):
         """ Returns truncated string with elipsis if necessary.
             Called by many class functions. """
         checked_value = string_value
-        elip = normalize( 'NFC', '…' ); assert len(elip) == 1  # to make explicit it's one-character
-        if len( checked_value ) > limit_num:
+        elip = unicodedata.normalize( 'NFC', '…' ); assert len(elip) == 1  # to make explicit it's one-character
+        if len( checked_value ) > limit:
             checked_value = '%s%s' % ( checked_value[0:limit_num-1], elip )
             log.debug( '%s - string value updated; was, ```%s```; now, ```%s```' % (self.request_id, string_value, checked_value) )
         log.debug( '%s - returning string-value, ```%s```' % (self.request_id, checked_value) )
+        return checked_value
 
     ## end class Mapper()
