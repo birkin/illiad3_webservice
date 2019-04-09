@@ -6,7 +6,7 @@ from django.test import Client, TestCase
 from illiad_app.lib.cloud_book_request import Mapper
 
 
-class Mapper_Test( TestCase ):
+class Book_Mapper_Test( TestCase ):
     """ Tests parsing of bib-dcts. """
 
     def setUp(self):
@@ -405,4 +405,4 @@ class Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_place(bib_dct), 'Brooklyn  New York' )
         self.assertEqual( self.mapper.grab_publisher(bib_dct), 'Dead Letter Office  BABEL Working Group an imprin…' )
 
-    ## end class class Mapper_Test()
+    ## end class class Book_Mapper_Test()
