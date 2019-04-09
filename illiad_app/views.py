@@ -9,7 +9,8 @@ from django.shortcuts import get_object_or_404, render
 from illiad_app.lib import info_helper
 from illiad_app.lib.cloud_api_check_user import CloudCheckUserHandler
 from illiad_app.lib.cloud_api_create_user import CloudCreateUserHandler
-from illiad_app.lib.cloud_request import BookRequestHandler
+from illiad_app.lib.cloud_book_request import BookRequestHandler
+from illiad_app.lib.cloud_article_request import ArticleRequestHandler
 
 
 log = logging.getLogger(__name__)

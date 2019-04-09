@@ -3,7 +3,7 @@
 import base64, json, random
 from . import settings_app
 from django.test import Client, TestCase
-from illiad_app.lib.cloud_request import Mapper
+from illiad_app.lib.cloud_book_request import Mapper
 
 
 class ClientCloudCreateUser_Test( TestCase ):
