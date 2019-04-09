@@ -7,7 +7,7 @@ Example json response:
 {
   "request": {
     "params": {
-      "auth_id": "zzzzz",
+      "auth_id": "xxxxx",
       "department": "zzzzz",
       "email": "zzzzz",
       "first_name": "zzzzz",

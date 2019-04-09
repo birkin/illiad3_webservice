@@ -1,44 +1,29 @@
 ### overview ###
 
-This is a [django](https://www.djangoproject.com) web-wrapper around our [python3 illiad module](https://github.com/birkin/illiad3_client) for programmatic access to [Illiad Interlibrary Loan](http://www.atlas-sys.com/illiad/) software.
+This is a [django](https://www.djangoproject.com) web-app that provides an internal-api that interfaces with the [ILLiad](http://www.atlas-sys.com/illiad/) hosted API.
+
+This internal-api allows multiple applications that programmatically interface with ILLiad (the article part of [easyAccess](https://github.com/Brown-University-Library/easyaccess_project), and [easyBorrow](https://github.com/birkin/easyborrow_controller), for example) -- to continue to work as-is if/when the programmatic interface to ILLiad changes.
+
+And it has.
+
+In April 2019, we changed our programmatic-access to ILLiad from a [module](https://github.com/birkin/illiad3_client) that simulated web-requests on behalf of a user -- to, instead, use ILLiad's official api. We made this change as part of a migration from an end-of-life self-hosted version of ILLiad -- to a newer version of ILLiad only available via [OCLC hosting](https://www.oclc.org/en/illiad/features.html).
+
+Useful references...
+
+- [api documentation](https://support.atlas-sys.com/hc/en-us/articles/360011809394-The-ILLiad-Web-Platform-API)
+
+- [table documentation](https://support.atlas-sys.com/hc/en-us/articles/360011812074) -- used to apply field-length limits when calling the official-illiad-api
+
+---
 
 
 ### usage ###
 
-    # -*- coding: utf-8 -*-
+- check user: better example coming; for now [see these tests](https://github.com/Brown-University-Library/illiad3_webservice/blob/0da33e12fe709218903ba0b5968e643a2baddafe/illiad_app/tests.py#L63-L64)
 
-    """ Shows sample call to webservice. """
+- create user: [see sample script](https://github.com/Brown-University-Library/illiad3_webservice/blob/master/sample_scripts/sample_newuser_submission.py)
 
-    import os
-    import requests
+- request item: [see sample script](https://github.com/Brown-University-Library/illiad3_webservice/blob/master/sample_scripts/sample_transaction_submission.py)
 
-
-    ## setup
-    ARTICLE_OPENURL = 'rft.jtitle=Facial plastic surgery : FPS&rft.atitle=Anatomy for blepharoplasty and brow-lift.&rft.pages=177-85&rft.date=2010&rft.volume=26&rft.end_page=85&ctx_ver=Z39.88-2004&rft.genre=article'
-
-    BOOK_OPENURL = 'sid=FirstSearch%3AWorldCat&genre=book&isbn=9780688002305&title=Zen+and+the+art+of+motorcycle+maintenance%3A+an+inquiry+into+values%2C&date=1974&aulast=Pirsig&aufirst=Robert&auinitm=M&id=doi%3A&pid=673595%3Cfssessid%3E0%3C%2Ffssessid%3E&url_ver=Z39.88-2004&rfr_id=info%3Asid%2Ffirstsearch.oclc.org%3AWorldCat&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&rft.genre=book&req_dat=%3Csessionid%3E0%3C%2Fsessionid%3E&rfe_dat=%3Caccessionnumber%3E673595%3C%2Faccessionnumber%3E&rft_id=info%3Aoclcnum%2F673595&rft_id=urn%3AISBN%3A9780688002305&rft.aulast=Pirsig&rft.aufirst=Robert&rft.auinitm=M&rft.btitle=Zen+and+the+art+of+motorcycle+maintenance%3A+an+inquiry+into+values%2C&rft.date=1974&rft.isbn=9780688002305&rft.place=New+York&rft.pub=Morrow&rft.genre=book&checksum=8bf1504d891b0a2551ab879c3a555a8c&title=Brown University&linktype=openurl&detail=RBN'
-
-    API_URL = os.environ['url']
-    API_AUTH_KEY = os.environ['key']
-    USERNAME = os.environ['username']
-    OPENURL = ARTICLE_OPENURL  # or BOOK_OPENURL
-    REQUEST_ID = 1234  # used to easily track web-service log entries for a single request
-
-    ## hit api
-    params = {
-        'auth_key': API_AUTH_KEY,
-        'username':USERNAME,
-        'openurl': OPENURL,
-        'request_id': REQUEST_ID
-        }
-    r = requests.post( API_URL, data=params )
-
-    ## view response
-    print r.content  # eg, { "status": "submission_successful", "transaction_number": "2468" }
-
-
-### notes ###
-
-- Though the underlying [python3 module](https://github.com/birkin/illiad3_client) supports new-user-registration, this webservice focuses solely on submitting requests.
 
 ---
