@@ -149,7 +149,7 @@ class ClientCloudBookRequest_Test( TestCase ):
 
     def test__check_bad_post_params(self):
         """ POST with bad params should return 400.
-            eg: $ python ./manage.py test illiad_app.tests.ClientV3_MakeBookRequest_Test.test__check_bad_post_params
+            eg: $ python ./manage.py test illiad_app.tests.ClientCloudBookRequest_Test.test__check_bad_post_params
             """
         c = Client()
         # response = c.post( '/cloud_book_request/', {'aa': 'foo_a', 'bb': 'foo_b'} )
@@ -194,3 +194,42 @@ class ClientCloudBookRequest_Test( TestCase ):
         # self.assertEqual( 'submission_successful', response_dct['status'] )
 
     ## end class ClientCloudBookRequest_Test()
+
+
+class ClientCloudArticleRequest_Test( TestCase ):
+    """ Tests article-requesting via cloud ILLiad-api """
+
+    def test__check_bad_method(self):
+        """ GET (api requires POST) should return 400. """
+        c = Client()
+        response = c.get( '/request_article/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        self.assertEqual( 400, response.status_code )
+        self.assertEqual( b'Bad Request', response.content )
+
+    def test__check_bad_post_params(self):
+        """ POST with bad params should return 400.
+            eg: $ python ./manage.py test illiad_app.tests.ClientCloudArticleRequest_Test.test__check_bad_post_params
+            """
+        c = Client()
+        response = c.post( '/request_article/', {'aa': 'foo_a', 'bb': 'foo_b'} )
+        self.assertEqual( 400, response.status_code )
+        self.assertEqual( b'Bad Request', response.content )
+
+    def test__check_good_post_happy_path(self):
+        """ POST with good params should submit a request and return a transaction number.
+            This test is GOOD, just disabled so as not to auto-submit real requests. """
+        pass
+        # c = Client()
+        # response = c.post(
+        #     '/request_article/',
+        #     { 'auth_key': settings_app.TEST_AUTH_KEY,
+        #         'openurl': 'sid=google&auinit=T&aulast=SOTA&atitle=Phylogeny+and+divergence+time+of+island+tiger+beetles+of+the+genus+Cylindera+(Coleoptera:+Cicindelidae)+in+East+Asia&id=doi:10.1111/j.1095-8312.2011.01617.x&title=Biological+journal+of+the+Linnean+Society&volume=102&issue=4&date=2011&spage=715&issn=0024-4066',
+        #         'request_id': str(random.randint(1111, 9999)),
+        #         'username': settings_app.TEST_EXISTING_GOOD_USER }
+        #     )
+        # self.assertEqual( 200, response.status_code )
+        # response_dct = json.loads( response.content )
+        # self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
+        # self.assertEqual( 'submission_successful', response_dct['status'] )
+
+    ## end class ClientCloudArticleRequest_Test()
