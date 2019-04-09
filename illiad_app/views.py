@@ -62,7 +62,7 @@ def cloud_article_request( request ):
         TO DO: get this working, then look for commonalities with book-requesting """
     log.debug( 'starting article-request' )
     log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
-    return HttpResponse( 'article-requesting coming' )
+
     article_handler = ArticleRequestHandler( request.POST.get('request_id', 'no_id') )
     if article_handler.check_validity( request ) is False:
         return HttpResponseBadRequest( 'Bad Request' )

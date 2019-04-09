@@ -60,6 +60,7 @@ class ArticleRequestHandler( object ):
         param_builder = ILLiadParamBuilder( self.request_id )
         open_url_params = param_builder.parse_openurl( request.POST['openurl'] )
         full_illiad_params = self.add_additional_params( open_url_params, request.POST['username'] )
+        1/0
         cloud_api_response_dct = self.submit_transaction( full_illiad_params )
         # output_dct = self.prepare_V2_output_dct( cloud_api_response_dct )
         return cloud_api_response_dct
