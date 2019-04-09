@@ -20,6 +20,8 @@ urlpatterns = [
     # url( r'^cloud_book_request/$', views.cloud_book_request, name='cloud_book_request' ),  # (official illiad-api) submits request
     url( r'^v2/make_request/$', views.cloud_book_request, name='cloud_book_request' ),  # easyBorrow April 2019 calling syntax, uses official illiad-api to submit book-request
 
+    url( r'^request_article/$', views.cloud_article_request, name='cloud_article_request' ),  # easyArticle April 2019 calling syntax, uses official illiad-api to submit article-request
+
     # url( r'^check_status_via_shib/$', views.check_status_via_shib, name='check_status_via_shib' ),  # (remote-auth method) status meaning 'Undergrad', 'Staff', etc.
     # url( r'^update_status/$', views.update_status, name='update_status' ),  # (remote-auth method)
 
