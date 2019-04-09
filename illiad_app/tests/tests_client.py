@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import base64, json, random
-from . import settings_app
+from illiad_app import settings_app
 from django.test import Client, TestCase
 from illiad_app.lib.cloud_request import Mapper
 
