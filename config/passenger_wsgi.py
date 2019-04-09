@@ -13,7 +13,7 @@ import shellvars
 
 
 PROJECT_DIR_PATH = os.path.dirname( os.path.dirname(os.path.abspath(__file__)) )
-ENV_SETTINGS_FILE = os.environ['ILLIAD3_WS__ENV_SETTINGS_PATH']  # set in `conf.d/passenger.conf`, and `env/bin/activate`
+ENV_SETTINGS_FILE = os.environ['ILLIAD_WS__ENV_SETTINGS_PATH']  # set in `conf.d/passenger.conf`, and `env/bin/activate`
 
 ## update path
 sys.path.append( PROJECT_DIR_PATH )
