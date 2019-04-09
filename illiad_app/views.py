@@ -44,7 +44,7 @@ def cloud_create_user( request ):
 
 def cloud_book_request( request ):
     """ Handles current (April 2019) easyBorrow controller illiad call -- via hitting ILLiad API. """
-    log.debug( 'starting' )
+    log.debug( 'starting book-request' )
     log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
     book_handler = BookRequestHandler( request.POST.get('request_id', 'no_id') )
     if book_handler.check_validity( request ) is False:
@@ -52,6 +52,21 @@ def cloud_book_request( request ):
     cloud_api_response_dct = book_handler.manage_request( request )
     # output_dct = book_handler.prep_output_dct( rq_now, request, cloud_api_response_dct )  # future TODO
     output_dct = book_handler.prepare_V2_output_dct( cloud_api_response_dct )  # this is compatible with the April 2019 format of the easyBorrow internal-illiad-api call
+    output = json.dumps( output_dct, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
+
+
+def cloud_article_request( request ):
+    """ Handles current (April 2019) easyAccess article illiad call -- via hitting ILLiad API.
+        TO DO: get this working, then look for commonalities with book-requesting """
+    log.debug( 'starting article-request' )
+    log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
+    return HttpResponse( 'article-requesting coming' )
+    article_handler = ArticleRequestHandler( request.POST.get('request_id', 'no_id') )
+    if article_handler.check_validity( request ) is False:
+        return HttpResponseBadRequest( 'Bad Request' )
+    cloud_api_response_dct = article_handler.manage_request( request )
+    output_dct = article_handler.prep_output_dct( rq_now, request, cloud_api_response_dct )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
