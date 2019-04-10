@@ -43,7 +43,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Phylogeny and divergence time of island tiger beetles of the genus Cylindera (Coleoptera: Cicindelidae) in East Asia' )
         self.assertEqual( self.mapper.grab_author(bib_dct), 'SOTA' )
         self.assertEqual( self.mapper.grab_volume(bib_dct), '102' )
-        self.assertEqual( self.mapper.grab_issue(bib_dct), 'z4' )
+        self.assertEqual( self.mapper.grab_issue(bib_dct), '4' )
         self.assertEqual( self.mapper.grab_date(bib_dct), 'z2011' )
         self.assertEqual( self.mapper.grab_pages(bib_dct), 'z715 - EOA' )
         self.assertEqual( self.mapper.grab_issn(bib_dct), 'z0024-4066' )

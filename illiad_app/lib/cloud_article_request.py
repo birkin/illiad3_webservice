@@ -249,17 +249,28 @@ class Mapper( object ):
         return author
 
     def grab_volume( self, bib_dct ):
-        """ Returns isbn.
+        """ Returns volume.
             Called by ILLiadParamBuilder.map_to_illiad_keys() """
         volume = ''
         try:
             volume = bib_dct['response']['bib']['volume']
         except Exception as e:
             log.error( '%s - repr(e)' )
-        volume = self.check_limit( string_value=volume, limit=20 )
+        volume = self.check_limit( string_value=volume, limit=30 )
         log.debug( '%s - volume, `%s`' % (self.request_id, volume) )
         return volume
 
+    def grab_issue( self, bib_dct ):
+        """ Returns issue.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        issue = ''
+        try:
+            issue = bib_dct['response']['bib']['issue']
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        issue = self.check_limit( string_value=issue, limit=30 )
+        log.debug( '%s - issue, `%s`' % (self.request_id, issue) )
+        return issue
 
 #######
 
