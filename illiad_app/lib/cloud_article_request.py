@@ -312,7 +312,21 @@ class Mapper( object ):
         log.debug( '%s - issn, `%s`' % (self.request_id, issn) )
         return issn
 
-#######
+    def grab_espn( self, bib_dct ):
+        """ Returns oclc number.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        oclc = ''
+        try:
+            identifiers = bib_dct['response']['bib']['identifier']
+            for element_dct in identifiers:
+                if element_dct['type'] == 'oclc':
+                    oclc = element_dct['id']
+                    break
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        oclc = self.check_limit( string_value=oclc, limit=32 )
+        log.debug( '%s - oclc, `%s`' % (self.request_id, oclc) )
+        return oclc
 
     def grab_sid( self, bib_dct ):
         """ Returns sid number.
@@ -340,54 +354,6 @@ class Mapper( object ):
             sid = ''
         log.debug( '%s - sid from openurl-check, `%s`' % (self.request_id, sid) )
         return sid
-
-    def grab_espn( self, bib_dct ):
-        """ Returns oclc number.
-            Called by ILLiadParamBuilder.map_to_illiad_keys() """
-        oclc = ''
-        try:
-            identifiers = bib_dct['response']['bib']['identifier']
-            for element_dct in identifiers:
-                if element_dct['type'] == 'oclc':
-                    oclc = element_dct['id']
-                    break
-        except Exception as e:
-            log.error( '%s - repr(e)' )
-        oclc = self.check_limit( string_value=oclc, limit=32 )
-        log.debug( '%s - oclc, `%s`' % (self.request_id, oclc) )
-        return oclc
-
-
-
-
-    def grab_place( self, bib_dct ):
-        """ Returns place number.
-            Called by ILLiadParamBuilder.map_to_illiad_keys() """
-        place = ''
-        try:
-            place = bib_dct['response']['bib']['place_of_publication']
-            if place is None:
-                place = ''
-        except Exception as e:
-            log.error( '%s - repr(e)' )
-        place = self.check_limit( string_value=place, limit=30 )
-        log.debug( '%s - place, `%s`' % (self.request_id, place) )
-        return place
-
-    def grab_publisher( self, bib_dct ):
-        """ Returns publisher number.
-            Called by ILLiadParamBuilder.map_to_illiad_keys() """
-        publisher = ''
-        try:
-            publisher = bib_dct['response']['bib']['publisher']
-            if publisher is None:
-                publisher = ''
-        except Exception as e:
-            log.error( '%s - repr(e)' )
-        publisher = self.check_limit( string_value=publisher, limit=50 )
-        log.debug( '%s - publisher, `%s`' % (self.request_id, publisher) )
-        return publisher
-
 
     def check_limit( self, string_value, limit ):
         """ Returns truncated string with elipsis if necessary.
