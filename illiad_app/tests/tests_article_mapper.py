@@ -3,7 +3,22 @@
 import base64, json, random
 from illiad_app import settings_app
 from django.test import Client, TestCase
-from illiad_app.lib.cloud_article_request import Mapper
+from illiad_app.lib.cloud_article_request import ILLiadParamBuilder, Mapper
+
+
+class ILLiadParamBuilder_Test( TestCase ):
+    """ Tests parsing of notes in openurl.
+        Notes-tests correspond to the `decoded_openurl` in `Article_Mapper_Test()` """
+
+    def setUp(self):
+        self.log_id = random.randint(1111, 9999)
+        self.builder = ILLiadParamBuilder( self.log_id )
+
+    def test_notes_A(self):
+        decoded_openurl = 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/Entrez:PubMed&rft.issue=2&rft.au=Manika,+Katerina&rft.pages=134+-+EOA&rft_id=info:pmid/18496984&rft.date=2007&rft.volume=24&rft.end_page=EOA&rft.atitle=Epstein-Barr+virus+DNA+in+bronchoalveolar+lavage+fluid+from+patients+with+idiopathic+pulmonary+fibrosis.&ctx_ver=Z39.88-2004&rft.jtitle=Sarcoidosis,+vasculitis,+and+diffuse+lung+diseases&rft.issn=1124-0490&rft.genre=article&rft.spage=134&Notes=`PMID:+18496984`;+`shortlink:+</easyaccess/find/permalink/Xqt/>`'
+        self.assertEqual( self.builder.extract_notes(decoded_openurl), '`PMID:+18496984`;+`shortlink:+</easyaccess/find/permalink/Xqt/>`' )
+
+    ## end class ILLiadParamBuilder()
 
 
 class Article_Mapper_Test( TestCase ):

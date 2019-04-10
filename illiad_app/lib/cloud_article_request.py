@@ -161,36 +161,35 @@ class ILLiadParamBuilder( object ):
 
     def extract_notes( self, decoded_openurl_querystring ):
         """ Returns notes-dct.
+            Useful, <https://pymotw.com/3/urllib.parse/>.
             Called by parse_openurl() """
+        log.debug( '%s - querystring initially, ```%s```' % (self.request_id, decoded_openurl_querystring) )
         notes = 'no notes'
-        parts_dct = urllib.parse.parse_qs( decoded_openurl_querystring )  # <https://pymotw.com/3/urllib.parse/>
-        log.debug( '%s - parts_dct, ```%s```' % (self.request_id, pprint.pformat(parts_dct)) )
-        if 'notes' in parts_dct.keys():
-            notes = parts_dct['notes'][0]  # all values are in list
+        encoded_semicolon = urllib.parse.quote( ';' )
+        decoded_openurl_querystring = decoded_openurl_querystring.replace( ';', encoded_semicolon )
+        parts_dct = urllib.parse.parse_qs( decoded_openurl_querystring ); log.debug( '%s - parts_dct, ```%s```' % (self.request_id, pprint.pformat(parts_dct)) )
+        if 'Notes' in parts_dct.keys():
+            notes = parts_dct['Notes'][0]  # all values are in list
+            log.debug( '%s - found notes, ```%s```' % (self.request_id, notes) )
+        notes = notes.replace( ' ', '+' )
         log.debug( '%s - notes, ```%s```' % (self.request_id, notes) )
         return notes
 
     def map_to_illiad_keys( self, bib_json_dct, notes ):
         """ Returns dct using illiad-cloud-api keys.
             Called by parse_openurl() """
-        # defaults = {
-        #     'RequestType': 'Book',
-        #     'ProcessType' : 'Borrowing'
-        #     }
-        # user = {
-        #     "Username" : None,  # fill later
-        #     }
         mapper = Mapper( self.request_id )
         item = {
-            'CitedIn': mapper.grab_sid( bib_json_dct ),  # often 'source-id/sid' in openurl
+            'CitedIn': mapper.grab_sid( bib_json_dct ),  # sometimes 'source-id/sid' in openurl
+            'PhotoJournalTitle': mapper.grab_journal_title( bib_json_dct ),
+            'PhotoJournalVolume': mapper.grab_volume( bib_json_dct ),
+            'PhotoJournalIssue': mapper.grab_issue( bib_json_dct ),
+            'PhotoJournalYear': mapper.grab_date( bib_json_dct ),
+            'PhotoJournalInclusivePages': mapper.grab_pages( bib_json_dct ),
+            'ISSN': mapper.grab_issn( bib_json_dct ),
             'ESPNumber': mapper.grab_espn( bib_json_dct ),  # OCLC number
-            'ISSN': mapper.grab_isbn( bib_json_dct ),  # really ISBN
-            'LoanAuthor': mapper.grab_author( bib_json_dct ),
-            'LoanDate': mapper.grab_date( bib_json_dct ),
-            'LoanPlace': mapper.grab_place( bib_json_dct ),
-            'LoanPublisher': mapper.grab_publisher( bib_json_dct ),
-            'LoanTitle': mapper.grab_title( bib_json_dct ),
-            # 'Notes': notes,
+            'PhotoArticleAuthor': mapper.grab_author( bib_json_dct ),
+            'PhotoArticleTitle': mapper.grab_article_title( bib_json_dct ),
             'CitedTitle': 'NOTES: %s' % notes  # work-around due to the fact that I can't submit Notes directly within this transaction
             }
         log.debug( '%s - illiad_dct, ```%s```' % (self.request_id, pprint.pformat(item)) )
