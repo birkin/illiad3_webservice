@@ -254,6 +254,8 @@ class Mapper( object ):
         volume = ''
         try:
             volume = bib_dct['response']['bib']['volume']
+            if volume is None:
+                volume = ''
         except Exception as e:
             log.error( '%s - repr(e)' )
         volume = self.check_limit( string_value=volume, limit=30 )
@@ -266,6 +268,8 @@ class Mapper( object ):
         issue = ''
         try:
             issue = bib_dct['response']['bib']['issue']
+            if issue is None:
+                issue = ''
         except Exception as e:
             log.error( '%s - repr(e)' )
         issue = self.check_limit( string_value=issue, limit=30 )
