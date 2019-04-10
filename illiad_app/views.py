@@ -62,12 +62,11 @@ def cloud_article_request( request ):
         TO DO: get this working, then look for commonalities with book-requesting """
     log.debug( 'starting article-request' )
     log.debug( 'request.__dict__, `%s`' % pprint.pformat(request.__dict__) )
-
     article_handler = ArticleRequestHandler( request.POST.get('request_id', 'no_id') )
     if article_handler.check_validity( request ) is False:
         return HttpResponseBadRequest( 'Bad Request' )
     cloud_api_response_dct = article_handler.manage_request( request )
-    output_dct = article_handler.prep_output_dct( rq_now, request, cloud_api_response_dct )
+    output_dct = article_handler.prep_output_dct( cloud_api_response_dct )
     output = json.dumps( output_dct, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 

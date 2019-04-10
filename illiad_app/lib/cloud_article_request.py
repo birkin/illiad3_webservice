@@ -60,15 +60,13 @@ class ArticleRequestHandler( object ):
         param_builder = ILLiadParamBuilder( self.request_id )
         open_url_params = param_builder.parse_openurl( request.POST['openurl'] )
         full_illiad_params = self.add_additional_params( open_url_params, request.POST['username'] )
-        1/0
         cloud_api_response_dct = self.submit_transaction( full_illiad_params )
-        # output_dct = self.prepare_V2_output_dct( cloud_api_response_dct )
         return cloud_api_response_dct
 
     def add_additional_params( self, param_dct, username ):
         """ Adds additional params needed for illiad-api submission.
             Called by manage_request() """
-        param_dct['RequestType'] = 'Loan'
+        param_dct['RequestType'] = 'Article'
         param_dct['ProcessType'] = 'Borrowing'
         param_dct['Username'] = username
         log.debug( '%s - updated param_dct, ```%s```' % (self.request_id, pprint.pformat(param_dct)) )
@@ -99,15 +97,15 @@ class ArticleRequestHandler( object ):
             'ApiKey': settings_app.ILLIAD_API_KEY }
         return ( url, headers )
 
-    def prepare_V2_output_dct( self, cloud_api_response_dct ):
-        """ Prepares response expected by the easyBorrow v2 call.
-            TODO: at some point, update to the more modern api-response format, and update easyBorrow accordingly to handle it.
-            Called by views.cloud_book_request() """
-        v2_response_dct = { 'status': 'submission_failed', 'message': 'see illiad-webservice logs for more info' }
+    def prep_output_dct( self, cloud_api_response_dct ):
+        """ Prepares response expected by the easyAccess 2019-April illiad article call.
+            TODO: at some point, update to the more modern api-response format, and update easyAccess accordingly to handle it.
+            Called by views.cloud_article_request() """
+        output_dct = { 'status': 'submission_failed', 'message': 'see illiad-webservice logs for more info' }
         if 'TransactionNumber' in cloud_api_response_dct.keys():
-            v2_response_dct = { 'status': 'submission_successful', 'transaction_number': cloud_api_response_dct['TransactionNumber'] }
-        log.debug( '%s - v2_response_dct, ```%s```' % (self.request_id, v2_response_dct) )
-        return v2_response_dct
+            output_dct = { 'status': 'submission_successful', 'transaction_number': cloud_api_response_dct['TransactionNumber'] }
+        log.debug( '%s - output_dct, ```%s```' % (self.request_id, output_dct) )
+        return output_dct
 
     ## end class ArticleRequestHandler()
 

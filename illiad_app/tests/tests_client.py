@@ -218,17 +218,17 @@ class ClientCloudArticleRequest_Test( TestCase ):
         """ POST with good params should submit a request and return a transaction number.
             This test is GOOD, just disabled so as not to auto-submit real requests. """
         pass
-        c = Client()
-        response = c.post(
-            '/request_article/',
-            { 'auth_key': settings_app.TEST_AUTH_KEY,
-                'openurl': 'rft_val_fmt=info%3Aofi/fmt%3Akev%3Amtx%3Ajournal&rfr_id=info%3Asid/Entrez%3APubMed&rft.issue=2&rft.au=Manika%2C+Katerina&rft.pages=134+-+EOA&rft_id=info%3Apmid/18496984&rft.date=2007&rft.volume=24&rft.end_page=EOA&rft.atitle=Epstein-Barr+virus+DNA+in+bronchoalveolar+lavage+fluid+from+patients+with+idiopathic+pulmonary+fibrosis.&ctx_ver=Z39.88-2004&rft.jtitle=Sarcoidosis%2C+vasculitis%2C+and+diffuse+lung+diseases&rft.issn=1124-0490&rft.genre=article&rft.spage=134&Notes=%60PMID%3A+18496984%60%3B+%60shortlink%3A+%3C%2Feasyaccess%2Ffind%2Fpermalink%2FXqt%2F%3E%60',
-                'request_id': str(random.randint(1111, 9999)),
-                'username': settings_app.TEST_EXISTING_GOOD_USER }
-            )
-        self.assertEqual( 200, response.status_code )
-        response_dct = json.loads( response.content )
-        self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
-        self.assertEqual( 'submission_successful', response_dct['status'] )
+        # c = Client()
+        # response = c.post(
+        #     '/request_article/',
+        #     { 'auth_key': settings_app.TEST_AUTH_KEY,
+        #         'openurl': 'rft_val_fmt=info%3Aofi/fmt%3Akev%3Amtx%3Ajournal&rfr_id=info%3Asid/Entrez%3APubMed&rft.issue=2&rft.au=Manika%2C+Katerina&rft.pages=134+-+EOA&rft_id=info%3Apmid/18496984&rft.date=2007&rft.volume=24&rft.end_page=EOA&rft.atitle=Epstein-Barr+virus+DNA+in+bronchoalveolar+lavage+fluid+from+patients+with+idiopathic+pulmonary+fibrosis.&ctx_ver=Z39.88-2004&rft.jtitle=Sarcoidosis%2C+vasculitis%2C+and+diffuse+lung+diseases&rft.issn=1124-0490&rft.genre=article&rft.spage=134&Notes=%60PMID%3A+18496984%60%3B+%60shortlink%3A+%3C%2Feasyaccess%2Ffind%2Fpermalink%2FXqt%2F%3E%60',
+        #         'request_id': str(random.randint(1111, 9999)),
+        #         'username': settings_app.TEST_EXISTING_GOOD_USER }
+        #     )
+        # self.assertEqual( 200, response.status_code )
+        # response_dct = json.loads( response.content )
+        # self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
+        # self.assertEqual( 'submission_successful', response_dct['status'] )
 
     ## end class ClientCloudArticleRequest_Test()
