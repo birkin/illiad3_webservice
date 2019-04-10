@@ -16,7 +16,11 @@ class ILLiadParamBuilder_Test( TestCase ):
 
     def test_notes_A(self):
         decoded_openurl = 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/Entrez:PubMed&rft.issue=2&rft.au=Manika,+Katerina&rft.pages=134+-+EOA&rft_id=info:pmid/18496984&rft.date=2007&rft.volume=24&rft.end_page=EOA&rft.atitle=Epstein-Barr+virus+DNA+in+bronchoalveolar+lavage+fluid+from+patients+with+idiopathic+pulmonary+fibrosis.&ctx_ver=Z39.88-2004&rft.jtitle=Sarcoidosis,+vasculitis,+and+diffuse+lung+diseases&rft.issn=1124-0490&rft.genre=article&rft.spage=134&Notes=`PMID:+18496984`;+`shortlink:+</easyaccess/find/permalink/Xqt/>`'
-        self.assertEqual( self.builder.extract_notes(decoded_openurl), '`PMID:+18496984`;+`shortlink:+</easyaccess/find/permalink/Xqt/>`' )
+        self.assertEqual( self.builder.extract_notes(decoded_openurl), '`PMID: 18496984`; `shortlink: </easyaccess/find/permalink/Xqt/>`' )
+
+    def test_notes_B(self):
+        decoded_openurl = 'rft.pub=StatPearls+Publishing&rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/Entrez:PubMed&rft.pages=?+-+?&rft_id=info:pmid/29083764&rft.date=2019&rft.atitle=Unknown&ctx_ver=Z39.88-2004&rft.jtitle=StatPearls&rft.genre=article&Notes=`PMID:+29083764`;+`not+enough+original-request+data`;+`shortlink:+</easyaccess/find/permalink/Du68/>`'
+        self.assertEqual( self.builder.extract_notes(decoded_openurl), '`PMID: 29083764`; `not enough original-request data`; `shortlink: </easyaccess/find/permalink/Du68/>`' )
 
     ## end class ILLiadParamBuilder()
 

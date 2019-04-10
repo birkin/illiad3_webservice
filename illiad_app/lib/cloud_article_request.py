@@ -167,11 +167,10 @@ class ILLiadParamBuilder( object ):
         notes = 'no notes'
         encoded_semicolon = urllib.parse.quote( ';' )
         decoded_openurl_querystring = decoded_openurl_querystring.replace( ';', encoded_semicolon )
-        parts_dct = urllib.parse.parse_qs( decoded_openurl_querystring ); log.debug( '%s - parts_dct, ```%s```' % (self.request_id, pprint.pformat(parts_dct)) )
+        parts_dct = urllib.parse.parse_qs( decoded_openurl_querystring )
+        log.debug( '%s - parts_dct, ```%s```' % (self.request_id, pprint.pformat(parts_dct)) )
         if 'Notes' in parts_dct.keys():
             notes = parts_dct['Notes'][0]  # all values are in list
-            log.debug( '%s - found notes, ```%s```' % (self.request_id, notes) )
-        notes = notes.replace( ' ', '+' )
         log.debug( '%s - notes, ```%s```' % (self.request_id, notes) )
         return notes
 
