@@ -272,6 +272,18 @@ class Mapper( object ):
         log.debug( '%s - issue, `%s`' % (self.request_id, issue) )
         return issue
 
+    def grab_date( self, bib_dct ):
+        """ Returns year.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        date = ''
+        try:
+            date = bib_dct['response']['bib']['year']
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        date = self.check_limit( string_value=date, limit=30 )
+        log.debug( '%s - date, `%s`' % (self.request_id, date) )
+        return date
+
 #######
 
     def grab_sid( self, bib_dct ):
@@ -334,17 +346,6 @@ class Mapper( object ):
         return isbn
 
 
-    def grab_date( self, bib_dct ):
-        """ Returns date number.
-            Called by ILLiadParamBuilder.map_to_illiad_keys() """
-        date = ''
-        try:
-            date = bib_dct['response']['bib']['year']
-        except Exception as e:
-            log.error( '%s - repr(e)' )
-        date = self.check_limit( string_value=date, limit=30 )
-        log.debug( '%s - date, `%s`' % (self.request_id, date) )
-        return date
 
     def grab_place( self, bib_dct ):
         """ Returns place number.
