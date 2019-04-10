@@ -50,10 +50,6 @@ class ILLiadParamBuilder_Test( TestCase ):
         decoded_openurl = 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/EBSCO:Company+Information&rft.pages=?+-+?&rft.date=?&rft.atitle=Leroy+Seafood+Group+Asa&ctx_ver=Z39.88-2004&rft.jtitle=Leroy+Seafood+Group+Asa&rft.genre=article&Notes=`not+enough+original-request+data`;+`shortlink:+</easyaccess/find/permalink/Du4Z/>`'
         self.assertEqual( self.builder.extract_notes(decoded_openurl), '`not enough original-request data`; `shortlink: </easyaccess/find/permalink/Du4Z/>`' )
 
-    def test_notes_J(self):
-        decoded_openurl = 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/EBSCO:Company+Information&rft.pages=?+-+?&rft.date=?&rft.atitle=Marine+Harvest+Asa&ctx_ver=Z39.88-2004&rft.jtitle=Marine+Harvest+Asa&rft.genre=article&Notes=`not+enough+original-request+data`;+`shortlink:+</easyaccess/find/permalink/DsOO/>`'
-        self.assertEqual( self.builder.extract_notes(decoded_openurl), '`not enough original-request data`; `shortlink: </easyaccess/find/permalink/DsOO/>`' )
-
     ## end class ILLiadParamBuilder()
 
 
@@ -160,14 +156,14 @@ class Article_Mapper_Test( TestCase ):
                       'year': '2018'},
               'decoded_openurl': 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/Entrez:PubMed&rft.issue=3&rft.au=Unai,+Yuki&rft.pages=178+-+EOA&rft_id=info:pmid/29491331&rft.date=2018&rft.volume=58&rft.end_page=EOA&rft.atitle=[A+case+of+short-lasting+unilateral+neuralgiform+headache+with+conjunctival+injection+and+tearing+triggered+by+mumps+meningitis+in+a+patient+with+recurrent+primary+stabbing+headache].&ctx_ver=Z39.88-2004&rft.jtitle=Rinsho+shinkeigaku+=+Clinical+neurology&rft.issn=0009-918X&rft.genre=article&rft.spage=178&Notes=`PMID:+29491331`;+`shortlink:+</easyaccess/find/permalink/Du6U/>`',
               'elapsed_time': '0:00:00.018693'}}
-        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'StatPearls' )
-        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Unknown' )
-        self.assertEqual( self.mapper.grab_author(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_volume(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_issue(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
-        self.assertEqual( self.mapper.grab_pages(bib_dct), '? - ?' )
-        self.assertEqual( self.mapper.grab_issn(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'Rinsho shinkeigaku = Clinical neurology' )
+        self.assertEqual( self.mapper.grab_article_title(bib_dct), '[A case of short-lasting unilateral neuralgiform headache with conjunctival injection and tearing triggered by mumps meningitis in a patient with recurrent primary stabbing headache].' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Unai, Yuki' )
+        self.assertEqual( self.mapper.grab_volume(bib_dct), '58' )
+        self.assertEqual( self.mapper.grab_issue(bib_dct), '3' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2018' )
+        self.assertEqual( self.mapper.grab_pages(bib_dct), '178 - EOA' )
+        self.assertEqual( self.mapper.grab_issn(bib_dct), '0009-918X' )
         self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
 
@@ -197,16 +193,16 @@ class Article_Mapper_Test( TestCase ):
                       'year': '2019'},
               'decoded_openurl': 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/&rft.issue=2&rft.au=Li,+Huifang&rft.eissn=2210-321X&rft.pages=335+-+EOA&rft_id=info:doi/10.1016/j.cjche.2018.04.010&rft.date=2019&rft.volume=27&rft.end_page=EOA&rft.atitle=Selective+recovery+of+lithium+from+simulated+brine+using+different+organic+synergist&ctx_ver=Z39.88-2004&rft.jtitle=Chinese+journal+of+chemical+engineering&rft.issn=1004-9541&rft.genre=article&rft.spage=335&Notes=`shortlink:+</easyaccess/find/permalink/DtZG/>`',
               'elapsed_time': '0:00:00.018644'}}
-        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'StatPearls' )
-        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Unknown' )
-        self.assertEqual( self.mapper.grab_author(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_volume(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_issue(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'Chinese journal of chemical engineering' )
+        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Selective recovery of lithium from simulated brine using different organic synergist' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Li, Huifang' )
+        self.assertEqual( self.mapper.grab_volume(bib_dct), '27' )
+        self.assertEqual( self.mapper.grab_issue(bib_dct), '2' )
         self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
-        self.assertEqual( self.mapper.grab_pages(bib_dct), '? - ?' )
-        self.assertEqual( self.mapper.grab_issn(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_pages(bib_dct), '335 - EOA' )
+        self.assertEqual( self.mapper.grab_issn(bib_dct), '1004-9541' )
         self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/' )
 
     def test_bib_dct_E(self):
         """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
@@ -233,16 +229,16 @@ class Article_Mapper_Test( TestCase ):
                       'year': '2018'},
               'decoded_openurl': 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/&rft.issue=11&rft.au=Partibha,+Krishan&rft.pages=2557+-+EOA&rft_id=info:doi/10.14233/ajchem.2018.21598&rft.date=2018&rft.volume=30&rft.end_page=EOA&rft.atitle=Prediction+of+Interactions+between+Binary+Mixtures+of+Aliphatic+Amines+and+Aliphatic+Acetates&ctx_ver=Z39.88-2004&rft.jtitle=Asian+journal+of+chemistry&rft.issn=0970-7077&rft.genre=article&rft.spage=2557&Notes=`shortlink:+</easyaccess/find/permalink/DsvT/>`',
               'elapsed_time': '0:00:00.019117'}}
-        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'StatPearls' )
-        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Unknown' )
-        self.assertEqual( self.mapper.grab_author(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_volume(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_issue(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
-        self.assertEqual( self.mapper.grab_pages(bib_dct), '? - ?' )
-        self.assertEqual( self.mapper.grab_issn(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'Asian journal of chemistry' )
+        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Prediction of Interactions between Binary Mixtures of Aliphatic Amines and Aliphatic Acetates' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Partibha, Krishan' )
+        self.assertEqual( self.mapper.grab_volume(bib_dct), '30' )
+        self.assertEqual( self.mapper.grab_issue(bib_dct), '11' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2018' )
+        self.assertEqual( self.mapper.grab_pages(bib_dct), '2557 - EOA' )
+        self.assertEqual( self.mapper.grab_issn(bib_dct), '0970-7077' )
         self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/' )
 
     def test_bib_dct_F(self):
         """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
@@ -270,16 +266,16 @@ class Article_Mapper_Test( TestCase ):
                       'year': '2018'},
               'decoded_openurl': 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/info:sid/Elsevier:SD&rft.au=Glunz,+Stefan&rft.eissn=1879-3398&rft.pages=260+-+EOA&rft_id=info:doi/10.1016/j.solmat.2018.04.029&rft.date=2018&rft.volume=185&rft.end_page=EOA&rft.atitle=SiO2+surface+passivation+layers+?+a+key+technology+for+silicon+solar+cells&ctx_ver=Z39.88-2004&rft.jtitle=Solar+energy+materials+and+solar+cells&rft.issn=0927-0248&rft.genre=article&rft.spage=260&Notes=`shortlink:+</easyaccess/find/permalink/Dt6D/>`',
               'elapsed_time': '0:00:00.018042'}}
-        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'StatPearls' )
-        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Unknown' )
-        self.assertEqual( self.mapper.grab_author(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_volume(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'Solar energy materials and solar cells' )
+        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'SiO2 surface passivation layers ? a key technology for silicon solar cells' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Glunz, Stefan' )
+        self.assertEqual( self.mapper.grab_volume(bib_dct), '185' )
         self.assertEqual( self.mapper.grab_issue(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
-        self.assertEqual( self.mapper.grab_pages(bib_dct), '? - ?' )
-        self.assertEqual( self.mapper.grab_issn(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2018' )
+        self.assertEqual( self.mapper.grab_pages(bib_dct), '260 - EOA' )
+        self.assertEqual( self.mapper.grab_issn(bib_dct), '0927-0248' )
         self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/info:sid/Elsevier:SD' )
 
     def test_bib_dct_G(self):
         """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
@@ -306,16 +302,16 @@ class Article_Mapper_Test( TestCase ):
                       'year': '2016'},
               'decoded_openurl': 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/EBSCO:Business+Source+Premier&rft.issue=4&rft.au=Campbell,+Trevor&rft.eissn=1532-4265&rft.pages=284+-+EOA&rft.date=2016&rft.volume=39&rft.end_page=EOA&rft.atitle=The+Impact+of+the+Unemployment+Rate+on+Unemployment+Benefits+in+Barbados:+An+Impulse+Response+Approach.&ctx_ver=Z39.88-2004&rft.jtitle=International+journal+of+public+administration&rft.issn=0190-0692&rft.genre=article&rft.spage=284&Notes=`shortlink:+</easyaccess/find/permalink/Du4b/>`',
               'elapsed_time': '0:00:00.017337'}}
-        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'StatPearls' )
-        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Unknown' )
-        self.assertEqual( self.mapper.grab_author(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_volume(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_issue(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
-        self.assertEqual( self.mapper.grab_pages(bib_dct), '? - ?' )
-        self.assertEqual( self.mapper.grab_issn(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'International journal of public administration' )
+        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'The Impact of the Unemployment Rate on Unemployment Benefits in Barbados: An Impulse Response Approach.' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Campbell, Trevor' )
+        self.assertEqual( self.mapper.grab_volume(bib_dct), '39' )
+        self.assertEqual( self.mapper.grab_issue(bib_dct), '4' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '2016' )
+        self.assertEqual( self.mapper.grab_pages(bib_dct), '284 - EOA' )
+        self.assertEqual( self.mapper.grab_issn(bib_dct), '0190-0692' )
         self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/EBSCO:Business Source Premier' )
 
     def test_bib_dct_H(self):
         """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
@@ -338,16 +334,16 @@ class Article_Mapper_Test( TestCase ):
                       'year': '1977'},
               'decoded_openurl': 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/&rft.au=Tojo+et+al.&rft.pages=120+-+EOA&rft.date=1977&rft.volume=73&rft.end_page=EOA&rft.atitle=Unknown&ctx_ver=Z39.88-2004&rft.jtitle=Anales+de+Quimica+(1968-1979)&rft.issn=0365-4990&rft.genre=article&rft.spage=120&Notes=`shortlink:+</easyaccess/find/permalink/63w/>`',
               'elapsed_time': '0:00:00.014483'}}
-        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'StatPearls' )
+        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'Anales de Quimica (1968-1979)' )
         self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Unknown' )
-        self.assertEqual( self.mapper.grab_author(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_volume(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_author(bib_dct), 'Tojo et al.' )
+        self.assertEqual( self.mapper.grab_volume(bib_dct), '73' )
         self.assertEqual( self.mapper.grab_issue(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
-        self.assertEqual( self.mapper.grab_pages(bib_dct), '? - ?' )
-        self.assertEqual( self.mapper.grab_issn(bib_dct), '' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '1977' )
+        self.assertEqual( self.mapper.grab_pages(bib_dct), '120 - EOA' )
+        self.assertEqual( self.mapper.grab_issn(bib_dct), '0365-4990' )
         self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/' )
 
     def test_bib_dct_I(self):
         """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
@@ -370,47 +366,15 @@ class Article_Mapper_Test( TestCase ):
                       'year': '?'},
               'decoded_openurl': 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/EBSCO:Company+Information&rft.pages=?+-+?&rft.date=?&rft.atitle=Leroy+Seafood+Group+Asa&ctx_ver=Z39.88-2004&rft.jtitle=Leroy+Seafood+Group+Asa&rft.genre=article&Notes=`not+enough+original-request+data`;+`shortlink:+</easyaccess/find/permalink/Du4Z/>`',
               'elapsed_time': '0:00:00.010208'}}
-        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'StatPearls' )
-        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Unknown' )
+        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'Leroy Seafood Group Asa' )
+        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Leroy Seafood Group Asa' )
         self.assertEqual( self.mapper.grab_author(bib_dct), '' )
         self.assertEqual( self.mapper.grab_volume(bib_dct), '' )
         self.assertEqual( self.mapper.grab_issue(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
+        self.assertEqual( self.mapper.grab_date(bib_dct), '?' )
         self.assertEqual( self.mapper.grab_pages(bib_dct), '? - ?' )
         self.assertEqual( self.mapper.grab_issn(bib_dct), '' )
         self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
-
-    def test_bib_dct_J(self):
-        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
-        bib_dct = {
- 'query': {'date_time': '2019-04-10 15:07:58.105388',
-           'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=rft_val_fmt%3Dinfo%253Aofi%2Ffmt%253Akev%253Amtx%253Ajournal%26rfr_id%3Dinfo%253Asid%2FEBSCO%253ACompany%2BInformation%26rft.pages%3D%253F%2B-%2B%253F%26rft.date%3D%253F%26rft.atitle%3DMarine%2BHarvest%2BAsa%26ctx_ver%3DZ39.88-2004%26rft.jtitle%3DMarine%2BHarvest%2BAsa%26rft.genre%3Darticle%26Notes%3D%2560not%2Benough%2Boriginal-request%2Bdata%2560%253B%2B%2560shortlink%253A%2B%253C%252Feasyaccess%252Ffind%252Fpermalink%252FDsOO%252F%253E%2560'},
- 'response': {'bib': {'_rfr': 'info:sid/EBSCO:Company Information',
-                      'author': [],
-                      'end_page': None,
-                      'identifier': [],
-                      'issue': None,
-                      'journal': {'name': 'Marine Harvest Asa'},
-                      'pages': '? - ?',
-                      'place_of_publication': None,
-                      'publisher': None,
-                      'start_page': None,
-                      'title': 'Marine Harvest Asa',
-                      'type': 'article',
-                      'volume': None,
-                      'year': '?'},
-              'decoded_openurl': 'rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rfr_id=info:sid/EBSCO:Company+Information&rft.pages=?+-+?&rft.date=?&rft.atitle=Marine+Harvest+Asa&ctx_ver=Z39.88-2004&rft.jtitle=Marine+Harvest+Asa&rft.genre=article&Notes=`not+enough+original-request+data`;+`shortlink:+</easyaccess/find/permalink/DsOO/>`',
-              'elapsed_time': '0:00:00.009889'}}
-        self.assertEqual( self.mapper.grab_journal_title(bib_dct), 'StatPearls' )
-        self.assertEqual( self.mapper.grab_article_title(bib_dct), 'Unknown' )
-        self.assertEqual( self.mapper.grab_author(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_volume(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_issue(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_date(bib_dct), '2019' )
-        self.assertEqual( self.mapper.grab_pages(bib_dct), '? - ?' )
-        self.assertEqual( self.mapper.grab_issn(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_espn(bib_dct), '' )
-        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
+        self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/EBSCO:Company Information' )
 
     ## end class class Article_Mapper_Test()
