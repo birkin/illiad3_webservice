@@ -296,6 +296,22 @@ class Mapper( object ):
         log.debug( '%s - pages, `%s`' % (self.request_id, pages) )
         return pages
 
+    def grab_issn( self, bib_dct ):
+        """ Returns issn.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        issn = ''
+        try:
+            identifiers = bib_dct['response']['bib']['identifier']
+            for element_dct in identifiers:
+                if element_dct['type'] == 'issn':
+                    issn = element_dct['id']
+                    break
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        issn = self.check_limit( string_value=issn, limit=20 )
+        log.debug( '%s - issn, `%s`' % (self.request_id, issn) )
+        return issn
+
 #######
 
     def grab_sid( self, bib_dct ):
@@ -341,21 +357,6 @@ class Mapper( object ):
         log.debug( '%s - oclc, `%s`' % (self.request_id, oclc) )
         return oclc
 
-    def grab_isbn( self, bib_dct ):
-        """ Returns isbn.
-            Called by ILLiadParamBuilder.map_to_illiad_keys() """
-        isbn = ''
-        try:
-            identifiers = bib_dct['response']['bib']['identifier']
-            for element_dct in identifiers:
-                if element_dct['type'] == 'isbn':
-                    isbn = element_dct['id']
-                    break
-        except Exception as e:
-            log.error( '%s - repr(e)' )
-        isbn = self.check_limit( string_value=isbn, limit=20 )
-        log.debug( '%s - isbn, `%s`' % (self.request_id, isbn) )
-        return isbn
 
 
 
