@@ -209,6 +209,47 @@ class Mapper( object ):
         # self.request_id = random.randint( 1111, 9999 )  # to follow logic if simultaneous hits
         self.request_id = request_id
 
+    def grab_journal_title( self, bib_dct ):
+        """ Returns journal title.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        title = ''
+        try:
+            title = bib_dct['response']['bib']['journal']['name']
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        title = self.check_limit( string_value=title, limit=255 )
+        log.debug( '%s - title, `%s`' % (self.request_id, title) )
+        return title
+
+    def grab_article_title( self, bib_dct ):
+        """ Returns article title.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        title = ''
+        try:
+            title = bib_dct['response']['bib']['title']
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        title = self.check_limit( string_value=title, limit=250 )
+        log.debug( '%s - title, `%s`' % (self.request_id, title) )
+        return title
+
+    def grab_author( self, bib_dct ):
+        """ Returns author.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        author = ''
+        try:
+            authors = bib_dct['response']['bib']['author']
+            for element_dct in authors:
+                if 'name' in element_dct.keys():
+                    author = element_dct['name']
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        author = self.check_limit( string_value=author, limit=100 )
+        log.debug( '%s - author, `%s`' % (self.request_id, author) )
+        return author
+
+#######
+
     def grab_sid( self, bib_dct ):
         """ Returns sid number.
             (no field-length limit)
@@ -268,20 +309,6 @@ class Mapper( object ):
         log.debug( '%s - isbn, `%s`' % (self.request_id, isbn) )
         return isbn
 
-    def grab_author( self, bib_dct ):
-        """ Returns author.
-            Called by ILLiadParamBuilder.map_to_illiad_keys() """
-        author = ''
-        try:
-            authors = bib_dct['response']['bib']['author']
-            for element_dct in authors:
-                if 'name' in element_dct.keys():
-                    author = element_dct['name']
-        except Exception as e:
-            log.error( '%s - repr(e)' )
-        author = self.check_limit( string_value=author, limit=100 )
-        log.debug( '%s - author, `%s`' % (self.request_id, author) )
-        return author
 
     def grab_date( self, bib_dct ):
         """ Returns date number.
@@ -323,20 +350,10 @@ class Mapper( object ):
         log.debug( '%s - publisher, `%s`' % (self.request_id, publisher) )
         return publisher
 
-    def grab_title( self, bib_dct ):
-        """ Returns title number.
-            Called by ILLiadParamBuilder.map_to_illiad_keys() """
-        title = ''
-        try:
-            title = bib_dct['response']['bib']['title']
-        except Exception as e:
-            log.error( '%s - repr(e)' )
-        title = self.check_limit( string_value=title, limit=255 )
-        log.debug( '%s - title, `%s`' % (self.request_id, title) )
-        return title
 
     def check_limit( self, string_value, limit ):
         """ Returns truncated string with elipsis if necessary.
+            Source for `limit`, <https://support.atlas-sys.com/hc/en-us/articles/360011812074> -- see Transactions table docs.
             Called by many class functions. """
         checked_value = string_value
         elip = unicodedata.normalize( 'NFC', '…' ); assert len(elip) == 1  # to make explicit it's one-character
