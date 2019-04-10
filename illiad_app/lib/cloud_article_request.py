@@ -284,6 +284,18 @@ class Mapper( object ):
         log.debug( '%s - date, `%s`' % (self.request_id, date) )
         return date
 
+    def grab_pages( self, bib_dct ):
+        """ Returns pages.
+            Called by ILLiadParamBuilder.map_to_illiad_keys() """
+        pages = ''
+        try:
+            pages = bib_dct['response']['bib']['pages']
+        except Exception as e:
+            log.error( '%s - repr(e)' )
+        pages = self.check_limit( string_value=pages, limit=30 )
+        log.debug( '%s - pages, `%s`' % (self.request_id, pages) )
+        return pages
+
 #######
 
     def grab_sid( self, bib_dct ):

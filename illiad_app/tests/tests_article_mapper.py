@@ -45,7 +45,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_volume(bib_dct), '102' )
         self.assertEqual( self.mapper.grab_issue(bib_dct), '4' )
         self.assertEqual( self.mapper.grab_date(bib_dct), '2011' )
-        self.assertEqual( self.mapper.grab_pages(bib_dct), 'z715 - EOA' )
+        self.assertEqual( self.mapper.grab_pages(bib_dct), '715 - EOA' )
         self.assertEqual( self.mapper.grab_issn(bib_dct), 'z0024-4066' )
         self.assertEqual( self.mapper.grab_espn(bib_dct), 'z' )
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'zgoogle' )
