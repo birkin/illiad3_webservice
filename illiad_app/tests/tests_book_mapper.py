@@ -3,7 +3,28 @@
 import base64, json, random
 from illiad_app import settings_app
 from django.test import Client, TestCase
-from illiad_app.lib.cloud_book_request import Mapper
+from illiad_app.lib.cloud_book_request import ILLiadParamBuilder, Mapper
+
+
+class ILLiadParamBuilder_Test( TestCase ):
+    """ Tests parsing of notes in openurl.
+        Notes-tests may _not_ always correspond to the `decoded_openurl` in `Book_Mapper_Test()` """
+
+    def setUp(self):
+        self.log_id = random.randint(1111, 9999)
+        self.builder = ILLiadParamBuilder( self.log_id )
+
+    def test_notes_A(self):
+        """ Checks an openurl that contains notes. """
+        decoded_openurl = 'isbn=9780857021052&title=The SAGE Handbook of Remote Sensing&notes=p.barcode,+`21236009704581`+--+volumes,+`N/A`'
+        self.assertEqual( self.builder.extract_notes(decoded_openurl), 'p.barcode, `21236009704581` -- volumes, `N/A`' )
+
+    def test_notes_B(self):
+        """ Checks an openurl that does not contains notes. """
+        decoded_openurl = 'sid=FirstSearch:WorldCat&genre=book&isbn=9780300059915&title=The+texture+of+memory+:+Holocaust+memorials+and+meaning&date=2000&aulast=Young&aufirst=James&auinitm=Edward&id=doi:&pid=254605206<fssessid>0</fssessid><edition>[Nachdr.]</edition>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>254605206</accessionnumber>&rft_id=info:oclcnum/254605206&rft_id=urn:ISBN:9780300059915&rft.aulast=Young&rft.aufirst=James&rft.auinitm=Edward&rft.btitle=The+texture+of+memory+:+Holocaust+memorials+and+meaning&rft.date=2000&rft.isbn=9780300059915&rft.place=New+Haven++CT&rft.pub=Yale+Univ.+Press&rft.edition=[Nachdr.]&rft.genre=book'
+        self.assertEqual( self.builder.extract_notes(decoded_openurl), 'no notes' )
+
+    ## end class ILLiadParamBuilder()
 
 
 class Book_Mapper_Test( TestCase ):
