@@ -66,6 +66,7 @@ class ArticleRequestHandler( object ):
     def add_additional_params( self, param_dct, username ):
         """ Adds additional params needed for illiad-api submission.
             Called by manage_request() """
+        param_dct['DocumentType'] = 'Article'
         param_dct['RequestType'] = 'Article'
         param_dct['ProcessType'] = 'Borrowing'
         param_dct['Username'] = username
