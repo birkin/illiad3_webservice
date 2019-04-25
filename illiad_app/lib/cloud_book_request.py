@@ -329,6 +329,8 @@ class Mapper( object ):
         title = ''
         try:
             title = bib_dct['response']['bib']['title']
+            if title is None:
+                title = ''
         except Exception as e:
             log.error( '%s - repr(e)' )
         title = self.check_limit( string_value=title, limit=255 )

@@ -192,6 +192,25 @@ class ClientCloudBookRequest_Test( TestCase ):
         # self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
         # self.assertEqual( 'submission_successful', response_dct['status'] )
 
+    def test__check_no_title(self):
+        """ Checks a url that should have been handled in the article flow of easyAccess...
+            ...but got to easyBorrow and failed as an ILLiad book-request because of no title.
+            This test is GOOD, just disabled so as not to auto-submit real requests. """
+        pass
+        # c = Client()
+        # response = c.post(
+        #     # '/cloud_book_request/',
+        #     '/v2/make_request/',
+        #     { 'auth_key': settings_app.TEST_AUTH_KEY,
+        #         'openurl': 'sid=Entrez:PubMed&id=pmid:30989589',
+        #         'request_id': str(random.randint(1111, 9999)),
+        #         'username': settings_app.TEST_EXISTING_GOOD_USER }
+        #     )
+        # self.assertEqual( 200, response.status_code )
+        # response_dct = json.loads( response.content )
+        # self.assertEqual( [u'status', u'transaction_number'], sorted(response_dct.keys()) )
+        # self.assertEqual( 'submission_successful', response_dct['status'] )
+
     ## end class ClientCloudBookRequest_Test()
 
 
