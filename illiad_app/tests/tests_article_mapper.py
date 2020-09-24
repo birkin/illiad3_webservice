@@ -129,7 +129,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
 
     def test_bib_dct_C(self):
-        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
+        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29491331`. """
         bib_dct = {
  'query': {'date_time': '2019-04-10 14:58:31.049638',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=rft_val_fmt%3Dinfo%253Aofi%2Ffmt%253Akev%253Amtx%253Ajournal%26rfr_id%3Dinfo%253Asid%2FEntrez%253APubMed%26rft.issue%3D3%26rft.au%3DUnai%252C%2BYuki%26rft.pages%3D178%2B-%2BEOA%26rft_id%3Dinfo%253Apmid%2F29491331%26rft.date%3D2018%26rft.volume%3D58%26rft.end_page%3DEOA%26rft.atitle%3D%255BA%2Bcase%2Bof%2Bshort-lasting%2Bunilateral%2Bneuralgiform%2Bheadache%2Bwith%2Bconjunctival%2Binjection%2Band%2Btearing%2Btriggered%2Bby%2Bmumps%2Bmeningitis%2Bin%2Ba%2Bpatient%2Bwith%2Brecurrent%2Bprimary%2Bstabbing%2Bheadache%255D.%26ctx_ver%3DZ39.88-2004%26rft.jtitle%3DRinsho%2Bshinkeigaku%2B%253D%2BClinical%2Bneurology%26rft.issn%3D0009-918X%26rft.genre%3Darticle%26rft.spage%3D178%26Notes%3D%2560PMID%253A%2B29491331%2560%253B%2B%2560shortlink%253A%2B%253C%252Feasyaccess%252Ffind%252Fpermalink%252FDu6U%252F%253E%2560'},
@@ -168,7 +168,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/Entrez:PubMed' )
 
     def test_bib_dct_D(self):
-        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
+        """ Checks mapping of bib_dct elements to illiad article keys for id `doi:10.1016/j.cjche.2018.04.010`. """
         bib_dct = {
  'query': {'date_time': '2019-04-10 15:00:15.789185',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=rft_val_fmt%3Dinfo%253Aofi%2Ffmt%253Akev%253Amtx%253Ajournal%26rfr_id%3Dinfo%253Asid%2F%26rft.issue%3D2%26rft.au%3DLi%252C%2BHuifang%26rft.eissn%3D2210-321X%26rft.pages%3D335%2B-%2BEOA%26rft_id%3Dinfo%253Adoi%2F10.1016%2Fj.cjche.2018.04.010%26rft.date%3D2019%26rft.volume%3D27%26rft.end_page%3DEOA%26rft.atitle%3DSelective%2Brecovery%2Bof%2Blithium%2Bfrom%2Bsimulated%2Bbrine%2Busing%2Bdifferent%2Borganic%2Bsynergist%26ctx_ver%3DZ39.88-2004%26rft.jtitle%3DChinese%2Bjournal%2Bof%2Bchemical%2Bengineering%26rft.issn%3D1004-9541%26rft.genre%3Darticle%26rft.spage%3D335%26Notes%3D%2560shortlink%253A%2B%253C%252Feasyaccess%252Ffind%252Fpermalink%252FDtZG%252F%253E%2560'},
@@ -205,7 +205,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/' )
 
     def test_bib_dct_E(self):
-        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
+        """ Checks mapping of bib_dct elements to illiad article keys for doi `doi:10.14233/ajchem.2018.21598`. """
         bib_dct = {
  'query': {'date_time': '2019-04-10 15:01:30.132287',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=rft_val_fmt%3Dinfo%253Aofi%2Ffmt%253Akev%253Amtx%253Ajournal%26rfr_id%3Dinfo%253Asid%2F%26rft.issue%3D11%26rft.au%3DPartibha%252C%2BKrishan%26rft.pages%3D2557%2B-%2BEOA%26rft_id%3Dinfo%253Adoi%2F10.14233%2Fajchem.2018.21598%26rft.date%3D2018%26rft.volume%3D30%26rft.end_page%3DEOA%26rft.atitle%3DPrediction%2Bof%2BInteractions%2Bbetween%2BBinary%2BMixtures%2Bof%2BAliphatic%2BAmines%2Band%2BAliphatic%2BAcetates%26ctx_ver%3DZ39.88-2004%26rft.jtitle%3DAsian%2Bjournal%2Bof%2Bchemistry%26rft.issn%3D0970-7077%26rft.genre%3Darticle%26rft.spage%3D2557%26Notes%3D%2560shortlink%253A%2B%253C%252Feasyaccess%252Ffind%252Fpermalink%252FDsvT%252F%253E%2560'},
@@ -241,7 +241,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/' )
 
     def test_bib_dct_F(self):
-        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
+        """ Checks mapping of bib_dct elements to illiad article keys for doi `doi:10.1016/j.solmat.2018.04.029`. """
         bib_dct = {
  'query': {'date_time': '2019-04-10 15:02:47.768342',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=rft_val_fmt%3Dinfo%253Aofi%2Ffmt%253Akev%253Amtx%253Ajournal%26rfr_id%3Dinfo%253Asid%2Finfo%253Asid%2FElsevier%253ASD%26rft.au%3DGlunz%252C%2BStefan%26rft.eissn%3D1879-3398%26rft.pages%3D260%2B-%2BEOA%26rft_id%3Dinfo%253Adoi%2F10.1016%2Fj.solmat.2018.04.029%26rft.date%3D2018%26rft.volume%3D185%26rft.end_page%3DEOA%26rft.atitle%3DSiO2%2Bsurface%2Bpassivation%2Blayers%2B%253F%2Ba%2Bkey%2Btechnology%2Bfor%2Bsilicon%2Bsolar%2Bcells%26ctx_ver%3DZ39.88-2004%26rft.jtitle%3DSolar%2Benergy%2Bmaterials%2Band%2Bsolar%2Bcells%26rft.issn%3D0927-0248%26rft.genre%3Darticle%26rft.spage%3D260%26Notes%3D%2560shortlink%253A%2B%253C%252Feasyaccess%252Ffind%252Fpermalink%252FDt6D%252F%253E%2560'},
@@ -278,7 +278,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/info:sid/Elsevier:SD' )
 
     def test_bib_dct_G(self):
-        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
+        """ Checks mapping of bib_dct elements to illiad article keys for issn `0190-0692`. """
         bib_dct = {
  'query': {'date_time': '2019-04-10 15:04:01.752378',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=rft_val_fmt%3Dinfo%253Aofi%2Ffmt%253Akev%253Amtx%253Ajournal%26rfr_id%3Dinfo%253Asid%2FEBSCO%253ABusiness%2BSource%2BPremier%26rft.issue%3D4%26rft.au%3DCampbell%252C%2BTrevor%26rft.eissn%3D1532-4265%26rft.pages%3D284%2B-%2BEOA%26rft.date%3D2016%26rft.volume%3D39%26rft.end_page%3DEOA%26rft.atitle%3DThe%2BImpact%2Bof%2Bthe%2BUnemployment%2BRate%2Bon%2BUnemployment%2BBenefits%2Bin%2BBarbados%253A%2BAn%2BImpulse%2BResponse%2BApproach.%26ctx_ver%3DZ39.88-2004%26rft.jtitle%3DInternational%2Bjournal%2Bof%2Bpublic%2Badministration%26rft.issn%3D0190-0692%26rft.genre%3Darticle%26rft.spage%3D284%26Notes%3D%2560shortlink%253A%2B%253C%252Feasyaccess%252Ffind%252Fpermalink%252FDu4b%252F%253E%2560'},
@@ -314,7 +314,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/EBSCO:Business Source Premier' )
 
     def test_bib_dct_H(self):
-        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
+        """ Checks mapping of bib_dct elements to illiad article keys for issn `0365-4990`. """
         bib_dct = {
  'query': {'date_time': '2019-04-10 15:05:26.760665',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=rft_val_fmt%3Dinfo%253Aofi%2Ffmt%253Akev%253Amtx%253Ajournal%26rfr_id%3Dinfo%253Asid%2F%26rft.au%3DTojo%2Bet%2Bal.%26rft.pages%3D120%2B-%2BEOA%26rft.date%3D1977%26rft.volume%3D73%26rft.end_page%3DEOA%26rft.atitle%3DUnknown%26ctx_ver%3DZ39.88-2004%26rft.jtitle%3DAnales%2Bde%2BQuimica%2B%25281968-1979%2529%26rft.issn%3D0365-4990%26rft.genre%3Darticle%26rft.spage%3D120%26Notes%3D%2560shortlink%253A%2B%253C%252Feasyaccess%252Ffind%252Fpermalink%252F63w%252F%253E%2560'},
@@ -346,7 +346,7 @@ class Article_Mapper_Test( TestCase ):
         self.assertEqual( self.mapper.grab_sid(bib_dct), 'info:sid/' )
 
     def test_bib_dct_I(self):
-        """ Checks mapping of bib_dct elements to illiad article keys for pmid `info:pmid/29083764`. """
+        """ Checks mapping of bib_dct elements to illiad article keys for no id. """
         bib_dct = {
  'query': {'date_time': '2019-04-10 15:06:54.550762',
            'url': 'https://library.brown.edu/bib_ourl_api/v1/ourl_to_bib/?ourl=rft_val_fmt%3Dinfo%253Aofi%2Ffmt%253Akev%253Amtx%253Ajournal%26rfr_id%3Dinfo%253Asid%2FEBSCO%253ACompany%2BInformation%26rft.pages%3D%253F%2B-%2B%253F%26rft.date%3D%253F%26rft.atitle%3DLeroy%2BSeafood%2BGroup%2BAsa%26ctx_ver%3DZ39.88-2004%26rft.jtitle%3DLeroy%2BSeafood%2BGroup%2BAsa%26rft.genre%3Darticle%26Notes%3D%2560not%2Benough%2Boriginal-request%2Bdata%2560%253B%2B%2560shortlink%253A%2B%253C%252Feasyaccess%252Ffind%252Fpermalink%252FDu4Z%252F%253E%2560'},
